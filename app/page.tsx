@@ -3,6 +3,7 @@ import About from "@/components/sections/About";
 import Architecture from "@/components/sections/Architecture";
 import Contact from "@/components/sections/Contact";
 import Hero from "@/components/sections/Hero";
+import Marquee from "@/components/Marquee";
 import Stack from "@/components/sections/Stack";
 import SystemsLab from "@/components/sections/SystemsLab";
 import Timeline from "@/components/sections/Timeline";
@@ -15,6 +16,7 @@ export default function Home() {
       <SceneLayer />
       <main id="main" className="page">
         <Hero />
+        <Marquee />
         <About />
         <SystemsLab />
         <Architecture />

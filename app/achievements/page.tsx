@@ -41,7 +41,7 @@ export default function AchievementsPage() {
                       </p>
                       <h3 className={a.kind === "Patent" ? "heading text-[clamp(24px,3vw,36px)]" : "title text-[20px]"}>{a.title}</h3>
                       <p className="text-fg-2">{a.org}</p>
-                      <p className="mt-1 inline-flex w-fit border border-fg px-2 py-1 text-[12px] font-semibold">{a.status}</p>
+                      <p className="mt-1 inline-flex w-fit border border-cyan/60 px-2 py-1 text-[12px] font-semibold text-cyan">{a.status}</p>
                       {a.detail && <p className="mt-2 max-w-[60ch] text-[15px] text-fg-2">{a.detail}</p>}
                     </div>
                   </li>

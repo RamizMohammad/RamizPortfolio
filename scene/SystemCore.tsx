@@ -4,13 +4,17 @@ import { Edges } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
+import type { LineMaterial } from "three/examples/jsm/lines/LineMaterial.js";
+import type { LineSegments2 } from "three/examples/jsm/lines/LineSegments2.js";
 import { stack } from "@/content/stack";
 import { LAYERS } from "@/content/types";
-import { archEdges, archNodes, BLOCKS, FORMATIONS, formation, LAYER_BLOCKS, type Block, type Ctx } from "./formations";
+import { archEdges, archNodes, blockColor, BLOCKS, FORMATIONS, formation, LAYER_BLOCKS, type Block, type Ctx } from "./formations";
 import { signals, target, type Pose } from "./store";
 
-const FACE = new THREE.Color("#121211");
-const FACE_LIT = new THREE.Color("#2e2e2c");
+const FACE = new THREE.Color("#0a0e1a");
+const colA = new THREE.Color();
+const colB = new THREE.Color();
+const tint = new THREE.Color();
 const MAX_EDGES = 8;
 const PACKETS_PER_EDGE = 2;
 
@@ -44,7 +48,7 @@ export default function SystemCore({ packets, labels, reduced }: Props) {
   const root = useRef<THREE.Group>(null);
   const meshes = useRef<(THREE.Mesh | null)[]>([]);
   const faceMats = useRef<(THREE.MeshStandardMaterial | null)[]>([]);
-  const edgeMats = useRef<(THREE.LineBasicMaterial | null)[]>([]);
+  const edgeMats = useRef<(LineMaterial | null)[]>([]);
   const labelEls = useRef<HTMLDivElement[]>([]);
   const labelText = useRef<string[]>([]);
   const packetMesh = useRef<THREE.InstancedMesh>(null);
@@ -82,14 +86,14 @@ export default function SystemCore({ packets, labels, reduced }: Props) {
 
   // Constellation: one point per stack item, clustered by layer around a ring.
   const stars = useMemo(() => {
-    const items: { pos: THREE.Vector3; center: THREE.Vector3 }[] = [];
+    const items: { pos: THREE.Vector3; center: THREE.Vector3; color: string }[] = [];
     LAYERS.forEach((layer, li) => {
       const a = (li / LAYERS.length) * Math.PI * 2;
       const center = new THREE.Vector3(Math.cos(a) * 1.2, (LAYERS.length / 2 - li - 0.5) * 0.3, Math.sin(a) * 1.2);
       stack[layer.id].forEach((_, k) => {
         const t = k * 2.399963; // golden angle keeps the scatter even and deterministic
         const r = 0.22 + 0.06 * (k % 4);
-        items.push({ pos: center.clone().add(new THREE.Vector3(Math.cos(t) * r, Math.sin(t * 1.7) * 0.18, Math.sin(t) * r)), center });
+        items.push({ pos: center.clone().add(new THREE.Vector3(Math.cos(t) * r, Math.sin(t * 1.7) * 0.18, Math.sin(t) * r)), center, color: layer.color });
       });
     });
     const line: number[] = [];
@@ -98,6 +102,15 @@ export default function SystemCore({ packets, labels, reduced }: Props) {
     g.setAttribute("position", new THREE.Float32BufferAttribute(line, 3));
     return { items, lines: g };
   }, []);
+
+  // Each constellation point takes its layer's colour.
+  useEffect(() => {
+    const sm = starMesh.current;
+    if (!sm) return;
+    const col = new THREE.Color();
+    stars.items.forEach((it, i) => sm.setColorAt(i, col.set(it.color)));
+    if (sm.instanceColor) sm.instanceColor.needsUpdate = true;
+  }, [stars]);
 
   // Labels are plain DOM nodes over the canvas, projected from 3D each frame.
   useEffect(() => {
@@ -109,7 +122,7 @@ export default function SystemCore({ packets, labels, reduced }: Props) {
     labelEls.current = Array.from({ length: BLOCKS }, () => {
       const el = document.createElement("div");
       el.className = "label";
-      el.style.cssText = "position:absolute;left:0;top:0;white-space:nowrap;color:#f4f4f1;opacity:0;will-change:transform";
+      el.style.cssText = "position:absolute;left:0;top:0;white-space:nowrap;color:#3be8ff;opacity:0;will-change:transform;text-shadow:0 0 12px currentColor";
       layer.appendChild(el);
       return el;
     });
@@ -229,9 +242,17 @@ export default function SystemCore({ packets, labels, reduced }: Props) {
         m.visible = L.s[0] > 0.003 && L.s[1] > 0.003;
       }
       const lit = A.lit + (B.lit - A.lit) * t;
-      faceMats.current[i]?.color.lerpColors(FACE, FACE_LIT, lit);
+      colA.set(blockColor(i, A));
+      colB.set(blockColor(i, B));
+      colA.lerp(colB, t);
+      // Lit faces take on a dim wash of their own colour.
+      tint.copy(colA).multiplyScalar(0.2);
+      faceMats.current[i]?.color.lerpColors(FACE, tint, lit);
       const em = edgeMats.current[i];
-      if (em) em.opacity += (A.edge + (B.edge - A.edge) * t - em.opacity) * (reduced ? 1 : 0.2);
+      if (em) {
+        em.color.copy(colA);
+        em.opacity += (A.edge + (B.edge - A.edge) * t - em.opacity) * (reduced ? 1 : 0.2);
+      }
 
       // Labels follow the dominant formation and swap text while invisible.
       const el = labelEls.current[i];
@@ -241,6 +262,7 @@ export default function SystemCore({ packets, labels, reduced }: Props) {
         if (labelText.current[i] !== text) {
           labelText.current[i] = text;
           el.textContent = text;
+          el.style.color = blockColor(i, D);
         }
         const op = text ? labelFade * (1 - wStack) * intro * intro : 0;
         el.style.opacity = op.toFixed(3);
@@ -326,37 +348,44 @@ export default function SystemCore({ packets, labels, reduced }: Props) {
         <mesh key={i} ref={(el) => { meshes.current[i] = el; }} visible={i < LAYER_BLOCKS}>
           <boxGeometry args={[1, 1, 1]} />
           <meshStandardMaterial ref={(m) => { faceMats.current[i] = m; }} color={FACE} roughness={0.42} metalness={0.55} />
-          <Edges threshold={20}>
-            <lineBasicMaterial ref={(m) => { edgeMats.current[i] = m; }} color="#f4f4f1" transparent opacity={0.95} />
-          </Edges>
+          {/* drei's Edges draws its own fat-line material; take it from the ref to drive colour and opacity. */}
+          <Edges
+            threshold={20}
+            ref={(e: LineSegments2 | null) => { edgeMats.current[i] = e ? (e.material as LineMaterial) : null; }}
+            color="#3be8ff"
+            lineWidth={1.4}
+            transparent
+            opacity={0.95}
+            toneMapped={false}
+          />
         </mesh>
       ))}
 
       <group ref={scan} visible={false}>
         <lineLoop geometry={scanGeo}>
-          <lineBasicMaterial ref={scanLine} color="#ffffff" transparent opacity={0} />
+          <lineBasicMaterial ref={scanLine} color="#7ff3ff" transparent opacity={0} toneMapped={false} />
         </lineLoop>
         <mesh rotation-x={-Math.PI / 2}>
           <planeGeometry args={[2.6, 1.64]} />
-          <meshBasicMaterial ref={scanFill} color="#ffffff" transparent opacity={0} blending={THREE.AdditiveBlending} depthWrite={false} side={THREE.DoubleSide} />
+          <meshBasicMaterial ref={scanFill} color="#3be8ff" transparent opacity={0} blending={THREE.AdditiveBlending} depthWrite={false} side={THREE.DoubleSide} />
         </mesh>
       </group>
 
       <lineSegments geometry={links}>
-        <lineBasicMaterial ref={linkMat} color="#f4f4f1" transparent opacity={0} />
+        <lineBasicMaterial ref={linkMat} color="#a08bff" transparent opacity={0} toneMapped={false} />
       </lineSegments>
       <instancedMesh ref={packetMesh} args={[undefined, undefined, packetCount]} frustumCulled={false}>
         <boxGeometry args={[0.05, 0.05, 0.05]} />
-        <meshBasicMaterial color="#f4f4f1" />
+        <meshBasicMaterial color="#7ff3ff" toneMapped={false} />
       </instancedMesh>
 
       <group ref={starGroup} visible={false}>
         <instancedMesh ref={starMesh} args={[undefined, undefined, stars.items.length]} frustumCulled={false}>
           <octahedronGeometry args={[0.05, 0]} />
-          <meshStandardMaterial color="#f4f4f1" roughness={0.3} metalness={0.2} emissive="#f4f4f1" emissiveIntensity={0.35} />
+          <meshBasicMaterial color="#ffffff" toneMapped={false} />
         </instancedMesh>
         <lineSegments geometry={stars.lines}>
-          <lineBasicMaterial ref={starLines} color="#f4f4f1" transparent opacity={0} />
+          <lineBasicMaterial ref={starLines} color="#a08bff" transparent opacity={0} toneMapped={false} />
         </lineSegments>
       </group>
     </group>

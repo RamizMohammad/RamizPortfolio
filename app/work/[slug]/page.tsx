@@ -45,7 +45,7 @@ export default async function WorkPage({ params }: Props) {
 
         <div className="wrap grid gap-12 py-14 md:grid-cols-12 md:py-20">
           <aside className="md:col-span-3">
-            <dl className="grid gap-6 border-t border-fg pt-6">
+            <dl className="grid gap-6 border-t border-cyan/50 pt-6">
               <div>
                 <dt className="label">Type</dt>
                 <dd className="mt-1">{s.shipsAs}</dd>

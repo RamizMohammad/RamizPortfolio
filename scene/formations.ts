@@ -21,6 +21,8 @@ export type Block = {
   lit: number;
   /** Edge brightness */
   edge: number;
+  /** Edge and label colour; defaults to the layer colour for blocks 0–4 and cyan for units */
+  color?: string;
   /** Text shown beside the block, if any */
   label?: string;
   /** Where the label sits relative to the block centre, and which way it reads */
@@ -42,6 +44,16 @@ const THICK = 0.16;
 const SIZES = LAYERS.map((_, i) => ({ w: 1.75 + i * 0.13, d: 1.2 + i * 0.08 }));
 const gapFor = (e: number) => 0.05 + e * 0.62;
 export const slabY = (i: number, e: number) => ((LAYER_BLOCKS - 1) / 2 - i) * (THICK + gapFor(e));
+
+const CYAN = "#3be8ff";
+const VIOLET = "#a08bff";
+/** i of n along the cyan → violet ramp */
+const ramp = (i: number, n: number) => {
+  const t = n <= 1 ? 0 : i / (n - 1);
+  const a = [0x3b, 0xe8, 0xff], b = [0xb3, 0x8b, 0xff];
+  return "#" + a.map((v, k) => Math.round(v + (b[k] - v) * t).toString(16).padStart(2, "0")).join("");
+};
+export const blockColor = (i: number, b: Block) => b.color ?? (i < LAYER_BLOCKS ? LAYERS[i].color : CYAN);
 
 const HIDDEN = (): Block => ({ p: [0, 0, 0], s: [0.0001, 0.0001, 0.0001], r: [0, 0, 0], lit: 0, edge: 0 });
 
@@ -73,7 +85,7 @@ function about(i: number, c: Ctx): Block {
   const a = (u / tags.length) * Math.PI * 2 + c.time * 0.12;
   const x = Math.cos(a) * 1.15;
   const z = Math.sin(a) * 0.7;
-  return { p: [x, (u % 2 ? 0.45 : -0.45) + Math.sin(c.time * 0.6 + u) * 0.05, z], s: [0.14, 0.14, 0.14], r: [c.time * 0.4 + u, c.time * 0.3, 0], lit: 1, edge: 0.95, label: tags[u], la: [x > 0 ? 0.14 : -0.14, 0, 0], align: x > 0 ? "right" : "left" };
+  return { p: [x, (u % 2 ? 0.45 : -0.45) + Math.sin(c.time * 0.6 + u) * 0.05, z], s: [0.14, 0.14, 0.14], r: [c.time * 0.4 + u, c.time * 0.3, 0], lit: 1, edge: 0.95, color: u % 2 ? VIOLET : CYAN, label: tags[u], la: [x > 0 ? 0.14 : -0.14, 0, 0], align: x > 0 ? "right" : "left" };
 }
 
 /** 2 · Systems: a server rack. One unit per system, in Lab order; the hovered one slides out. */
@@ -100,6 +112,7 @@ function rack(i: number, c: Ctx): Block {
     s: [w, RACK_U, d],
     r: [0, 0, 0],
     lit: hot ? 1 : 0,
+    color: ramp(u, systems.length),
     edge: !any || hot ? 0.95 : 0.3,
     label: sys.name,
     la: [-w / 2 - 0.16, 0, d / 2],
@@ -117,7 +130,7 @@ function architecture(i: number, c: Ctx): Block {
   const n = nodes[i - LAYER_BLOCKS];
   if (!n) return HIDDEN();
   const L = LAYERS.findIndex((l) => l.id === n.layer);
-  return { p: nodePos(n.x, n.y, L), s: [0.17, 0.17, 0.17], r: [0, 0, 0], lit: 1, edge: 0.95 };
+  return { p: nodePos(n.x, n.y, L), s: [0.17, 0.17, 0.17], r: [0, 0, 0], lit: 1, edge: 0.95, color: LAYERS[L].color };
 }
 
 export const archNodes = (slug: string | null) => (featuredSystems.find((s) => s.slug === slug) ?? featuredSystems[0]).architecture!.nodes;
@@ -149,6 +162,7 @@ function timelineForm(i: number, c: Ctx): Block {
     s: [len, 0.16, 0.22],
     r: [0, 0, 0],
     lit: t.span[1] === null ? 1 : 0,
+    color: t.span[1] === null ? CYAN : VIOLET,
     edge: 0.95,
     label: t.org,
     la: [-len / 2, 0.2, 0],

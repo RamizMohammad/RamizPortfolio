@@ -9,15 +9,15 @@ export default function Hero() {
       <div className="wrap grid min-h-[calc(100svh-64px)] grid-cols-1 md:grid-cols-12">
         <div className="flex flex-col justify-between gap-12 py-14 md:col-span-7 md:py-20 lg:col-span-6">
           <div>
-            <p className="label fade-up" style={d(0)}>
+            <p className="label eyebrow fade-up" style={d(0)}>
               {profile.role} · {profile.company}
             </p>
             <h1 id="hero-title" className="display mt-6 text-[clamp(40px,11.5vw,148px)]">
               <span className="reveal">
                 <span style={d(80)}>{profile.firstName}</span>
               </span>
-              <span className="reveal text-fg-3">
-                <span style={d(200)}>{profile.lastName}</span>
+              <span className="reveal">
+                <span style={d(200)} className="accent-text">{profile.lastName}</span>
               </span>
             </h1>
             <p className="fade-up mt-8 max-w-[44ch] text-[18px] leading-[1.55] text-fg-2 md:text-[19px]" style={d(520)}>

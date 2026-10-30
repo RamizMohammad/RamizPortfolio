@@ -43,7 +43,7 @@ export default function SiteHeader() {
 
   return (
     <header
-      className="sticky z-50 border-b border-rule bg-ink"
+      className="sticky z-50 border-b border-rule bg-ink/80 backdrop-blur-md"
       style={{ top: "env(safe-area-inset-top, 0px)" }}
     >
       <div className="wrap flex h-16 items-center justify-between gap-6">
@@ -58,12 +58,12 @@ export default function SiteHeader() {
                 <a
                   href={href(n.id)}
                   aria-current={current === n.id ? "true" : undefined}
-                  className="relative py-2 text-fg-2 no-underline transition-colors hover:text-fg aria-[current=true]:text-fg"
+                  className="relative py-2 text-fg-2 no-underline transition-colors hover:text-fg aria-[current=true]:text-cyan"
                 >
                   {n.label}
                   <span
                     aria-hidden="true"
-                    className={`absolute inset-x-0 -bottom-px h-px bg-fg transition-transform duration-200 ${current === n.id ? "scale-x-100" : "scale-x-0"}`}
+                    className={`absolute inset-x-0 -bottom-px h-px bg-gradient-to-r from-cyan to-violet transition-transform duration-200 ${current === n.id ? "scale-x-100" : "scale-x-0"}`}
                   />
                 </a>
               </li>

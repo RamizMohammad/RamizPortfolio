@@ -41,7 +41,7 @@ export default function BootSequence() {
     <div className="boot" aria-hidden="true">
       <div className="data grid w-full max-w-[420px] gap-1.5 text-[13px] text-fg-2">
         {LINES.map((l, i) => (
-          <p key={l} className="boot-line" style={{ animationDelay: `${120 + i * 220}ms`, color: i === LINES.length - 1 ? "var(--color-fg)" : undefined }}>
+          <p key={l} className="boot-line" style={{ animationDelay: `${120 + i * 220}ms`, color: i === 0 || i === LINES.length - 1 ? "var(--color-cyan)" : undefined }}>
             {l}
           </p>
         ))}

@@ -19,7 +19,7 @@ export default function Bloom() {
     // Multisampled target keeps the thin edge lines antialiased through the post pass.
     const c = new EffectComposer(gl, new WebGLRenderTarget(1, 1, { samples: 4, type: HalfFloatType }));
     c.addPass(new RenderPass(scene, camera));
-    c.addPass(new UnrealBloomPass(new Vector2(256, 256), 0.6, 0.55, 0.72));
+    c.addPass(new UnrealBloomPass(new Vector2(256, 256), 0.7, 0.6, 0.6));
     c.addPass(new OutputPass());
     return c;
   }, [gl, scene, camera]);

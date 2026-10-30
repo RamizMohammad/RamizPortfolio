@@ -1,14 +1,17 @@
 @import "tailwindcss";
 
-/* Monochrome system: ink, panel, rule and three greys. Contrast against ink:
-   fg 17.97:1 · fg-2 8.10:1 · fg-3 4.59:1 (labels and meta only on panel). */
+/* Deep blue-black with electric cyan and violet. Contrast against ink:
+   fg 18.1:1 · fg-2 8.9:1 · fg-3 5.3:1 · cyan 13.6:1 · violet 7.3:1 (all pass on panel too). */
 @theme {
-  --color-ink: #0a0a0a;
-  --color-panel: #141413;
-  --color-rule: #2a2a28;
-  --color-fg: #f4f4f1;
-  --color-fg-2: #a6a6a1;
-  --color-fg-3: #7a7a76;
+  --color-ink: #05070d;
+  --color-panel: #0d111c;
+  --color-rule: #1d2333;
+  --color-fg: #eef3ff;
+  --color-fg-2: #a3adc4;
+  --color-fg-3: #79839c;
+  --color-cyan: #3be8ff;
+  --color-violet: #a08bff;
+  --color-violet-soft: #b3a2ff;
 
   --font-display: var(--font-archivo), "Helvetica Neue", Arial, sans-serif;
   --font-sans: var(--font-geist), "Helvetica Neue", Arial, sans-serif;
@@ -36,8 +39,8 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
-::selection { background: var(--color-fg); color: var(--color-ink) }
-:focus-visible { outline: 2px solid var(--color-fg); outline-offset: 3px }
+::selection { background: var(--color-cyan); color: var(--color-ink) }
+:focus-visible { outline: 2px solid var(--color-cyan); outline-offset: 3px }
 a { text-underline-offset: 4px; text-decoration-thickness: 1px }
 
 /* Type roles. Archivo's width axis carries hierarchy, so it is set explicitly. */
@@ -45,6 +48,11 @@ a { text-underline-offset: 4px; text-decoration-thickness: 1px }
 .heading { font-family: var(--font-display); font-weight: 800; font-variation-settings: "wdth" 112; letter-spacing: -0.025em; line-height: 1; text-wrap: balance }
 .title { font-family: var(--font-display); font-weight: 700; font-variation-settings: "wdth" 108; letter-spacing: -0.01em; line-height: 1.15 }
 .label { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-fg-3); line-height: 1.4 }
+/* Section eyebrows carry the accent */
+.eyebrow { color: var(--color-cyan) }
+.eyebrow::before { content: ""; display: inline-block; width: 18px; height: 1px; margin-right: 10px; vertical-align: middle; background: linear-gradient(90deg, var(--color-cyan), var(--color-violet)) }
+/* Accent words: cyan into violet */
+.accent-text { background: linear-gradient(100deg, var(--color-cyan) 0%, #7fb6ff 45%, var(--color-violet) 100%); -webkit-background-clip: text; background-clip: text; color: transparent }
 .data { font-family: var(--font-mono); font-size: 13px; font-variant-numeric: tabular-nums }
 
 .wrap { width: 100%; max-width: 1360px; margin-inline: auto; padding-left: max(var(--gutter), 24px); padding-right: max(var(--gutter-r), 24px) }
@@ -57,9 +65,10 @@ a { text-underline-offset: 4px; text-decoration-thickness: 1px }
   font: 600 14px/1 var(--font-sans); text-decoration: none; cursor: pointer;
   transition: background-color 160ms ease, color 160ms ease;
 }
-.btn:hover { background: var(--color-fg); color: var(--color-ink) }
-.btn-solid { background: var(--color-fg); color: var(--color-ink) }
-.btn-solid:hover { background: transparent; color: var(--color-fg) }
+.btn { border-color: color-mix(in oklab, var(--color-fg) 35%, transparent); transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease, box-shadow 300ms ease }
+.btn:hover { background: transparent; color: var(--color-cyan); border-color: var(--color-cyan); box-shadow: 0 0 0 1px var(--color-cyan), 0 0 28px -6px color-mix(in oklab, var(--color-cyan) 70%, transparent) }
+.btn-solid { background: var(--color-cyan); color: var(--color-ink); border-color: var(--color-cyan) }
+.btn-solid:hover { background: var(--color-cyan); color: var(--color-ink); box-shadow: 0 10px 40px -8px color-mix(in oklab, var(--color-cyan) 75%, transparent), 0 0 0 1px var(--color-cyan) }
 .btn:active { transform: scale(0.97) }
 
 /* The 3D layer sits behind the page and never takes pointer events. */
@@ -102,7 +111,7 @@ html[data-scene="off"] .stage-hint { display: none }
 
 /* Film grain: a fine moving texture over everything, for the printed-ink feel. */
 body::after {
-  content: ""; position: fixed; inset: -50%; z-index: 90; pointer-events: none; opacity: 0.055;
+  content: ""; position: fixed; inset: -50%; z-index: 90; pointer-events: none; opacity: 0.04;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   animation: grain 900ms steps(6) infinite;
 }
@@ -114,4 +123,48 @@ body::after {
 @media (prefers-reduced-motion: reduce) {
   .reveal > span, .fade-up { animation: none }
   body::after { animation: none }
+}
+
+/* Ambient colour: two slow-drifting glows behind everything, cyan and violet. */
+body::before {
+  content: ""; position: fixed; inset: -20%; z-index: 1; pointer-events: none; mix-blend-mode: screen;
+  background:
+    radial-gradient(40% 35% at 18% 12%, color-mix(in oklab, var(--color-cyan) 16%, transparent), transparent 70%),
+    radial-gradient(38% 40% at 85% 70%, color-mix(in oklab, var(--color-violet) 18%, transparent), transparent 70%),
+    radial-gradient(30% 30% at 60% 30%, color-mix(in oklab, #3b6dff 10%, transparent), transparent 70%);
+  animation: aurora 26s ease-in-out infinite alternate;
+}
+@keyframes aurora {
+  0% { transform: translate3d(0, 0, 0) rotate(0deg) scale(1) }
+  50% { transform: translate3d(4%, 3%, 0) rotate(6deg) scale(1.08) }
+  100% { transform: translate3d(-3%, -2%, 0) rotate(-4deg) scale(1.03) }
+}
+
+/* Scroll reveals. Hidden only when JavaScript runs and motion is welcome; RevealObserver adds .in. */
+html.js [data-reveal] { transition: opacity 900ms cubic-bezier(0.16, 1, 0.3, 1), transform 900ms cubic-bezier(0.16, 1, 0.3, 1), clip-path 1100ms cubic-bezier(0.16, 1, 0.3, 1); transition-delay: var(--rd, 0ms) }
+html.js [data-reveal]:not(.in) { opacity: 0; transform: translateY(28px) }
+/* The mask only clips vertically; it reaches far sideways so wide display type never gets cut. */
+html.js [data-reveal="mask"]:not(.in) { opacity: 1; transform: translateY(40%); clip-path: inset(0 -100vw 100% -100vw) }
+html.js [data-reveal="mask"].in { clip-path: inset(-20% -100vw -20% -100vw) }
+html.js [data-reveal="line"] { transform-origin: left; transition: transform 1200ms cubic-bezier(0.16, 1, 0.3, 1) }
+html.js [data-reveal="line"]:not(.in) { opacity: 1; transform: scaleX(0) }
+
+/* Marquee */
+.marquee { display: flex; width: max-content; animation: marquee 38s linear infinite }
+.marquee:hover { animation-play-state: paused }
+@keyframes marquee { to { transform: translateX(-50%) } }
+
+/* Custom cursor (fine pointers only) */
+.cursor-ring { position: fixed; left: 0; top: 0; z-index: 120; pointer-events: none; width: 36px; height: 36px; margin: -18px 0 0 -18px; border: 1px solid var(--color-cyan); border-radius: 999px; display: grid; place-items: center; transition: width 220ms ease, height 220ms ease, margin 220ms ease, background-color 220ms ease, border-color 220ms ease, opacity 200ms ease; mix-blend-mode: screen; opacity: 0 }
+.cursor-ring span { font: 600 10px/1 var(--font-mono); letter-spacing: 0.1em; color: var(--color-ink); opacity: 0; transition: opacity 150ms ease }
+.cursor-ring[data-state="link"] { width: 64px; height: 64px; margin: -32px 0 0 -32px; background: color-mix(in oklab, var(--color-cyan) 18%, transparent) }
+.cursor-ring[data-state="drag"] { width: 84px; height: 84px; margin: -42px 0 0 -42px; background: var(--color-cyan); border-color: var(--color-cyan) }
+.cursor-ring[data-state="drag"] span { opacity: 1 }
+.cursor-dot { position: fixed; left: 0; top: 0; z-index: 121; pointer-events: none; width: 6px; height: 6px; margin: -3px 0 0 -3px; border-radius: 999px; background: var(--color-violet-soft); opacity: 0 }
+@media (hover: none), (pointer: coarse) { .cursor-ring, .cursor-dot { display: none } }
+
+@media (prefers-reduced-motion: reduce) {
+  body::before, .marquee { animation: none }
+  html.js [data-reveal], html.js [data-reveal]:not(.in) { opacity: 1; transform: none; clip-path: none; transition: none }
+  .cursor-ring, .cursor-dot { display: none }
 }

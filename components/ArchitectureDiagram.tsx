@@ -10,6 +10,7 @@ const ROW = 98;
 const PAD = 20;
 
 const layerIndex = (l: Layer) => LAYERS.findIndex((x) => x.id === l) + 1;
+const color = (n: ArchNode) => LAYERS.find((x) => x.id === n.layer)?.color ?? "#3be8ff";
 
 type Props = {
   name: string;
@@ -41,7 +42,7 @@ export default function ArchitectureDiagram({ name, nodes, edges, caption, onHig
         <svg viewBox={`0 0 ${W} ${H}`} className="block w-full" style={{ minWidth: 640 }} role="img" aria-label={`Architecture of ${name}. The components are listed below.`}>
           <defs>
             <marker id={`arrow-${name}`} viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto">
-              <path d="M0,0 L8,4 L0,8 z" fill="#a6a6a1" />
+              <path d="M0,0 L8,4 L0,8 z" fill="#a08bff" />
             </marker>
           </defs>
           {edges.map((e, i) => {
@@ -78,9 +79,9 @@ export default function ArchitectureDiagram({ name, nodes, edges, caption, onHig
             const on = related(e);
             return (
               <g key={i} opacity={hot && !on ? 0.25 : 1}>
-                <path d={d} fill="none" stroke={on ? "#f4f4f1" : "#a6a6a1"} strokeWidth={on ? 1.5 : 1} strokeDasharray={e.dashed ? "3 4" : undefined} markerEnd={`url(#arrow-${name})`} />
+                <path d={d} fill="none" stroke={on ? "#3be8ff" : "#a08bff"} strokeWidth={on ? 1.5 : 1} strokeDasharray={e.dashed ? "3 4" : undefined} markerEnd={`url(#arrow-${name})`} />
                 {e.label && (
-                  <text x={lx} y={ly} textAnchor={anchor} fontFamily="var(--font-mono)" fontSize="11" fill="#a6a6a1" letterSpacing="0.04em">
+                  <text x={lx} y={ly} textAnchor={anchor} fontFamily="var(--font-mono)" fontSize="11" fill="#b3a2ff" letterSpacing="0.04em">
                     {e.label}
                   </text>
                 )}
@@ -98,14 +99,14 @@ export default function ArchitectureDiagram({ name, nodes, edges, caption, onHig
                 onPointerEnter={() => highlight(n.id)}
                 onPointerLeave={() => highlight(null)}
               >
-                <rect width={NODE_W} height={NODE_H} fill={on ? "#f4f4f1" : "#0a0a0a"} stroke="#f4f4f1" strokeWidth="1" />
-                <text x="14" y="26" fontFamily="var(--font-sans)" fontSize="14" fontWeight="600" fill={on ? "#0a0a0a" : "#f4f4f1"}>
+                <rect width={NODE_W} height={NODE_H} fill={on ? color(n) : "#05070d"} stroke={color(n)} strokeWidth="1" style={{ filter: on ? `drop-shadow(0 0 10px ${color(n)})` : undefined }} />
+                <text x="14" y="26" fontFamily="var(--font-sans)" fontSize="14" fontWeight="600" fill={on ? "#05070d" : "#eef3ff"}>
                   {n.label}
                 </text>
-                <text x="14" y="46" fontFamily="var(--font-mono)" fontSize="11" fill={on ? "#2a2a28" : "#a6a6a1"}>
+                <text x="14" y="46" fontFamily="var(--font-mono)" fontSize="11" fill={on ? "#1d2333" : "#a3adc4"}>
                   {n.detail}
                 </text>
-                <text x={NODE_W - 10} y="16" textAnchor="end" fontFamily="var(--font-mono)" fontSize="10" fill={on ? "#2a2a28" : "#7a7a76"}>
+                <text x={NODE_W - 10} y="16" textAnchor="end" fontFamily="var(--font-mono)" fontSize="10" fill={on ? "#1d2333" : color(n)}>
                   L{layerIndex(n.layer)}
                 </text>
               </g>
@@ -124,7 +125,7 @@ export default function ArchitectureDiagram({ name, nodes, edges, caption, onHig
                 onBlur={() => highlight(null)}
                 onPointerEnter={() => highlight(n.id)}
                 onPointerLeave={() => highlight(null)}
-                className="grid w-full gap-1 p-4 text-left transition-colors aria-pressed:bg-fg aria-pressed:text-ink"
+                className="grid w-full gap-1 p-4 text-left transition-colors aria-pressed:bg-cyan aria-pressed:text-ink"
               >
                 <span className="label text-inherit opacity-70">
                   L{layerIndex(n.layer)} · {LAYERS.find((l) => l.id === n.layer)?.label}

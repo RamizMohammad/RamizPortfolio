@@ -32,15 +32,16 @@ export default function Scene({ tier, reduced, onReady }: Props) {
       }}
       aria-hidden="true"
     >
-      {q.bloom && <color attach="background" args={["#0a0a0a"]} />}
-      <ambientLight intensity={0.25} />
-      <directionalLight position={[-3, 5, 4]} intensity={2.4} />
-      <directionalLight position={[3, 1.5, -4]} intensity={1.4} />
+      {q.bloom && <color attach="background" args={["#05070d"]} />}
+      <ambientLight intensity={0.3} color="#9fb4ff" />
+      <directionalLight position={[-3, 5, 4]} intensity={2.2} color="#e4ecff" />
+      <directionalLight position={[3, 1.5, -4]} intensity={2.4} color="#a08bff" />
+      <pointLight position={[-2.5, -1, 2.5]} intensity={6} distance={8} color="#3be8ff" />
       {q.environment && (
         <Environment resolution={64} frames={1}>
-          <Lightformer form="rect" intensity={2.5} position={[0, 4, 1]} scale={[8, 1.2, 1]} />
-          <Lightformer form="rect" intensity={1.2} position={[-5, 1, 2]} rotation-y={Math.PI / 2} scale={[4, 2, 1]} />
-          <Lightformer form="rect" intensity={0.6} position={[5, 0, -2]} rotation-y={-Math.PI / 2} scale={[4, 2, 1]} />
+          <Lightformer form="rect" intensity={2.2} position={[0, 4, 1]} scale={[8, 1.2, 1]} color="#e4ecff" />
+          <Lightformer form="rect" intensity={2} position={[-5, 1, 2]} rotation-y={Math.PI / 2} scale={[4, 2, 1]} color="#3be8ff" />
+          <Lightformer form="rect" intensity={2} position={[5, 0, -2]} rotation-y={-Math.PI / 2} scale={[4, 2, 1]} color="#a08bff" />
         </Environment>
       )}
       <SystemCore packets={q.packets} labels={q.labels} reduced={reduced} />

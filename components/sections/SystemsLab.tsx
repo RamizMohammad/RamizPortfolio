@@ -35,12 +35,12 @@ export default function SystemsLab() {
       <div className="grid gap-10 md:col-span-8 lg:col-span-7">
         <div className="grid gap-6">
           <div>
-            <p className="label">Index of work</p>
-            <h2 id="systems-title" className="display mt-4 text-[clamp(44px,7vw,96px)]">
+            <p className="label eyebrow" data-reveal>Index of work</p>
+            <h2 id="systems-title" className="display mt-4 text-[clamp(44px,7vw,96px)]" data-reveal="mask">
               Systems Lab
             </h2>
           </div>
-          <p className="max-w-[46ch] text-fg-2">
+          <p className="max-w-[46ch] text-fg-2" data-reveal style={{ ["--rd" as string]: "120ms" }}>
             Things I have built and shipped, one rack unit each. Each public system opens a case study. Work done inside Moglix is listed by name only.
           </p>
         </div>
@@ -52,7 +52,7 @@ export default function SystemsLab() {
               type="button"
               aria-pressed={filter === d.id}
               onClick={() => choose(d.id)}
-              className="min-h-10 border border-rule px-4 text-[13px] text-fg-2 transition-colors hover:border-fg hover:text-fg aria-pressed:border-fg aria-pressed:bg-fg aria-pressed:text-ink"
+              className="min-h-10 border border-rule px-4 text-[13px] text-fg-2 transition-colors hover:border-cyan hover:text-cyan aria-pressed:border-cyan aria-pressed:bg-cyan aria-pressed:text-ink"
             >
               {d.label}
             </button>
@@ -71,10 +71,12 @@ export default function SystemsLab() {
               </tr>
             </thead>
             <tbody>
-              {rows.map((s) => (
+              {rows.map((s, i) => (
                 <tr
                   key={s.slug}
-                  className="group relative border-b border-rule transition-colors hover:bg-panel focus-within:bg-panel"
+                  className="group relative border-b border-rule transition-colors hover:bg-panel/80 focus-within:bg-panel/80"
+                  data-reveal
+                  style={{ ["--rd" as string]: `${Math.min(i, 6) * 50}ms` }}
                   onPointerEnter={() => { setFocus(s.domains.flatMap((d) => DOMAIN_LAYERS[d])); setSystem(s.slug); }}
                   onPointerLeave={() => { setFocus([]); setSystem(null); }}
                   onFocus={() => { setFocus(s.domains.flatMap((d) => DOMAIN_LAYERS[d])); setSystem(s.slug); }}
@@ -82,18 +84,18 @@ export default function SystemsLab() {
                 >
                   <th scope="row" className="py-5 pr-4 align-top font-normal">
                     {s.internal ? (
-                      <span className="title text-[20px] text-fg">{s.name}</span>
+                      <span className="title text-[20px] text-fg">{s.name} <span className="label ml-1 align-middle text-violet-soft">Internal</span></span>
                     ) : (
-                      <Link href={`/work/${s.slug}`} className="title text-[20px] text-fg no-underline after:absolute after:inset-0 after:content-[''] focus-visible:outline-none group-focus-within:underline">
+                      <Link href={`/work/${s.slug}`} className="title text-[20px] text-fg no-underline transition-colors after:absolute after:inset-0 after:content-[''] group-hover:text-cyan focus-visible:outline-none group-focus-within:underline">
                         {s.name}
                       </Link>
                     )}
                     <p className="mt-1 max-w-[42ch] text-[14px] leading-snug text-fg-3">{s.summary}</p>
-                    <p className="data mt-2 text-[12px] text-fg-2">{s.stack.join(" · ")}</p>
+                    <p className="data mt-2 text-[12px] text-violet-soft/90">{s.stack.join(" · ")}</p>
                   </th>
                   <td className="py-5 pr-4 align-top text-[14px] text-fg-2">{s.domains.map(label).join(" · ")}</td>
                   <td className="py-5 pr-4 align-top text-[14px] text-fg-2">{s.shipsAs}</td>
-                  <td className="data py-5 text-right align-top text-fg" aria-hidden="true">
+                  <td className="data py-5 text-right align-top text-cyan" aria-hidden="true">
                     {s.internal ? "" : <span className="inline-block transition-transform group-hover:translate-x-1">→</span>}
                   </td>
                 </tr>

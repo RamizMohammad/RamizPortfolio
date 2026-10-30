@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Archivo, Geist, Geist_Mono } from "next/font/google";
+import Cursor from "@/components/Cursor";
+import RevealObserver from "@/components/RevealObserver";
 import SiteFooter from "@/components/SiteFooter";
 import SiteHeader from "@/components/SiteHeader";
 import { profile } from "@/content/profile";
@@ -21,11 +23,11 @@ export const metadata: Metadata = {
   twitter: { card: "summary_large_image", creator: "@Mohammad__Ramiz" },
 };
 
-export const viewport: Viewport = { themeColor: "#0a0a0a", colorScheme: "dark", viewportFit: "cover" };
+export const viewport: Viewport = { themeColor: "#05070d", colorScheme: "dark", viewportFit: "cover" };
 
 // Runs before first paint so the boot sequence never flashes for returning visitors or reduced motion.
 // data-boot-initial never changes afterwards, so CSS entrance delays can key off it safely.
-const bootGate = `try{var d=document.documentElement;if(sessionStorage.getItem('ramiz-boot')||matchMedia('(prefers-reduced-motion: reduce)').matches){d.dataset.boot='skip';d.dataset.bootInitial='skip'}}catch(e){}`;
+const bootGate = `document.documentElement.classList.add('js');try{var d=document.documentElement;if(sessionStorage.getItem('ramiz-boot')||matchMedia('(prefers-reduced-motion: reduce)').matches){d.dataset.boot='skip';d.dataset.bootInitial='skip'}}catch(e){}`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -40,6 +42,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <SiteHeader />
         {children}
         <SiteFooter />
+        <RevealObserver />
+        <Cursor />
       </body>
     </html>
   );

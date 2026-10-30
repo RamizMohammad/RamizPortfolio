@@ -39,22 +39,23 @@ export default function Architecture() {
         <div className="grid min-h-[70svh] gap-10 md:grid-cols-12">
           <div className="flex flex-col justify-between gap-10 md:col-span-6 lg:col-span-5">
             <div>
-              <p className="label">How the parts fit</p>
-              <h2 id="architecture-title" className="display mt-4 text-[clamp(44px,7vw,96px)]">
+              <p className="label eyebrow" data-reveal>How the parts fit</p>
+              <h2 id="architecture-title" className="display mt-4 text-[clamp(44px,7vw,96px)]" data-reveal="mask">
                 Architecture
               </h2>
-              <p className="mt-6 max-w-[44ch] text-fg-2">
+              <p className="mt-6 max-w-[44ch] text-fg-2" data-reveal style={{ ["--rd" as string]: "120ms" }}>
                 Every system I build sits on the same five layers. Choose a system to see which layers it uses, its components and how data moves between them.
               </p>
             </div>
             <ol className="grid border-t border-rule" aria-label="The five layers">
               {LAYERS.map((l, i) => (
-                <li key={l.id} className={`flex items-baseline justify-between border-b border-rule py-3 transition-colors ${used.includes(l.id) ? "text-fg" : "text-fg-3"}`}>
+                <li key={l.id} data-reveal style={{ ["--rd" as string]: `${i * 70}ms` }} className={`flex items-baseline justify-between border-b border-rule py-3 transition-colors duration-500 ${used.includes(l.id) ? "text-fg" : "text-fg-3"}`}>
                   <span className="text-[15px]">
+                    <span className="mr-3 inline-block h-2 w-2 rounded-full align-middle transition-shadow duration-500" style={{ background: l.color, boxShadow: used.includes(l.id) ? `0 0 12px ${l.color}` : "none", opacity: used.includes(l.id) ? 1 : 0.35 }} />
                     <span className="data mr-3 text-fg-3">L{i + 1}</span>
                     {l.label}
                   </span>
-                  <span className="label">{used.includes(l.id) ? "In use" : "—"}</span>
+                  <span className="label" style={{ color: used.includes(l.id) ? l.color : undefined }}>{used.includes(l.id) ? "In use" : "—"}</span>
                 </li>
               ))}
             </ol>
@@ -67,7 +68,7 @@ export default function Architecture() {
               <Tabs.Trigger
                 key={s.slug}
                 value={s.slug}
-                className="min-h-11 border border-rule px-5 text-[14px] text-fg-2 transition-colors hover:border-fg hover:text-fg data-[state=active]:border-fg data-[state=active]:bg-fg data-[state=active]:text-ink"
+                className="min-h-11 border border-rule px-5 text-[14px] text-fg-2 transition-colors hover:border-cyan hover:text-cyan data-[state=active]:border-cyan data-[state=active]:bg-cyan data-[state=active]:text-ink"
               >
                 {s.name}
               </Tabs.Trigger>
@@ -77,7 +78,7 @@ export default function Architecture() {
             <Tabs.Content key={s.slug} value={s.slug} className="grid gap-6 outline-none">
               <div className="flex flex-wrap items-baseline justify-between gap-4">
                 <p className="max-w-[60ch] text-fg-2">{s.summary}</p>
-                <Link href={`/work/${s.slug}`} className="text-[14px] text-fg">
+                <Link href={`/work/${s.slug}`} className="text-[14px] text-cyan hover:underline">
                   Read the case study →
                 </Link>
               </div>

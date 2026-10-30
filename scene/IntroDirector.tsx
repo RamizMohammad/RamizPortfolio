@@ -17,6 +17,8 @@ export default function IntroDirector({ reduced }: { reduced: boolean }) {
     const bootShown = document.documentElement.dataset.bootInitial !== "skip";
     const delay = bootShown ? Math.max(0, 1.6 - performance.now() / 1000) : 0.1;
     signals.intro = 0;
+    // Keep real time even if the first frames are slow, so the entrance never stalls.
+    gsap.ticker.lagSmoothing(0);
     const tween = gsap.to(signals, {
       intro: 1,
       duration: 2.8,

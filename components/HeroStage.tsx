@@ -13,8 +13,9 @@ export default function HeroStage() {
 
   return (
     <div
-      className="relative hidden cursor-grab touch-pan-y select-none active:cursor-grabbing md:col-span-5 md:block lg:col-span-6"
+      className="relative hidden cursor-grab [@media(hover:hover)_and_(pointer:fine)]:cursor-none touch-pan-y select-none active:cursor-grabbing md:col-span-5 md:block lg:col-span-6"
       aria-hidden="true"
+      data-cursor="drag"
       onPointerDown={(e) => {
         start.current = { x: e.clientX, moved: false };
         signals.dragging = true;
