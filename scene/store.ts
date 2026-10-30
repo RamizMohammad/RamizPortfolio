@@ -23,13 +23,13 @@ export type BeatId = (typeof BEAT_ORDER)[number];
 const form = (id: BeatId) => BEAT_ORDER.indexOf(id);
 
 export const BEATS: Record<BeatId, Pose> = {
-  hero: { form: form("hero"), x: 0, y: 0.03, rotY: -0.6, rotX: 0.12, scale: 0.68, opacity: 1 },
-  about: { form: form("about"), x: -0.5, y: 0, rotY: 0.25, rotX: 0.05, scale: 0.95, opacity: 1 },
-  systems: { form: form("systems"), x: 0, y: -0.08, rotY: -0.3, rotX: 0.5, scale: 0.8, opacity: 1 },
-  architecture: { form: form("architecture"), x: -0.5, y: 0.04, rotY: 0.35, rotX: 0.12, scale: 0.7, opacity: 1 },
-  timeline: { form: form("timeline"), x: -0.5, y: 0, rotY: 0.18, rotX: 0.16, scale: 0.72, opacity: 1 },
-  stack: { form: form("stack"), x: 0, y: -0.06, rotY: -0.6, rotX: 0.15, scale: 0.85, opacity: 1 },
-  contact: { form: form("contact"), x: 0, y: -0.27, rotY: -0.7, rotX: 0.1, scale: 0.6, opacity: 1 },
+  hero: { form: form("hero"), x: 0, y: -0.1, rotY: -0.6, rotX: 0.12, scale: 0.72, opacity: 1 },
+  about: { form: form("about"), x: -0.5, y: 0.02, rotY: 0.25, rotX: 0.05, scale: 0.5, opacity: 1 },
+  systems: { form: form("systems"), x: 0, y: -0.08, rotY: -0.3, rotX: 0.58, scale: 0.62, opacity: 1 },
+  architecture: { form: form("architecture"), x: -0.5, y: 0.04, rotY: 0.35, rotX: 0.12, scale: 0.5, opacity: 1 },
+  timeline: { form: form("timeline"), x: -0.48, y: 0.0, rotY: 0.18, rotX: 0.16, scale: 0.46, opacity: 1 },
+  stack: { form: form("stack"), x: 0, y: 0.05, rotY: -0.6, rotX: 0.15, scale: 0.62, opacity: 1 },
+  contact: { form: form("contact"), x: 0, y: -0.22, rotY: -0.7, rotX: 0.1, scale: 0.45, opacity: 1 },
 };
 
 /**
@@ -37,7 +37,7 @@ export const BEATS: Record<BeatId, Pose> = {
  * slides right so pieces lifted by hovering a row stay in view beside it.
  */
 export const SUB_BEATS: Partial<Record<BeatId, { id: string; pose: Partial<Pose> }>> = {
-  systems: { id: "systems-list", pose: { x: 0.62, y: 0.02, rotY: -0.5, scale: 0.7 } },
+  systems: { id: "systems-list", pose: { x: 0.58, y: 0.0, rotY: -0.5, scale: 0.45 } },
 };
 
 export const target: Pose = { ...BEATS.hero };

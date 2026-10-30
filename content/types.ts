@@ -1,13 +1,13 @@
 /** The five layers of the system core. Every system, node and stack item maps onto one of them. */
 export type Layer = "interface" | "api" | "automation" | "data" | "infra";
 
-/** Each layer has its own ink colour, like a set of sticker inks; shared by the page and the 3D scene. */
+/** Each layer has the colour of its crate in the 3D scene (blue, green, orange, grey, black); shared by the page. */
 export const LAYERS: { id: Layer; label: string; short: string; color: string }[] = [
   { id: "interface", label: "Interface", short: "UI", color: "#2b34c4" },
-  { id: "api", label: "API", short: "API", color: "#c4262f" },
+  { id: "api", label: "API", short: "API", color: "#0b6e4b" },
   { id: "automation", label: "Automation & AI", short: "AUTO", color: "#a63f09" },
-  { id: "data", label: "Data", short: "DATA", color: "#0b6e4b" },
-  { id: "infra", label: "Infrastructure", short: "INFRA", color: "#6b3fc0" },
+  { id: "data", label: "Data", short: "DATA", color: "#5a5e88" },
+  { id: "infra", label: "Infrastructure", short: "INFRA", color: "#1f2370" },
 ];
 
 export type Domain = "ai" | "automation" | "api" | "tools" | "apps" | "infra";

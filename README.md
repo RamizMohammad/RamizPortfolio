@@ -21,9 +21,22 @@ npm run dev
 | --- | --- |
 | `content/` | All facts on the site: profile, systems, timeline, stack, achievements. Edit here, not in components. |
 | `components/sections/` | The home page sections, server-rendered HTML. |
-| `scene/` | The 3D layer. Client-only, loaded after the page is interactive. `store.ts` holds the pose for each scroll beat. |
+| `scene/` | The 3D layer. Client-only, loaded after the page is interactive. `store.ts` holds the camera pose for each scroll beat; `formations.ts` places every object per section. |
 | `motion/ScrollDirector.tsx` | GSAP ScrollTrigger: moves the core between beats. Loads with the scene. |
 | `public/images/` | Optimised WebP images and the fallback poster of the core. |
+
+## 3D models
+
+The scene is a cast of real objects from [NVIDIA SimReady Assets](https://huggingface.co/datasets/nvidia/simready-assets) (CC BY 4.0; credits in `public/models/CREDITS.md` and the site footer). Each section arranges the same cast into its own scene in `scene/formations.ts`, and objects fly between arrangements as you scroll.
+
+SimReady ships OpenUSD with NVIDIA MDL materials, which browsers can't load, so each asset is converted:
+
+```bash
+python scripts/usd2glb.py path/to/sm_<asset>_01.usd out.glb        # needs: pip install usd-core pygltflib numpy
+npx @gltf-transform/cli optimize out.glb public/models/name.glb --compress meshopt --texture-compress webp --texture-size 512 --simplify-ratio 0.3
+```
+
+The converter maps each material's Albedo / ORM / Normal textures to glTF PBR and reads the surface type from SimReady's material names (only `metal` is metallic; `glossy` and `rough` set roughness; `glass` is transparent).
 
 ## How the 3D degrades
 

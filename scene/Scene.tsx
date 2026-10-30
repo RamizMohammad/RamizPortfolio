@@ -2,12 +2,21 @@
 
 import { ContactShadows, Environment, Lightformer } from "@react-three/drei";
 import { Canvas, useThree } from "@react-three/fiber";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import Bloom from "./Bloom";
 import IntroDirector from "./IntroDirector";
 import SystemCore from "./SystemCore";
 import { TIER_SETTINGS } from "./quality";
 import { subscribe } from "./store";
+
+/** Mounted after the models resolve: tells the page the 3D is ready, a frame later. */
+function Ready({ onReady }: { onReady: () => void }) {
+  useEffect(() => {
+    const id = requestAnimationFrame(onReady);
+    return () => cancelAnimationFrame(id);
+  }, [onReady]);
+  return null;
+}
 
 /** With reduced motion the scene renders only when something changes. */
 function DemandBridge() {
@@ -28,7 +37,6 @@ export default function Scene({ tier, reduced, onReady }: Props) {
       gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
       onCreated={({ gl }) => {
         gl.setClearColor(0x000000, 0);
-        requestAnimationFrame(onReady);
       }}
       aria-hidden="true"
     >
@@ -36,18 +44,21 @@ export default function Scene({ tier, reduced, onReady }: Props) {
       <directionalLight position={[-3, 5, 4]} intensity={2.4} color="#ffffff" />
       <directionalLight position={[3, 1.5, -4]} intensity={0.9} color="#ffd9a8" />
       <pointLight position={[-2.5, -1, 2.5]} intensity={2} distance={8} color="#fff1d6" />
-      {q.environment && (
-        <Environment resolution={64} frames={1}>
+      {/* Real PBR models need reflections: a tiny studio of light panels, rendered once, no download. */}
+      <Environment resolution={q.environment ? 64 : 32} frames={1}>
           <Lightformer form="rect" intensity={2.2} position={[0, 4, 1]} scale={[8, 1.2, 1]} color="#ffffff" />
           <Lightformer form="rect" intensity={2} position={[-5, 1, 2]} rotation-y={Math.PI / 2} scale={[4, 2, 1]} color="#fff4e2" />
           <Lightformer form="rect" intensity={2} position={[5, 0, -2]} rotation-y={-Math.PI / 2} scale={[4, 2, 1]} color="#ffe2b8" />
-        </Environment>
-      )}
-      <SystemCore packets={q.packets} labels={q.labels} reduced={reduced} />
-      {q.shadows && <ContactShadows position={[0, -1.7, 0]} opacity={0.4} scale={9} blur={2.4} far={3.5} resolution={256} color="#5a4630" />}
+      </Environment>
+      {/* The models stream in; the poster stays up until every one has loaded. */}
+      <Suspense fallback={null}>
+        <SystemCore packets={q.packets} labels={q.labels} reduced={reduced} />
+        <Ready onReady={onReady} />
+        <IntroDirector reduced={reduced} />
+      </Suspense>
+      {q.shadows && <ContactShadows position={[0, -1.25, 0]} opacity={0.38} scale={10} blur={2.2} far={4} resolution={256} color="#5a4630" />}
       {reduced && <DemandBridge />}
       {q.bloom && <Bloom />}
-      <IntroDirector reduced={reduced} />
     </Canvas>
   );
 }

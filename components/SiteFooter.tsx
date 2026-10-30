@@ -5,7 +5,15 @@ export default function SiteFooter() {
     <footer className="border-t border-rule">
       <div className="wrap flex flex-wrap items-center justify-between gap-4 py-8" style={{ paddingBottom: "max(32px, env(safe-area-inset-bottom, 0px))" }}>
         <p className="label normal-case tracking-normal">
-          © {new Date().getFullYear()} {profile.name}. Built with Next.js and three.js.
+          © {new Date().getFullYear()} {profile.name}. Built with Next.js and three.js. 3D models:{" "}
+          <a href="https://huggingface.co/datasets/nvidia/simready-assets" target="_blank" rel="noopener noreferrer" className="underline hover:text-fg">
+            NVIDIA SimReady Assets
+          </a>
+          ,{" "}
+          <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer" className="underline hover:text-fg">
+            CC BY 4.0
+          </a>
+          , converted and simplified.
         </p>
         <ul className="label flex gap-6">
           {profile.links.map((l) => (
