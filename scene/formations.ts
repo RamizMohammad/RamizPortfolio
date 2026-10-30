@@ -26,7 +26,7 @@ const CRATE_OF: Record<Layer, ModelId> = {
   infra: "crate-black",
 };
 
-type Actor = { key: string; model: ModelId | null };
+type Actor = { key: string; model: ModelId | null; sticker?: string };
 
 /** The cast. Every formation looks actors up by key; actors a formation doesn't use shrink away. */
 export const ACTORS: Actor[] = [
@@ -46,6 +46,8 @@ export const ACTORS: Actor[] = [
   ...LAYERS.map((l) => ({ key: `crate-${l.id}`, model: CRATE_OF[l.id] })),
   ...[0, 1, 2, 3].map((i) => ({ key: `long${i}`, model: "long-box" as ModelId })),
   ...[0, 1, 2, 3, 4].map((i) => ({ key: `node${i}`, model: "parcel" as ModelId })),
+  // One product box per system, wearing its real logo
+  ...systems.map((s) => ({ key: `prod-${s.slug}`, model: "cube-box" as ModelId, sticker: s.sticker })),
   // Label-only anchors (no model): timeline years
   ...[0, 1, 2, 3].map((i) => ({ key: `tick${i}`, model: null })),
 ];
@@ -69,6 +71,8 @@ export type Ctx = {
   focus: Layer[];
   system: string | null;
   arch: string | null;
+  /** Domain the Systems list is filtered by */
+  filter: string;
   now: number;
   /** Hero hover and click lift, in metres */
   boost: number;
@@ -112,34 +116,29 @@ function about(key: string): Place | null {
   }
 }
 
-/* ---------- 2 · Systems: unboxing; every project is a real object in the crate ---------- */
-const OBJECT_OF: Record<string, { key: string; s: number; r: Place["r"] }> = {
-  "supplier-invoice-accuracy": { key: "tower1", s: 0.42, r: [0, 0.2, 0] },
-  "sourcing-agent": { key: "tower2", s: 0.42, r: [0, -0.15, 0] },
-  "ocr-accuracy-report-pipeline": { key: "tower3", s: 0.42, r: [0, 0.1, 0] },
-  buddycode: { key: "keyboard", s: 0.62, r: [0, 0.2, 0] },
-  linkium: { key: "mouse", s: 0.85, r: [0, -0.4, 0] },
-  "backup-engine": { key: "cubeBox", s: 1.25, r: [0, 0.3, 0] },
-  confess: { key: "book", s: 0.85, r: [0, -0.2, 0] },
-  "confess-web": { key: "monitor1", s: 0.5, r: [-0.15, 0.25, 0] },
-  timefold: { key: "monitor2", s: 0.5, r: [-0.15, -0.3, 0] },
-};
+/* ---------- 2 · Systems: unboxing; each project is a box with its real logo ---------- */
+// Boxes sit in list order: first row of the list at the back left, last at the front right,
+// so the crate reads like the table next to it. Filtered-out systems sink back.
 const CRATE_S = 2.1; // the open box at crate size: 1.3 m wide
 function crateScene(key: string, c: Ctx): Place | null {
   if (key === "openBox") return at([0, -0.35, 0], [0, 0, 0], CRATE_S);
-  const u = systems.findIndex((s) => OBJECT_OF[s.slug]?.key === key);
-  if (u < 0) return null;
+  if (!key.startsWith("prod-")) return null;
+  const u = systems.findIndex((s) => `prod-${s.slug}` === key);
   const sys = systems[u];
-  const o = OBJECT_OF[sys.slug];
   const col = u % 3;
   const row = Math.floor(u / 3);
   const floor = -0.35 + 0.02;
   if (c.system === sys.slug) {
-    return at([0, 0.62 + Math.sin(c.time * 2) * 0.02, 0.15], [o.r[0] * 0.5, c.time * 0.9, 0], o.s * 1.7, {
-      label: sys.name, la: [0, 0.42, 0], align: "center",
+    // Lifted out, facing the viewer, swaying so the logo stays readable.
+    return at([0, 0.5 + Math.sin(c.time * 2) * 0.02, 0.2], [0.15, Math.sin(c.time * 1.4) * 0.5, 0], 2.9, {
+      label: sys.name, la: [0, 0.4, 0], align: "center",
     });
   }
-  return at([(col - 1) * 0.36, floor + Math.sin(c.time * 1.3 + u) * 0.004, (row - 1) * 0.27], o.r, o.s, { dim: c.system ? 0.35 : 1 });
+  const inFilter = c.filter === "all" || sys.domains.includes(c.filter as (typeof sys.domains)[number]);
+  const tilt = ((u * 7) % 5 - 2) * 0.06; // a little untidy, like a real packed crate
+  return at([(col - 1) * 0.36, floor - (inFilter ? 0 : 0.06), (row - 1) * 0.3], [0, tilt, 0], inFilter ? 2.3 : 1.8, {
+    dim: c.system ? 0.4 : inFilter ? 1 : 0.3,
+  });
 }
 
 /* ---------- 3 · Architecture: the five layers as coloured crates, components inside ---------- */

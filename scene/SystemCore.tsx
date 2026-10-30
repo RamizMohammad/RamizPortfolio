@@ -1,6 +1,6 @@
 "use client";
 
-import { useGLTF } from "@react-three/drei";
+import { useGLTF, useTexture } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
@@ -30,12 +30,57 @@ const SCATTER = ACTORS.map((_, i) => {
   return { p: [Math.cos(a) * r, ((i % 5) - 2) * 0.4, Math.sin(a) * r - 0.4], r: [i * 1.3, i * 2.1, i * 0.7] };
 });
 
-type ActorProps = { model: ModelId; index: number; register: (i: number, g: THREE.Group | null) => void };
+type ActorProps = { model: ModelId; index: number; sticker?: string; register: (i: number, g: THREE.Group | null) => void };
 
-/** One real object: a private copy of the model, bottom-centred so placements can stand it on surfaces. */
-function Actor({ model, index, register }: ActorProps) {
+/**
+ * A logo sticker on the front face and lid of a box. It follows its box's fade by reading the
+ * owner's dim value each frame.
+ */
+function Sticker({ src, size }: { src: string; size: THREE.Vector3 }) {
+  const map = useTexture(src, (t) => {
+    const tex = Array.isArray(t) ? t[0] : t;
+    tex.colorSpace = THREE.SRGBColorSpace;
+    tex.anisotropy = 4;
+  });
+  const group = useRef<THREE.Group>(null);
+  const mats = useRef<(THREE.MeshStandardMaterial | null)[]>([]);
+  useFrame(() => {
+    const dim = (group.current?.parent?.userData.dim as number | undefined) ?? 1;
+    mats.current.forEach((m) => {
+      if (m && Math.abs(m.opacity - dim) > 0.002) m.opacity = dim;
+    });
+  });
+  const w = Math.min(size.x, size.y) * 0.8;
+  const face = (i: number) => (
+    <meshStandardMaterial
+      ref={(m) => {
+        mats.current[i] = m;
+      }}
+      map={map}
+      roughness={0.55}
+      metalness={0}
+      transparent
+      polygonOffset
+      polygonOffsetFactor={-2}
+    />
+  );
+  return (
+    <group ref={group}>
+      <mesh position={[0, size.y / 2, size.z / 2 + 0.0008]}>
+        <planeGeometry args={[w, w]} />
+        {face(0)}
+      </mesh>
+      <mesh position={[0, size.y + 0.0008, 0]} rotation-x={-Math.PI / 2}>
+        <planeGeometry args={[w, w]} />
+        {face(1)}
+      </mesh>
+    </group>
+  );
+}
+
+function Actor({ model, index, sticker, register }: ActorProps) {
   const { scene } = useGLTF(url(model), false, true) as unknown as { scene: THREE.Group };
-  const object = useMemo(() => {
+  const { object, size } = useMemo(() => {
     const copy = scene.clone(true);
     const box = new THREE.Box3().setFromObject(copy);
     const centre = box.getCenter(new THREE.Vector3());
@@ -54,9 +99,13 @@ function Actor({ model, index, register }: ActorProps) {
     wrap.userData.mats = mats;
     wrap.userData.dim = 1;
     wrap.visible = false;
-    return wrap;
+    return { object: wrap, size: box.getSize(new THREE.Vector3()) };
   }, [scene]);
-  return <primitive object={object} ref={(g: THREE.Group | null) => register(index, g)} />;
+  return (
+    <primitive object={object} ref={(g: THREE.Group | null) => register(index, g)}>
+      {sticker && <Sticker src={sticker} size={size} />}
+    </primitive>
+  );
 }
 
 type Props = { packets: number; labels: boolean; reduced: boolean };
@@ -187,7 +236,7 @@ export default function SystemCore({ packets, labels, reduced }: Props) {
     g.updateMatrixWorld();
 
     const boost = (P.hover * 0.08 + P.burst * 0.18) * wCore;
-    const ctx: Ctx = { time, focus: signals.focus, system: signals.system, arch: signals.arch, now, boost };
+    const ctx: Ctx = { time, focus: signals.focus, system: signals.system, arch: signals.arch, filter: signals.filter, now, boost };
     const labelFade = Math.abs(1 - 2 * t); // labels cross-fade through zero while objects travel
 
     ACTORS.forEach((actor, i) => {
@@ -296,7 +345,7 @@ export default function SystemCore({ packets, labels, reduced }: Props) {
 
   return (
     <group ref={root}>
-      {ACTORS.map((a, i) => (a.model ? <Actor key={a.key} model={a.model} index={i} register={register} /> : null))}
+      {ACTORS.map((a, i) => (a.model ? <Actor key={a.key} model={a.model} index={i} sticker={a.sticker} register={register} /> : null))}
       <lineSegments geometry={links}>
         <lineBasicMaterial ref={linkMat} color="#c4262f" transparent opacity={0} toneMapped={false} />
       </lineSegments>

@@ -4,11 +4,11 @@ import Link from "next/link";
 import ChapterHead from "@/components/ChapterHead";
 import CurvedLed from "@/components/CurvedLed";
 import { taglines } from "@/content/personality";
-import { useMemo, useState, useSyncExternalStore } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { DOMAIN_LAYERS } from "@/content/layers";
 import { systems } from "@/content/systems";
 import { DOMAINS, type Domain } from "@/content/types";
-import { setFocus, setSystem } from "@/scene/store";
+import { setFocus, setSystem, setSystemFilter } from "@/scene/store";
 
 const noop = () => () => {};
 const readDomainParam = () => new URLSearchParams(window.location.search).get("domain");
@@ -21,6 +21,9 @@ export default function SystemsLab() {
   const fromUrl = useSyncExternalStore(noop, readDomainParam, () => null);
   const [chosen, setFilter] = useState<Domain | "all" | null>(null);
   const filter = chosen ?? (fromUrl && domains.some((x) => x.id === fromUrl) ? (fromUrl as Domain) : "all");
+
+  // The 3D crate mirrors the list: boxes outside the filter sink back.
+  useEffect(() => setSystemFilter(filter), [filter]);
 
   const choose = (d: Domain | "all") => {
     setFilter(d);

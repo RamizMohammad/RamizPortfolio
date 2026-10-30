@@ -48,6 +48,8 @@ export const signals = {
   focus: [] as Layer[],
   /** Slug of the system hovered in the Systems Lab */
   system: null as string | null,
+  /** Domain the Systems Lab list is filtered by ("all" shows everything) */
+  filter: "all" as string,
   /** Slug of the system selected in the Architecture tabs */
   arch: null as string | null,
   pointer: { x: 0, y: 0 },
@@ -83,6 +85,10 @@ export function setFocus(layers: Layer[]) {
 }
 export function setSystem(slug: string | null) {
   signals.system = slug;
+  emit();
+}
+export function setSystemFilter(domain: string) {
+  signals.filter = domain;
   emit();
 }
 export function setArch(slug: string | null) {

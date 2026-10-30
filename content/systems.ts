@@ -9,6 +9,7 @@ export const systems: System[] = [
     stack: ["Python"],
     shipsAs: "Internal · Moglix",
     internal: true,
+    sticker: "/images/stickers/moglix.webp",
   },
   {
     slug: "sourcing-agent",
@@ -18,6 +19,7 @@ export const systems: System[] = [
     stack: ["Python", "Agentic AI"],
     shipsAs: "Internal · Moglix",
     internal: true,
+    sticker: "/images/stickers/moglix.webp",
   },
   {
     slug: "ocr-accuracy-report-pipeline",
@@ -27,6 +29,7 @@ export const systems: System[] = [
     stack: ["Python", "OCR"],
     shipsAs: "Internal · Moglix",
     internal: true,
+    sticker: "/images/stickers/moglix.webp",
   },
   {
     slug: "buddycode",
@@ -37,6 +40,7 @@ export const systems: System[] = [
     shipsAs: "Web app",
     links: [{ label: "buddycode.online", href: "https://www.buddycode.online" }],
     logo: "/images/logos/buddycode.webp",
+    sticker: "/images/stickers/buddycode.webp",
     points: [
       "Several people edit the same file at once and see each other's cursors.",
       "Edits travel over WebSocket between the browser editor and a Flask server.",
@@ -70,6 +74,7 @@ export const systems: System[] = [
     shipsAs: "Desktop app",
     links: [{ label: "linkium.space", href: "https://www.linkium.space" }],
     logo: "/images/logos/linkium.webp",
+    sticker: "/images/stickers/linkium.webp",
     points: [
       "Pairs two devices and keeps a live connection between them.",
       "Moves files and messages over a WebSocket link.",
@@ -102,6 +107,7 @@ export const systems: System[] = [
     shipsAs: "Desktop release v1.0",
     links: [{ label: "Release v1.0 on GitHub", href: "https://github.com/RamizMohammad/Backup_Engine/releases/tag/v1.0" }],
     logo: "/images/logos/backup-engine.webp",
+    sticker: "/images/stickers/backup-engine.webp",
     points: [
       "Hashes files to detect what changed since the last run.",
       "Writes compressed snapshots of the folders you choose.",
@@ -134,6 +140,7 @@ export const systems: System[] = [
     shipsAs: "Android · Google Play",
     links: [{ label: "Google Play", href: "https://play.google.com/store/apps/details?id=in.mohammad.ramiz.confess" }],
     logo: "/images/logos/confess.webp",
+    sticker: "/images/stickers/confess.webp",
     points: [
       "Real-time Firebase listeners update the feed instantly.",
       "Cloud Functions handle content moderation.",
@@ -149,6 +156,7 @@ export const systems: System[] = [
     shipsAs: "Web",
     links: [{ label: "confess.mohammadramiz.in", href: "https://confess.mohammadramiz.in/" }],
     logo: "/images/logos/confess-web.webp",
+    sticker: "/images/stickers/confess-web.webp",
   },
   {
     slug: "timefold",
@@ -159,6 +167,7 @@ export const systems: System[] = [
     shipsAs: "Web app",
     links: [{ label: "timefold.space", href: "https://www.timefold.space/" }],
     logo: "/images/logos/timefold.webp",
+    sticker: "/images/stickers/timefold.webp",
   },
 ];
 

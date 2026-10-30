@@ -35,6 +35,8 @@ export type System = {
   internal?: boolean;
   links?: { label: string; href: string }[];
   logo?: string;
+  /** Square logo sticker shown on this system's box in the 3D crate */
+  sticker?: string;
   points?: string[];
   architecture?: { caption: string; nodes: ArchNode[]; edges: ArchEdge[] };
 };
