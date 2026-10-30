@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { profile } from "@/content/profile";
 
 const NAV = [
+  { id: "about", label: "About" },
   { id: "systems", label: "Systems" },
   { id: "architecture", label: "Architecture" },
   { id: "timeline", label: "Timeline" },
@@ -50,7 +51,7 @@ export default function SiteHeader() {
           RAMIZ
         </Link>
 
-        <nav aria-label="Main" className="hidden md:block">
+        <nav aria-label="Main" className="hidden lg:block">
           <ul className="flex items-center gap-7 text-[14px]">
             {NAV.map((n) => (
               <li key={n.id}>
@@ -82,7 +83,7 @@ export default function SiteHeader() {
 
         <button
           type="button"
-          className="flex h-11 w-11 items-center justify-center border border-rule md:hidden"
+          className="flex h-11 w-11 items-center justify-center border border-rule lg:hidden"
           aria-label="Open menu"
           aria-expanded={open}
           onClick={() => setOpen(true)}

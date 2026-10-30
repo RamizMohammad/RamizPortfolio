@@ -1,4 +1,5 @@
 import BootSequence from "@/components/BootSequence";
+import About from "@/components/sections/About";
 import Architecture from "@/components/sections/Architecture";
 import Contact from "@/components/sections/Contact";
 import Hero from "@/components/sections/Hero";
@@ -14,6 +15,7 @@ export default function Home() {
       <SceneLayer />
       <main id="main" className="page">
         <Hero />
+        <About />
         <SystemsLab />
         <Architecture />
         <Timeline />

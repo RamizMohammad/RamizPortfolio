@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import ArchitectureDiagram from "@/components/ArchitectureDiagram";
 import { featuredSystems } from "@/content/systems";
 import { LAYERS, type Layer } from "@/content/types";
-import { setFocus } from "@/scene/store";
+import { setArch, setFocus } from "@/scene/store";
 
 const layersOf = (slug: string) => [...new Set(featuredSystems.find((s) => s.slug === slug)?.architecture?.nodes.map((n) => n.layer) ?? [])];
 
@@ -22,6 +22,7 @@ export default function Architecture() {
     const io = new IntersectionObserver(([e]) => {
       inView.current = e.isIntersecting;
       setFocus(e.isIntersecting ? layersOf(active) : []);
+      setArch(active);
     }, { rootMargin: "-30% 0px -30% 0px" });
     io.observe(el);
     return () => io.disconnect();
