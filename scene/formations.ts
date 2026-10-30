@@ -46,14 +46,10 @@ const SIZES = LAYERS.map((_, i) => ({ w: 1.75 + i * 0.13, d: 1.2 + i * 0.08 }));
 const gapFor = (e: number) => 0.05 + e * 0.62;
 export const slabY = (i: number, e: number) => ((LAYER_BLOCKS - 1) / 2 - i) * (THICK + gapFor(e));
 
-const CYAN = "#3be8ff";
-const VIOLET = "#a08bff";
-/** i of n along the cyan → violet ramp */
-const ramp = (i: number, n: number) => {
-  const t = n <= 1 ? 0 : i / (n - 1);
-  const a = [0x3b, 0xe8, 0xff], b = [0xb3, 0x8b, 0xff];
-  return "#" + a.map((v, k) => Math.round(v + (b[k] - v) * t).toString(16).padStart(2, "0")).join("");
-};
+const CYAN = "#2b34c4";
+const VIOLET = "#c4262f";
+/** Sticker inks, cycled: each unit gets the next one */
+const ramp = (i: number) => LAYERS[i % LAYERS.length].color;
 export const blockColor = (i: number, b: Block) => b.color ?? (i < LAYER_BLOCKS ? LAYERS[i].color : CYAN);
 
 const HIDDEN = (): Block => ({ p: [0, 0, 0], s: [0.0001, 0.0001, 0.0001], r: [0, 0, 0], lit: 0, edge: 0 });
@@ -94,7 +90,7 @@ function about(i: number, c: Ctx): Block {
  * hardware shaped like what it is. The system hovered in the Lab lifts out and turns.
  */
 const CRATE = { w: 2.3, d: 1.6, h: 0.82, y: -0.42 };
-const TAPE = "#ffd84a";
+const TAPE = "#d99a00";
 type Kind = "blade" | "phone" | "screen" | "keyboard" | "router" | "usb";
 const KIND: Record<string, Kind> = {
   "supplier-invoice-accuracy": "blade",
@@ -153,7 +149,7 @@ function crate(i: number, c: Ctx): Block {
     s: hot ? [shape.s[0] * 1.5, shape.s[1] * 1.5, shape.s[2] * 1.5] : shape.s,
     r: hot ? [shape.r[0] * 0.5, c.time * 0.9, 0] : shape.r,
     lit: hot ? 1 : 0,
-    color: ramp(u, systems.length),
+    color: ramp(u),
     edge: !any || hot ? 0.95 : 0.3,
     label: hot ? sys.name : undefined,
     la: [0, shape.s[1] * 0.75 + 0.18, 0],

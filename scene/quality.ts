@@ -18,6 +18,6 @@ export function detectTier(): Tier {
 }
 
 export const TIER_SETTINGS = {
-  high: { dpr: [1, 2] as [number, number], packets: 16, shadows: true, environment: true, labels: true, bloom: true },
+  high: { dpr: [1, 2] as [number, number], packets: 16, shadows: true, environment: true, labels: true, bloom: false },
   low: { dpr: [1, 1.5] as [number, number], packets: 10, shadows: false, environment: false, labels: false, bloom: false },
 } as const;

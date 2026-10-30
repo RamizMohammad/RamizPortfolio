@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import ChapterHead from "@/components/ChapterHead";
 import CurvedLed from "@/components/CurvedLed";
 import { taglines } from "@/content/personality";
 import { useMemo, useState, useSyncExternalStore } from "react";
@@ -33,25 +34,23 @@ export default function SystemsLab() {
 
   return (
     <section id="systems" aria-labelledby="systems-title" className="border-t border-rule py-24 md:py-32">
-      <div className="wrap grid md:grid-cols-12">
-      <div className="grid gap-10 md:col-span-8 lg:col-span-7">
-        <div className="grid gap-6">
-          <div>
-            <p className="label eyebrow" data-reveal>Index of work</p>
-            <CurvedLed text="Unboxing my······" className="-mb-4 mt-2 w-[min(100%,460px)]" />
-            <h2 id="systems-title" className="display text-[clamp(44px,7vw,96px)]" data-reveal="mask">
-              Systems Lab
-            </h2>
-            <p className="mt-5 grid gap-1 text-[15px]" data-reveal style={{ ["--rd" as string]: "200ms" }}>
-              <span className="tape tape-line" style={{ ["--tilt" as string]: "-1.5deg" }}>{taglines.systems[0]}</span>
-              <span className="tape tape-line ml-5" style={{ ["--tilt" as string]: "1deg" }}>{taglines.systems[1]}</span>
-            </p>
-          </div>
-          <p className="max-w-[46ch] text-fg-2" data-reveal style={{ ["--rd" as string]: "120ms" }}>
+      <div className="wrap grid gap-10">
+        <ChapterHead n={1} kicker={taglines.chapters.systems} title="Systems Lab" id="systems-title">
+          <p className="grid justify-items-center gap-1 text-[15px]" data-reveal style={{ ["--rd" as string]: "200ms" }}>
+            <span className="tape tape-line" style={{ ["--tilt" as string]: "-1.5deg" }}>{taglines.systems[0]}</span>
+            <span className="tape tape-line" style={{ ["--tilt" as string]: "1deg" }}>{taglines.systems[1]}</span>
+          </p>
+          <p className="max-w-[52ch] text-fg-2" data-reveal style={{ ["--rd" as string]: "120ms" }}>
             Everything I have built and shipped, unpacked one piece at a time. Point at a system and it lifts out of the crate. Public systems open a case study; work done inside Moglix is listed by name only.
           </p>
+        </ChapterHead>
+
+        {/* Stage: the 3D crate opens here, under the stamped arc. */}
+        <div aria-hidden="true" className="relative hidden h-[54svh] md:block">
+          <CurvedLed text="Unboxing my······" className="absolute left-1/2 top-[2%] w-[520px] -translate-x-1/2" />
         </div>
 
+        <div id="systems-list" className="relative z-[2] grid gap-8 border-[1.5px] border-fg bg-ink p-5 shadow-[8px_8px_0_var(--color-fg)] md:w-[62%] md:p-8">
         <div role="group" aria-label="Filter systems by domain" className="flex flex-wrap gap-2">
           {[{ id: "all" as const, label: "All" }, ...domains].map((d) => (
             <button
@@ -67,7 +66,7 @@ export default function SystemsLab() {
         </div>
 
         <div className="relative overflow-x-auto">
-          <table className="w-full min-w-[620px] border-collapse text-left">
+          <table className="w-full min-w-[560px] border-collapse text-left">
             <caption className="sr-only">Systems, filtered by {filter === "all" ? "all domains" : label(filter)}</caption>
             <thead>
               <tr className="border-b border-rule">

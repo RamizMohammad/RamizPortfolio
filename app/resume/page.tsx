@@ -61,20 +61,20 @@ export default function ResumePage() {
           {/* ID card styled like an old handset, as in a physical portfolio box */}
           <aside className="grid content-start gap-8 lg:col-span-4">
             <div className="relative mx-auto w-full max-w-[320px]" data-reveal>
-              <div className="rounded-[44px] border-2 border-violet/70 bg-gradient-to-b from-[#2a2470] to-[#15123d] p-5 shadow-[0_30px_80px_-30px_var(--color-violet)]">
-                <div className="mx-auto mb-4 h-1.5 w-14 rounded-full bg-ink/60" />
-                <div className="relative aspect-[4/5] overflow-hidden rounded-2xl border-4 border-ink bg-[radial-gradient(circle_at_50%_30%,#1d2a55,#05070d)]">
+              <div className="rounded-[44px] border-2 border-fg bg-gradient-to-b from-[#5a5ee6] to-[#3438b8] p-5 shadow-[8px_10px_0_#1f2370]">
+                <div className="mx-auto mb-4 h-1.5 w-14 rounded-full bg-[#23266e]" />
+                <div className="relative aspect-[4/5] overflow-hidden rounded-2xl border-4 border-[#23266e] bg-[radial-gradient(circle_at_50%_30%,#fffaf0,#efe1c8)]">
                   <Image src="/images/portrait-cut.webp" alt={profile.portrait.alt} width={640} height={640} sizes="300px" className="absolute bottom-0 left-1/2 w-[120%] max-w-none -translate-x-1/2" />
                   <span className="tape absolute left-3 top-3 text-[11px]" style={{ ["--tilt" as string]: "-4deg" }}>
                     {profile.name}
                   </span>
                 </div>
                 <div className="mt-5 grid grid-cols-3 items-center gap-3">
-                  <span className="h-3 rounded-full bg-ink/50" />
-                  <span className="mx-auto grid h-16 w-16 place-items-center rounded-full border-2 border-violet/60 bg-[#211c5c]">
-                    <span className="h-6 w-6 rounded-full border-2 border-violet/60" />
+                  <span className="h-3 rounded-full bg-[#23266e]/60" />
+                  <span className="mx-auto grid h-16 w-16 place-items-center rounded-full border-2 border-[#23266e] bg-[#7c80f0]">
+                    <span className="h-6 w-6 rounded-full border-2 border-[#23266e]" />
                   </span>
-                  <span className="h-3 rounded-full bg-ink/50" />
+                  <span className="h-3 rounded-full bg-[#23266e]/60" />
                 </div>
               </div>
             </div>

@@ -15,7 +15,7 @@ export default function About() {
   return (
     <section id="about" aria-labelledby="about-title" className="border-t border-rule py-24 md:py-32">
       <div className="wrap grid gap-12 md:grid-cols-12">
-        <div className="grid content-start gap-12 md:col-span-7 lg:col-span-6">
+        <div className="grid content-start gap-12 md:col-span-7 md:col-start-6 lg:col-span-6 lg:col-start-7">
           <div className="flex items-end justify-between gap-6">
             <div>
               <p className="label eyebrow" data-reveal>Personal</p>

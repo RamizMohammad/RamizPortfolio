@@ -8,13 +8,13 @@ export const contentType = "image/png";
 export default function OpengraphImage() {
   return new ImageResponse(
     (
-      <div style={{ width: "100%", height: "100%", background: "linear-gradient(135deg, #05070d 0%, #0d1530 60%, #1a1240 100%)", color: "#eef3ff", display: "flex", flexDirection: "column", justifyContent: "space-between", padding: 72 }}>
-        <div style={{ fontSize: 22, letterSpacing: 4, color: "#3be8ff" }}>SOFTWARE ENGINEER · MOGLIX</div>
+      <div style={{ width: "100%", height: "100%", background: "#fbf3e6", color: "#1f2370", display: "flex", flexDirection: "column", justifyContent: "space-between", padding: 72 }}>
+        <div style={{ fontSize: 22, letterSpacing: 4, color: "#2b34c4" }}>SOFTWARE ENGINEER · MOGLIX</div>
         <div style={{ display: "flex", flexDirection: "column", fontSize: 132, fontWeight: 900, lineHeight: 0.9, letterSpacing: -6 }}>
           <span>{profile.firstName}</span>
-          <span style={{ color: "#a08bff" }}>{profile.lastName}</span>
+          <span style={{ color: "#c4262f" }}>{profile.lastName}</span>
         </div>
-        <div style={{ fontSize: 28, color: "#a3adc4" }}>Automation · Backends · APIs · Infrastructure</div>
+        <div style={{ fontSize: 28, color: "#474c86" }}>Automation · Backends · APIs · Infrastructure</div>
       </div>
     ),
     size,

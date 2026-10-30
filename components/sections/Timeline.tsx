@@ -1,18 +1,16 @@
 import { timeline } from "@/content/timeline";
+import ChapterHead from "@/components/ChapterHead";
 import { taglines } from "@/content/personality";
 
 export default function Timeline() {
   return (
     <section id="timeline" aria-labelledby="timeline-title" className="border-t border-rule py-24 md:py-32">
-      <div className="wrap grid md:grid-cols-12">
-      <div className="grid gap-14 md:col-span-8 lg:col-span-7">
-        <div>
-          <p className="label eyebrow" data-reveal>Work, products, study · bars to scale</p>
-              <p className="mt-3" data-reveal style={{ ["--rd" as string]: "80ms" }}><span className="tape text-[12px]" style={{ ["--tilt" as string]: "-2deg" }}>{taglines.timeline}</span></p>
-          <h2 id="timeline-title" className="display mt-4 text-[clamp(44px,7vw,96px)]" data-reveal="mask">
-            Timeline
-          </h2>
-        </div>
+      <div className="wrap grid gap-14">
+        <ChapterHead n={3} kicker={taglines.chapters.timeline} title="Timeline" id="timeline-title">
+          <p className="label" data-reveal><span className="tape" style={{ ["--tilt" as string]: "1.5deg" }}>{taglines.timeline}</span> · bars to scale</p>
+        </ChapterHead>
+      <div className="grid md:grid-cols-12">
+      <div className="grid gap-14 md:col-span-8 md:col-start-5 lg:col-span-7 lg:col-start-6">
         <ol className="grid border-t border-cyan/50">
           {timeline.map((t, i) => (
             <li key={`${t.org}-${t.title}`} className="grid gap-4 border-b border-rule py-8 lg:grid-cols-12 lg:gap-6" data-reveal style={{ ["--rd" as string]: `${i * 80}ms` }}>
@@ -47,6 +45,7 @@ export default function Timeline() {
             </li>
           ))}
         </ol>
+      </div>
       </div>
       </div>
     </section>

@@ -5,7 +5,7 @@ export default function CurvedLed({ text, className = "" }: { text: string; clas
       <defs>
         <path id="led-arc" d="M20 140 Q300 -20 580 140" />
       </defs>
-      <text className="led" fontSize="54" fill="var(--color-cyan)" style={{ filter: "drop-shadow(0 0 10px rgb(59 232 255 / 0.55))" }}>
+      <text className="led" fontSize="54" fill="var(--color-cyan)">
         <textPath href="#led-arc" startOffset="50%" textAnchor="middle">
           {text}
         </textPath>

@@ -25,11 +25,11 @@ export default function CopyEmail({ email }: { email: string }) {
   };
 
   return (
-    <div className="grid gap-4">
+    <div className="grid justify-items-center gap-4">
       <a href={`mailto:${email}`} className="heading block break-all text-[clamp(28px,5vw,64px)] no-underline hover:underline">
         <span ref={text}>{email}</span>
       </a>
-      <div className="flex flex-wrap items-center gap-3">
+      <div className="flex flex-wrap items-center justify-center gap-3">
         <a href={`mailto:${email}`} className="btn btn-solid">
           Write an email
         </a>

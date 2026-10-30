@@ -5,6 +5,7 @@ import { taglines } from "@/content/personality";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import ArchitectureDiagram from "@/components/ArchitectureDiagram";
+import ChapterHead from "@/components/ChapterHead";
 import { featuredSystems } from "@/content/systems";
 import { LAYERS, type Layer } from "@/content/types";
 import { setArch, setFocus } from "@/scene/store";
@@ -37,23 +38,19 @@ export default function Architecture() {
   return (
     <section ref={section} id="architecture" aria-labelledby="architecture-title" className="border-t border-rule py-24 md:py-32">
       <div className="wrap grid gap-14">
-        <div className="grid min-h-[70svh] gap-10 md:grid-cols-12">
-          <div className="flex flex-col justify-between gap-10 md:col-span-6 lg:col-span-5">
-            <div>
-              <p className="label eyebrow" data-reveal>How the parts fit</p>
-              <p className="mt-3" data-reveal style={{ ["--rd" as string]: "80ms" }}><span className="tape text-[12px]" style={{ ["--tilt" as string]: "-2deg" }}>{taglines.architecture}</span></p>
-              <h2 id="architecture-title" className="display mt-4 text-[clamp(44px,7vw,96px)]" data-reveal="mask">
-                Architecture
-              </h2>
-              <p className="mt-6 max-w-[44ch] text-fg-2" data-reveal style={{ ["--rd" as string]: "120ms" }}>
-                Every system I build sits on the same five layers. Choose a system to see which layers it uses, its components and how data moves between them.
-              </p>
-            </div>
+        <ChapterHead n={2} kicker={taglines.chapters.architecture} title="Architecture" id="architecture-title">
+          <p className="max-w-[52ch] text-fg-2" data-reveal style={{ ["--rd" as string]: "120ms" }}>
+            Every system I build sits on the same five layers. Choose a system to see which layers it uses, its components and how data moves between them.
+          </p>
+        </ChapterHead>
+        <div className="grid min-h-[78svh] gap-10 md:grid-cols-12">
+          <div className="flex flex-col justify-center gap-10 md:col-span-6 md:col-start-7 lg:col-span-5 lg:col-start-8">
+            <p className="label" data-reveal><span className="tape" style={{ ["--tilt" as string]: "-2deg" }}>{taglines.architecture}</span></p>
             <ol className="grid border-t border-rule" aria-label="The five layers">
               {LAYERS.map((l, i) => (
                 <li key={l.id} data-reveal style={{ ["--rd" as string]: `${i * 70}ms` }} className={`flex items-baseline justify-between border-b border-rule py-3 transition-colors duration-500 ${used.includes(l.id) ? "text-fg" : "text-fg-3"}`}>
                   <span className="text-[15px]">
-                    <span className="mr-3 inline-block h-2 w-2 rounded-full align-middle transition-shadow duration-500" style={{ background: l.color, boxShadow: used.includes(l.id) ? `0 0 12px ${l.color}` : "none", opacity: used.includes(l.id) ? 1 : 0.35 }} />
+                    <span className="mr-3 inline-block h-2.5 w-2.5 rounded-full align-middle ring-[1.5px] ring-fg transition-opacity duration-500" style={{ background: l.color, opacity: used.includes(l.id) ? 1 : 0.3 }} />
                     <span className="data mr-3 text-fg-3">L{i + 1}</span>
                     {l.label}
                   </span>

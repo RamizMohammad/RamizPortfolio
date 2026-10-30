@@ -11,7 +11,8 @@ import { LAYERS } from "@/content/types";
 import { archEdges, archNodes, blockColor, BLOCKS, FORMATIONS, formation, LAYER_BLOCKS, type Block, type Ctx } from "./formations";
 import { signals, target, type Pose } from "./store";
 
-const FACE = new THREE.Color("#0a0e1a");
+// Cardboard: every block is kraft paper; colour lives in the edges and the lit faces.
+const FACE = new THREE.Color("#e7bf8c");
 const colA = new THREE.Color();
 const colB = new THREE.Color();
 const tint = new THREE.Color();
@@ -122,7 +123,7 @@ export default function SystemCore({ packets, labels, reduced }: Props) {
     labelEls.current = Array.from({ length: BLOCKS }, () => {
       const el = document.createElement("div");
       el.className = "label";
-      el.style.cssText = "position:absolute;left:0;top:0;white-space:nowrap;color:#3be8ff;opacity:0;will-change:transform;text-shadow:0 0 12px currentColor";
+      el.style.cssText = "position:absolute;left:0;top:0;white-space:nowrap;color:#1f2370;opacity:0;will-change:transform;background:#ffd84a;padding:3px 7px;box-shadow:2px 2px 0 #1f2370";
       layer.appendChild(el);
       return el;
     });
@@ -205,7 +206,8 @@ export default function SystemCore({ packets, labels, reduced }: Props) {
 
     const idle = reduced ? 0 : Math.sin(time * 0.25) * 0.12 * (1 - 0.7 * wArch);
     g.position.x = narrow ? 0 : c.x * (viewport.width / 2);
-    g.position.y = narrow ? -viewport.height * 0.2 : c.y * viewport.height;
+    // Phones: the core sits in the gap between the hero name block and the summary.
+    g.position.y = narrow ? viewport.height * 0.01 : c.y * viewport.height;
     g.rotation.y = c.rotY + idle + pointer.current.x * 0.14 + P.spin * wCore + introCam * 1.6;
     g.rotation.x = c.rotX + pointer.current.y * 0.06;
     g.scale.setScalar(c.scale * (narrow ? 0.62 : Math.min(1, viewport.width / 7.5)));
@@ -245,8 +247,8 @@ export default function SystemCore({ packets, labels, reduced }: Props) {
       colA.set(blockColor(i, A));
       colB.set(blockColor(i, B));
       colA.lerp(colB, t);
-      // Lit faces take on a dim wash of their own colour.
-      tint.copy(colA).multiplyScalar(0.2);
+      // Lit faces take on a wash of their own ink, like a coloured sticker on the box.
+      tint.copy(FACE).lerp(colA, 0.55);
       faceMats.current[i]?.color.lerpColors(FACE, tint, lit);
       const em = edgeMats.current[i];
       if (em) {
@@ -322,7 +324,7 @@ export default function SystemCore({ packets, labels, reduced }: Props) {
       sc.visible = on > 0.01;
       sc.position.y = top + (bottom - top) * Math.min(u, 1);
       if (scanLine.current) scanLine.current.opacity = on;
-      if (scanFill.current) scanFill.current.opacity = on * 0.07;
+      if (scanFill.current) scanFill.current.opacity = on * 0.35;
     }
 
     const sm = starMesh.current;
@@ -348,13 +350,13 @@ export default function SystemCore({ packets, labels, reduced }: Props) {
       {Array.from({ length: BLOCKS }, (_, i) => (
         <mesh key={i} ref={(el) => { meshes.current[i] = el; }} visible={i < LAYER_BLOCKS}>
           <boxGeometry args={[1, 1, 1]} />
-          <meshStandardMaterial ref={(m) => { faceMats.current[i] = m; }} color={FACE} roughness={0.42} metalness={0.55} />
+          <meshStandardMaterial ref={(m) => { faceMats.current[i] = m; }} color={FACE} roughness={0.92} metalness={0} />
           {/* drei's Edges draws its own fat-line material; take it from the ref to drive colour and opacity. */}
           <Edges
             threshold={20}
             ref={(e: LineSegments2 | null) => { edgeMats.current[i] = e ? (e.material as LineMaterial) : null; }}
-            color="#3be8ff"
-            lineWidth={1.4}
+            color="#1f2370"
+            lineWidth={1.6}
             transparent
             opacity={0.95}
             toneMapped={false}
@@ -364,20 +366,20 @@ export default function SystemCore({ packets, labels, reduced }: Props) {
 
       <group ref={scan} visible={false}>
         <lineLoop geometry={scanGeo}>
-          <lineBasicMaterial ref={scanLine} color="#7ff3ff" transparent opacity={0} toneMapped={false} />
+          <lineBasicMaterial ref={scanLine} color="#c4262f" transparent opacity={0} toneMapped={false} />
         </lineLoop>
         <mesh rotation-x={-Math.PI / 2}>
           <planeGeometry args={[2.6, 1.64]} />
-          <meshBasicMaterial ref={scanFill} color="#3be8ff" transparent opacity={0} blending={THREE.AdditiveBlending} depthWrite={false} side={THREE.DoubleSide} />
+          <meshBasicMaterial ref={scanFill} color="#ffd84a" transparent opacity={0} depthWrite={false} side={THREE.DoubleSide} />
         </mesh>
       </group>
 
       <lineSegments geometry={links}>
-        <lineBasicMaterial ref={linkMat} color="#a08bff" transparent opacity={0} toneMapped={false} />
+        <lineBasicMaterial ref={linkMat} color="#1f2370" transparent opacity={0} toneMapped={false} />
       </lineSegments>
       <instancedMesh ref={packetMesh} args={[undefined, undefined, packetCount]} frustumCulled={false}>
         <boxGeometry args={[0.05, 0.05, 0.05]} />
-        <meshBasicMaterial color="#7ff3ff" toneMapped={false} />
+        <meshBasicMaterial color="#c4262f" toneMapped={false} />
       </instancedMesh>
 
       <group ref={starGroup} visible={false}>
@@ -386,7 +388,7 @@ export default function SystemCore({ packets, labels, reduced }: Props) {
           <meshBasicMaterial color="#ffffff" toneMapped={false} />
         </instancedMesh>
         <lineSegments geometry={stars.lines}>
-          <lineBasicMaterial ref={starLines} color="#a08bff" transparent opacity={0} toneMapped={false} />
+          <lineBasicMaterial ref={starLines} color="#1f2370" transparent opacity={0} toneMapped={false} />
         </lineSegments>
       </group>
     </group>

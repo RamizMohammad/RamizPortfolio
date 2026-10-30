@@ -12,4 +12,11 @@ export const taglines = {
   stack: "Tools of the trade",
   contact: ["Ping me.", "I reply faster than CI."],
   resume: "Turning manual work into scripts since 2021",
+  /** Chapter openers, one per numbered section */
+  chapters: {
+    systems: "let’s open the crate first.",
+    architecture: "now, how it all fits.",
+    timeline: "how I got here.",
+    stack: "what’s in the toolbox.",
+  },
 } as const;

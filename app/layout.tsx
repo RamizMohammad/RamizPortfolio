@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   twitter: { card: "summary_large_image", creator: "@Mohammad__Ramiz" },
 };
 
-export const viewport: Viewport = { themeColor: "#05070d", colorScheme: "dark", viewportFit: "cover" };
+export const viewport: Viewport = { themeColor: "#fbf3e6", colorScheme: "light", viewportFit: "cover" };
 
 // Runs before first paint so the boot sequence never flashes for returning visitors or reduced motion.
 // data-boot-initial never changes afterwards, so CSS entrance delays can key off it safely.

@@ -13,7 +13,7 @@ export default function HeroStage() {
 
   return (
     <div
-      className="relative hidden cursor-grab [@media(hover:hover)_and_(pointer:fine)]:cursor-none touch-pan-y select-none active:cursor-grabbing md:col-span-5 md:block lg:col-span-6"
+      className="absolute left-1/2 top-[50%] z-[1] hidden h-[58vh] w-[min(72vw,820px)] -translate-x-1/2 -translate-y-1/2 cursor-grab touch-pan-y select-none active:cursor-grabbing md:block [@media(hover:hover)_and_(pointer:fine)]:cursor-none"
       aria-hidden="true"
       data-cursor="drag"
       onPointerDown={(e) => {
@@ -43,9 +43,9 @@ export default function HeroStage() {
         height={900}
         priority
         draggable={false}
-        className="core-poster pointer-events-none absolute left-1/2 top-1/2 w-[min(110%,720px)] max-w-none -translate-x-[46%] -translate-y-1/2"
+        className="core-poster pointer-events-none absolute left-1/2 top-1/2 w-[min(100%,620px)] max-w-none -translate-x-1/2 -translate-y-1/2"
       />
-      <p className="stage-hint label pointer-events-none absolute bottom-10 right-0 fade-up" style={{ ["--d" as string]: "1400ms" }}>
+      <p className="stage-hint label pointer-events-none absolute -right-24 top-1/2 fade-up" style={{ ["--d" as string]: "1400ms" }}>
         Drag to spin · Click to burst
       </p>
     </div>
