@@ -1,73 +1,37 @@
-# Welcome to your Lovable project
+# mohammadramiz.in
 
-## Project info
+Personal portfolio of Mohammad Ramiz. A monochrome site built around one 3D object, the system core: five layers (interface, API, automation, data, infrastructure) that separate as you scroll and map onto the architecture of real projects.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## Stack
 
-## How can I edit this code?
+Next.js 16 (App Router, static) · React 19 · TypeScript · Tailwind CSS 4 · React Three Fiber + Drei · GSAP ScrollTrigger · Animate UI (Radix) · Motion
 
-There are several ways of editing your application.
+## Run
 
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+```bash
+npm install
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+`npm run check` runs lint, type checks and a production build.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Where things live
 
-**Use GitHub Codespaces**
+| Path | What |
+| --- | --- |
+| `content/` | All facts on the site: profile, systems, timeline, stack, achievements. Edit here, not in components. |
+| `components/sections/` | The home page sections, server-rendered HTML. |
+| `scene/` | The 3D layer. Client-only, loaded after the page is interactive. `store.ts` holds the pose for each scroll beat. |
+| `motion/ScrollDirector.tsx` | GSAP ScrollTrigger: moves the core between beats. Loads with the scene. |
+| `public/images/` | Optimised WebP images and the fallback poster of the core. |
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## How the 3D degrades
 
-## What technologies are used for this project?
+- **High tier** (desktop): full lighting, contact shadow, layer labels.
+- **Low tier** (phones, touch, 4 cores or fewer): lower resolution, no shadow or labels, fewer packets.
+- **Off** (no WebGL or Save-Data): a still poster of the core. Every section works without 3D.
+- **Reduced motion**: no boot sequence, no scroll scrubbing; the core snaps to one still pose per section.
 
-This project is built with:
+## Adding a project
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Add an entry to `content/systems.ts`. Public entries get a case study at `/work/<slug>` automatically. Add an `architecture` block (nodes on a small grid, each tagged with a layer) to feature it in the Architecture section.
