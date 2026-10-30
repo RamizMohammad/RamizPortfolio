@@ -17,6 +17,17 @@ const PACKETS_PER_EDGE = 2;
 type Props = { packets: number; labels: boolean; reduced: boolean };
 
 const ease = (t: number) => t * t * (3 - 2 * t);
+const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+const easeOutBack = (t: number) => 1 + 2.2 * Math.pow(t - 1, 3) + 1.2 * Math.pow(t - 1, 2);
+const SWEEP_EVERY = 6;
+const SWEEP_TIME = 1.4;
+
+/** Where each block starts before the entrance: a wide deterministic cloud around the core. */
+const SCATTER = Array.from({ length: BLOCKS }, (_, i) => {
+  const a = i * 2.399963;
+  const r = 4.2 + (i % 3) * 0.9;
+  return { p: [Math.cos(a) * r, ((i % 5) - 2) * 1.3, Math.sin(a) * r - 1.5], r: [i * 1.3, i * 2.1, i * 0.7] };
+});
 const lerp3 = (a: number[], b: number[], t: number, out: number[]) => {
   out[0] = a[0] + (b[0] - a[0]) * t;
   out[1] = a[1] + (b[1] - a[1]) * t;
@@ -46,11 +57,21 @@ export default function SystemCore({ packets, labels, reduced }: Props) {
   const lastOpacity = useRef(-1);
   const dummy = useMemo(() => new THREE.Object3D(), []);
   const anchor = useMemo(() => new THREE.Vector3(), []);
+  const scan = useRef<THREE.Group>(null);
+  const scanLine = useRef<THREE.LineBasicMaterial>(null);
+  const scanFill = useRef<THREE.MeshBasicMaterial>(null);
+  // Hero physics: hover parting, click burst (a damped spring), drag spin with inertia.
+  const phys = useRef({ hover: 0, burst: 0, burstV: 0, spin: 0, spinV: 0, sweepAt: 0 });
+  const scanGeo = useMemo(() => {
+    const g = new THREE.BufferGeometry();
+    g.setAttribute("position", new THREE.Float32BufferAttribute([-1.3, 0, -0.82, 1.3, 0, -0.82, 1.3, 0, 0.82, -1.3, 0, 0.82], 3));
+    return g;
+  }, []);
   const now = useMemo(() => nowYear(), []);
   const packetCount = Math.min(packets, MAX_EDGES * PACKETS_PER_EDGE);
 
   // Current blended position of every block, reused by links and packets.
-  const live = useMemo(() => Array.from({ length: BLOCKS }, () => ({ p: [0, 0, 0], s: [1, 1, 1], r: [0, 0, 0] })), []);
+  const liveRef = useRef(Array.from({ length: BLOCKS }, () => ({ p: [0, 0, 0], s: [1, 1, 1], r: [0, 0, 0] })));
 
   const links = useMemo(() => {
     const g = new THREE.BufferGeometry();
@@ -101,6 +122,7 @@ export default function SystemCore({ packets, labels, reduced }: Props) {
   }, [labels, gl]);
 
   useFrame((state, dt) => {
+    const live = liveRef.current;
     const c = cur.current;
     const k = reduced ? 1 : 1 - Math.exp(-3.2 * Math.min(dt, 0.1));
     (Object.keys(c) as (keyof Pose)[]).forEach((key) => {
@@ -131,15 +153,53 @@ export default function SystemCore({ packets, labels, reduced }: Props) {
 
     const g = root.current;
     if (!g) return;
+
+    // Hero interaction, only while the core is assembled.
+    const wCore = weight(0) + weight(FORMATIONS - 1);
+    const P = phys.current;
+    const step = Math.min(dt, 1 / 30);
+    if (!reduced) {
+      if (signals.bursts > 0) {
+        P.burstV += 4.2 * signals.bursts;
+        signals.bursts = 0;
+      }
+      P.burstV += (-38 * P.burst - 6 * P.burstV) * step;
+      P.burst += P.burstV * step;
+      if (signals.dragging) P.spinV = (signals.dragDelta * 0.012) / Math.max(step, 1 / 120);
+      else P.spinV *= Math.exp(-2.2 * step);
+      signals.dragDelta = 0;
+      P.spin += P.spinV * step;
+      if (!signals.dragging && Math.abs(P.spinV) < 0.4) P.spin *= Math.exp(-0.8 * step);
+    }
+
+    // Cursor near the core parts its layers.
+    anchor.set(0, 0, 0);
+    g.localToWorld(anchor).project(state.camera);
+    const aspect = size.width / size.height;
+    const dist = Math.hypot((signals.pointer.x - anchor.x) * aspect, -signals.pointer.y - anchor.y);
+    const near = signals.pointerActive && !narrow ? 1 - THREE.MathUtils.smoothstep(dist, 0.12, 0.6) : 0;
+    P.hover += (near - P.hover) * (reduced ? 1 : 0.08);
+
+    // Entrance: blocks fly in from the cloud while the camera pulls in.
+    const intro = signals.intro;
+    const introCam = 1 - easeOutCubic(intro);
+    state.camera.position.z = 7.2 + introCam * 5.5;
+    state.camera.position.y = 0.9 + introCam * 1.4;
+    if (signals.landed) {
+      P.sweepAt = time;
+      signals.landed = false;
+    }
+
     const idle = reduced ? 0 : Math.sin(time * 0.25) * 0.12 * (1 - 0.7 * wArch);
     g.position.x = narrow ? 0 : c.x * (viewport.width / 2);
     g.position.y = narrow ? -viewport.height * 0.2 : c.y * viewport.height;
-    g.rotation.y = c.rotY + idle + pointer.current.x * 0.14;
+    g.rotation.y = c.rotY + idle + pointer.current.x * 0.14 + P.spin * wCore + introCam * 1.6;
     g.rotation.x = c.rotX + pointer.current.y * 0.06;
     g.scale.setScalar(c.scale * (narrow ? 0.62 : Math.min(1, viewport.width / 7.5)));
     g.updateMatrixWorld();
 
-    const ctx: Ctx = { time, focus: signals.focus, system: signals.system, arch: signals.arch, now };
+    const boost = (P.hover * 0.3 + P.burst) * wCore;
+    const ctx: Ctx = { time, focus: signals.focus, system: signals.system, arch: signals.arch, now, boost };
     const labelFade = Math.abs(1 - 2 * t); // labels cross-fade through zero while blocks travel
 
     for (let i = 0; i < BLOCKS; i++) {
@@ -149,6 +209,17 @@ export default function SystemCore({ packets, labels, reduced }: Props) {
       lerp3(A.p, B.p, t, L.p);
       lerp3(A.s, B.s, t, L.s);
       lerp3(A.r, B.r, t, L.r);
+      if (intro < 1) {
+        const u = THREE.MathUtils.clamp((intro - i * 0.035) / 0.55, 0, 1);
+        const sp = SCATTER[i];
+        const k2 = easeOutBack(u);
+        const k3 = easeOutCubic(u);
+        for (let a = 0; a < 3; a++) {
+          L.p[a] = sp.p[a] + (L.p[a] - sp.p[a]) * k2;
+          L.r[a] = sp.r[a] + (L.r[a] - sp.r[a]) * k3;
+          L.s[a] *= 0.35 + 0.65 * k3;
+        }
+      }
 
       const m = meshes.current[i];
       if (m) {
@@ -171,7 +242,7 @@ export default function SystemCore({ packets, labels, reduced }: Props) {
           labelText.current[i] = text;
           el.textContent = text;
         }
-        const op = text ? labelFade * (1 - wStack) : 0;
+        const op = text ? labelFade * (1 - wStack) * intro * intro : 0;
         el.style.opacity = op.toFixed(3);
         if (op > 0.001) {
           const la = D.la ?? [0, 0, 0];
@@ -217,6 +288,20 @@ export default function SystemCore({ packets, labels, reduced }: Props) {
       pm.instanceMatrix.needsUpdate = true;
     }
 
+    // Scan line: sweeps down the assembled core when the intro lands, then every few seconds.
+    const sc = scan.current;
+    if (sc) {
+      const since = time - P.sweepAt;
+      const u = reduced ? 1 : (since % SWEEP_EVERY) / SWEEP_TIME;
+      const top = live[0].p[1] + 0.3;
+      const bottom = live[LAYER_BLOCKS - 1].p[1] - 0.3;
+      const on = u < 1 && since >= 0 ? Math.sin(u * Math.PI) * wCore * (intro >= 1 ? 1 : 0) : 0;
+      sc.visible = on > 0.01;
+      sc.position.y = top + (bottom - top) * Math.min(u, 1);
+      if (scanLine.current) scanLine.current.opacity = on;
+      if (scanFill.current) scanFill.current.opacity = on * 0.07;
+    }
+
     const sm = starMesh.current;
     if (sm) {
       stars.items.forEach(({ pos: p }, i) => {
@@ -246,6 +331,16 @@ export default function SystemCore({ packets, labels, reduced }: Props) {
           </Edges>
         </mesh>
       ))}
+
+      <group ref={scan} visible={false}>
+        <lineLoop geometry={scanGeo}>
+          <lineBasicMaterial ref={scanLine} color="#ffffff" transparent opacity={0} />
+        </lineLoop>
+        <mesh rotation-x={-Math.PI / 2}>
+          <planeGeometry args={[2.6, 1.64]} />
+          <meshBasicMaterial ref={scanFill} color="#ffffff" transparent opacity={0} blending={THREE.AdditiveBlending} depthWrite={false} side={THREE.DoubleSide} />
+        </mesh>
+      </group>
 
       <lineSegments geometry={links}>
         <lineBasicMaterial ref={linkMat} color="#f4f4f1" transparent opacity={0} />

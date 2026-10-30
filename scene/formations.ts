@@ -34,6 +34,8 @@ export type Ctx = {
   system: string | null;
   arch: string | null;
   now: number;
+  /** Extra explode on the assembled core from hover and clicks */
+  boost: number;
 };
 
 const THICK = 0.16;
@@ -56,7 +58,7 @@ function slab(i: number, e: number, focus: Layer[]): Block {
 
 /** 0 · Hero and 6 · Contact: the assembled core. */
 function core(i: number, c: Ctx, e = 0.1): Block {
-  return i < LAYER_BLOCKS ? slab(i, e, []) : HIDDEN();
+  return i < LAYER_BLOCKS ? slab(i, Math.max(-0.07, e + c.boost), []) : HIDDEN();
 }
 
 /** 1 · About: the layers stand up as a fanned set of profile cards; interests orbit them. */

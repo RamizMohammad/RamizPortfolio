@@ -23,7 +23,7 @@ export type BeatId = (typeof BEAT_ORDER)[number];
 const form = (id: BeatId) => BEAT_ORDER.indexOf(id);
 
 export const BEATS: Record<BeatId, Pose> = {
-  hero: { form: form("hero"), x: 0.56, y: 0, rotY: -0.6, rotX: 0, scale: 1, opacity: 1 },
+  hero: { form: form("hero"), x: 0.56, y: -0.06, rotY: -0.6, rotX: 0, scale: 1, opacity: 1 },
   about: { form: form("about"), x: 0.5, y: 0, rotY: -0.25, rotX: 0.05, scale: 0.95, opacity: 1 },
   systems: { form: form("systems"), x: 0.64, y: 0, rotY: -0.5, rotX: 0.08, scale: 0.85, opacity: 1 },
   architecture: { form: form("architecture"), x: 0.52, y: 0, rotY: -0.3, rotX: 0.12, scale: 0.85, opacity: 1 },
@@ -43,6 +43,16 @@ export const signals = {
   /** Slug of the system selected in the Architecture tabs */
   arch: null as string | null,
   pointer: { x: 0, y: 0 },
+  /** True while a mouse is over the page; touch never drives hover effects */
+  pointerActive: false,
+  /** Entrance progress: 0 blocks scattered → 1 assembled. Stays 1 when there is no intro. */
+  intro: 1,
+  /** Set when the intro lands, so the scan line sweeps right then */
+  landed: false,
+  /** Hero interaction: horizontal drag in pixels since the last frame, drag state, pending clicks */
+  dragDelta: 0,
+  dragging: false,
+  bursts: 0,
 };
 
 type Listener = () => void;

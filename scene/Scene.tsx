@@ -3,6 +3,8 @@
 import { ContactShadows, Environment, Lightformer } from "@react-three/drei";
 import { Canvas, useThree } from "@react-three/fiber";
 import { useEffect } from "react";
+import Bloom from "./Bloom";
+import IntroDirector from "./IntroDirector";
 import SystemCore from "./SystemCore";
 import { TIER_SETTINGS } from "./quality";
 import { subscribe } from "./store";
@@ -30,6 +32,7 @@ export default function Scene({ tier, reduced, onReady }: Props) {
       }}
       aria-hidden="true"
     >
+      {q.bloom && <color attach="background" args={["#0a0a0a"]} />}
       <ambientLight intensity={0.25} />
       <directionalLight position={[-3, 5, 4]} intensity={2.4} />
       <directionalLight position={[3, 1.5, -4]} intensity={1.4} />
@@ -43,6 +46,8 @@ export default function Scene({ tier, reduced, onReady }: Props) {
       <SystemCore packets={q.packets} labels={q.labels} reduced={reduced} />
       {q.shadows && <ContactShadows position={[0, -1.7, 0]} opacity={0.55} scale={9} blur={2.6} far={3.5} resolution={256} color="#000000" />}
       {reduced && <DemandBridge />}
+      {q.bloom && <Bloom />}
+      <IntroDirector reduced={reduced} />
     </Canvas>
   );
 }

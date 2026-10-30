@@ -24,7 +24,8 @@ export const metadata: Metadata = {
 export const viewport: Viewport = { themeColor: "#0a0a0a", colorScheme: "dark", viewportFit: "cover" };
 
 // Runs before first paint so the boot sequence never flashes for returning visitors or reduced motion.
-const bootGate = `try{var d=document.documentElement;if(sessionStorage.getItem('ramiz-boot')||matchMedia('(prefers-reduced-motion: reduce)').matches)d.dataset.boot='skip'}catch(e){}`;
+// data-boot-initial never changes afterwards, so CSS entrance delays can key off it safely.
+const bootGate = `try{var d=document.documentElement;if(sessionStorage.getItem('ramiz-boot')||matchMedia('(prefers-reduced-motion: reduce)').matches){d.dataset.boot='skip';d.dataset.bootInitial='skip'}}catch(e){}`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

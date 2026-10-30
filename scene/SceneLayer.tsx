@@ -31,6 +31,7 @@ export default function SceneLayer() {
 
     const onMove = (e: PointerEvent) => {
       if (e.pointerType !== "mouse") return;
+      signals.pointerActive = true;
       signals.pointer.x = (e.clientX / window.innerWidth) * 2 - 1;
       signals.pointer.y = (e.clientY / window.innerHeight) * 2 - 1;
     };

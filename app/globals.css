@@ -88,3 +88,30 @@ html[data-scene="on"] .core-poster { opacity: 0 }
 
 /* Grid children may shrink below their content, so wide tables and diagrams scroll inside their own box. */
 .grid > * { min-width: 0 }
+
+/* Hero entrance. Pure CSS so the text never waits for JavaScript; it starts after the boot
+   sequence on a first visit and almost immediately afterwards. */
+:root { --boot-delay: 1500ms }
+html[data-boot-initial="skip"] { --boot-delay: 120ms }
+.reveal { display: block; overflow-x: visible; overflow-y: clip; padding-bottom: 0.08em; margin-bottom: -0.08em }
+.reveal > span { display: block; animation: rise 1100ms cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: calc(var(--d, 0ms) + var(--boot-delay)) }
+.fade-up { animation: fade-up 900ms cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: calc(var(--d, 0ms) + var(--boot-delay)) }
+@keyframes rise { from { transform: translateY(108%) } to { transform: none } }
+@keyframes fade-up { from { opacity: 0; transform: translateY(14px) } to { opacity: 1; transform: none } }
+html[data-scene="off"] .stage-hint { display: none }
+
+/* Film grain: a fine moving texture over everything, for the printed-ink feel. */
+body::after {
+  content: ""; position: fixed; inset: -50%; z-index: 90; pointer-events: none; opacity: 0.055;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain 900ms steps(6) infinite;
+}
+@keyframes grain {
+  0% { transform: translate(0, 0) } 20% { transform: translate(-3%, 2%) } 40% { transform: translate(2%, -3%) }
+  60% { transform: translate(-2%, -1%) } 80% { transform: translate(3%, 3%) } 100% { transform: translate(0, 0) }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal > span, .fade-up { animation: none }
+  body::after { animation: none }
+}

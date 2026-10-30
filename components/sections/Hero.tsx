@@ -1,5 +1,7 @@
-import Image from "next/image";
+import HeroStage from "@/components/HeroStage";
 import { profile } from "@/content/profile";
+
+const d = (ms: number) => ({ ["--d" as string]: `${ms}ms` });
 
 export default function Hero() {
   return (
@@ -7,15 +9,21 @@ export default function Hero() {
       <div className="wrap grid min-h-[calc(100svh-64px)] grid-cols-1 md:grid-cols-12">
         <div className="flex flex-col justify-between gap-12 py-14 md:col-span-7 md:py-20 lg:col-span-6">
           <div>
-            <p className="label">
+            <p className="label fade-up" style={d(0)}>
               {profile.role} · {profile.company}
             </p>
             <h1 id="hero-title" className="display mt-6 text-[clamp(40px,11.5vw,148px)]">
-              {profile.firstName}
-              <span className="block text-fg-3">{profile.lastName}</span>
+              <span className="reveal">
+                <span style={d(80)}>{profile.firstName}</span>
+              </span>
+              <span className="reveal text-fg-3">
+                <span style={d(200)}>{profile.lastName}</span>
+              </span>
             </h1>
-            <p className="mt-8 max-w-[44ch] text-[18px] leading-[1.55] text-fg-2 md:text-[19px]">{profile.summary}</p>
-            <div className="mt-10 flex flex-wrap gap-3">
+            <p className="fade-up mt-8 max-w-[44ch] text-[18px] leading-[1.55] text-fg-2 md:text-[19px]" style={d(520)}>
+              {profile.summary}
+            </p>
+            <div className="fade-up mt-10 flex flex-wrap gap-3" style={d(680)}>
               <a href="#systems" className="btn btn-solid">
                 Explore systems <span aria-hidden="true">→</span>
               </a>
@@ -24,7 +32,7 @@ export default function Hero() {
               </a>
             </div>
           </div>
-          <ul className="label flex flex-wrap gap-x-6 gap-y-2" aria-label="Focus areas">
+          <ul className="label fade-up flex flex-wrap gap-x-6 gap-y-2" style={d(860)} aria-label="Focus areas">
             <li>Greater Noida, India</li>
             <li>Python</li>
             <li>FastAPI</li>
@@ -33,17 +41,7 @@ export default function Hero() {
             <li>Android</li>
           </ul>
         </div>
-        {/* The 3D core renders behind this column. The poster stands in until it loads, or when 3D is off. */}
-        <div className="relative hidden md:col-span-5 md:block lg:col-span-6" aria-hidden="true">
-          <Image
-            src="/images/core-poster.webp"
-            alt=""
-            width={900}
-            height={900}
-            priority
-            className="core-poster absolute left-1/2 top-1/2 w-[min(110%,720px)] max-w-none -translate-x-[46%] -translate-y-1/2"
-          />
-        </div>
+        <HeroStage />
       </div>
     </section>
   );
