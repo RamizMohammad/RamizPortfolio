@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import { signals } from "./store";
 
 /**
- * The entrance: blocks fly in from a wide cloud and assemble the core. Runs once, only when
+ * The entrance: the camera swoops down from above the town onto the square. Runs once, only when
  * the visitor starts at the top of the page, and waits for the boot sequence to finish.
  */
 export default function IntroDirector({ reduced }: { reduced: boolean }) {
@@ -24,9 +24,6 @@ export default function IntroDirector({ reduced }: { reduced: boolean }) {
       duration: 2.8,
       delay,
       ease: "none",
-      onComplete: () => {
-        signals.landed = true;
-      },
     });
     return () => {
       tween.kill();

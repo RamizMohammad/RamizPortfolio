@@ -1,8 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import ChapterHead from "@/components/ChapterHead";
-import CurvedLed from "@/components/CurvedLed";
 import { taglines } from "@/content/personality";
 import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { DOMAIN_LAYERS } from "@/content/layers";
@@ -22,7 +22,7 @@ export default function SystemsLab() {
   const [chosen, setFilter] = useState<Domain | "all" | null>(null);
   const filter = chosen ?? (fromUrl && domains.some((x) => x.id === fromUrl) ? (fromUrl as Domain) : "all");
 
-  // The 3D crate mirrors the list: boxes outside the filter sink back.
+  // The street mirrors the list: kiosks outside the filter sink into the ground.
   useEffect(() => setSystemFilter(filter), [filter]);
 
   const choose = (d: Domain | "all") => {
@@ -33,27 +33,27 @@ export default function SystemsLab() {
     window.history.replaceState(null, "", url);
   };
 
-  const rows = systems.filter((s) => filter === "all" || s.domains.includes(filter));
+  // Same order as the street: public systems kiosk by kiosk, then the Moglix building.
+  const rows = [...systems.filter((s) => !s.internal), ...systems.filter((s) => s.internal)].filter((s) => filter === "all" || s.domains.includes(filter));
+
+  const lift = (slug: string | null, domains: Domain[] = []) => {
+    setFocus(domains.flatMap((d) => DOMAIN_LAYERS[d]));
+    setSystem(slug);
+  };
 
   return (
-    <section id="systems" aria-labelledby="systems-title" className="border-t border-rule py-24 md:py-32">
-      <div className="wrap grid gap-10">
+    <section id="systems" aria-labelledby="systems-title" className="stop">
+      <div className="grid gap-9">
         <ChapterHead n={1} kicker={taglines.chapters.systems} title="Systems Lab" id="systems-title">
-          <p className="grid justify-items-center gap-1 text-[15px]" data-reveal style={{ ["--rd" as string]: "200ms" }}>
+          <p className="flex flex-wrap gap-2 text-[14px]" data-reveal style={{ ["--rd" as string]: "200ms" }}>
             <span className="tape tape-line" style={{ ["--tilt" as string]: "-1.5deg" }}>{taglines.systems[0]}</span>
             <span className="tape tape-line" style={{ ["--tilt" as string]: "1deg" }}>{taglines.systems[1]}</span>
           </p>
           <p className="max-w-[52ch] text-fg-2" data-reveal style={{ ["--rd" as string]: "120ms" }}>
-            Everything I have built and shipped, unpacked one piece at a time. Point at a system and it lifts out of the crate. Public systems open a case study; work done inside Moglix is listed by name only.
+            Everything I have built and shipped. Each public system has its own kiosk on the street: point at one here or there and it lights up. Work done inside Moglix is listed by name only.
           </p>
         </ChapterHead>
 
-        {/* Stage: the 3D crate opens here, under the stamped arc. */}
-        <div aria-hidden="true" className="relative hidden h-[54svh] md:block">
-          <CurvedLed text="Unboxing my······" className="absolute left-1/2 top-[2%] w-[520px] -translate-x-1/2" />
-        </div>
-
-        <div id="systems-list" className="relative z-[2] grid gap-8 border-[1.5px] border-fg bg-ink p-5 shadow-[8px_8px_0_var(--color-fg)] md:w-[62%] md:p-8">
         <div role="group" aria-label="Filter systems by domain" className="flex flex-wrap gap-2">
           {[{ id: "all" as const, label: "All" }, ...domains].map((d) => (
             <button
@@ -61,58 +61,54 @@ export default function SystemsLab() {
               type="button"
               aria-pressed={filter === d.id}
               onClick={() => choose(d.id)}
-              className="min-h-10 border border-rule px-4 text-[13px] text-fg-2 transition-colors hover:border-cyan hover:text-cyan aria-pressed:border-cyan aria-pressed:bg-cyan aria-pressed:text-ink"
+              className="min-h-10 border-[1.5px] border-fg px-4 text-[13px] text-fg transition-colors hover:bg-tape aria-pressed:bg-fg aria-pressed:text-ink"
             >
               {d.label}
             </button>
           ))}
         </div>
 
-        <div className="relative overflow-x-auto">
-          <table className="w-full min-w-[560px] border-collapse text-left">
-            <caption className="sr-only">Systems, filtered by {filter === "all" ? "all domains" : label(filter)}</caption>
-            <thead>
-              <tr className="border-b border-rule">
-                <th scope="col" className="label pb-3 pr-4 font-medium">System</th>
-                <th scope="col" className="label pb-3 pr-4 font-medium">Domain</th>
-                <th scope="col" className="label pb-3 pr-4 font-medium">Ships as</th>
-                <th scope="col" className="pb-3"><span className="sr-only">Open</span></th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((s, i) => (
-                <tr
-                  key={s.slug}
-                  className="group relative border-b border-rule transition-colors hover:bg-panel/80 focus-within:bg-panel/80"
-                  data-reveal
-                  style={{ ["--rd" as string]: `${Math.min(i, 6) * 50}ms` }}
-                  onPointerEnter={() => { setFocus(s.domains.flatMap((d) => DOMAIN_LAYERS[d])); setSystem(s.slug); }}
-                  onPointerLeave={() => { setFocus([]); setSystem(null); }}
-                  onFocus={() => { setFocus(s.domains.flatMap((d) => DOMAIN_LAYERS[d])); setSystem(s.slug); }}
-                  onBlur={() => { setFocus([]); setSystem(null); }}
-                >
-                  <th scope="row" className="py-5 pr-4 align-top font-normal">
-                    {s.internal ? (
-                      <span className="title text-[20px] text-fg">{s.name} <span className="label ml-1 align-middle text-violet-soft">Internal</span></span>
-                    ) : (
-                      <Link href={`/work/${s.slug}`} className="title text-[20px] text-fg no-underline transition-colors after:absolute after:inset-0 after:content-[''] group-hover:text-cyan focus-visible:outline-none group-focus-within:underline">
-                        {s.name}
-                      </Link>
-                    )}
-                    <p className="mt-1 max-w-[42ch] text-[14px] leading-snug text-fg-3">{s.summary}</p>
-                    <p className="data mt-2 text-[12px] text-violet-soft/90">{s.stack.join(" · ")}</p>
-                  </th>
-                  <td className="py-5 pr-4 align-top text-[14px] text-fg-2">{s.domains.map(label).join(" · ")}</td>
-                  <td className="py-5 pr-4 align-top text-[14px] text-fg-2">{s.shipsAs}</td>
-                  <td className="data py-5 text-right align-top text-cyan" aria-hidden="true">
-                    {s.internal ? "" : <span className="inline-block transition-transform group-hover:translate-x-1">→</span>}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+        <ul className="grid border-t-[1.5px] border-fg" aria-label={`Systems, ${filter === "all" ? "all domains" : label(filter)}`}>
+          {rows.map((s, i) => (
+            <li
+              key={s.slug}
+              className="group relative grid grid-cols-[48px_1fr_auto] items-start gap-4 border-b border-rule py-4 transition-colors hover:bg-panel focus-within:bg-panel"
+              data-reveal
+              style={{ ["--rd" as string]: `${Math.min(i, 6) * 50}ms` }}
+              onPointerEnter={() => lift(s.slug, s.domains)}
+              onPointerLeave={() => lift(null)}
+              onFocus={() => lift(s.slug, s.domains)}
+              onBlur={() => lift(null)}
+            >
+              {s.sticker ? (
+                <Image src={s.sticker} alt="" width={48} height={48} className="mt-0.5 rounded-[10px] border-[1.5px] border-fg bg-ink" />
+              ) : (
+                <span aria-hidden="true" className="mt-0.5 h-12 w-12 rounded-[10px] border-[1.5px] border-fg bg-panel" />
+              )}
+              <div className="grid gap-1">
+                {s.internal ? (
+                  <h3 className="title text-[19px] text-fg">
+                    {s.name} <span className="label ml-1 align-middle text-violet-soft">Internal</span>
+                  </h3>
+                ) : (
+                  <h3 className="title text-[19px]">
+                    <Link href={`/work/${s.slug}`} className="text-fg no-underline transition-colors after:absolute after:inset-0 after:content-[''] group-hover:text-cyan focus-visible:outline-none group-focus-within:underline">
+                      {s.name}
+                    </Link>
+                  </h3>
+                )}
+                <p className="text-[14px] leading-snug text-fg-3">{s.summary}</p>
+                <p className="label mt-1 normal-case tracking-normal text-fg-2">
+                  {s.domains.map(label).join(" · ")} — {s.shipsAs}
+                </p>
+                <p className="data text-[12px] text-violet-soft/90">{s.stack.join(" · ")}</p>
+              </div>
+              <span className="data pt-1 text-cyan" aria-hidden="true">
+                {s.internal ? "" : <span className="inline-block transition-transform group-hover:translate-x-1">→</span>}
+              </span>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );

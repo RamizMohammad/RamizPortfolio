@@ -43,14 +43,20 @@ export default function SceneLayer() {
     if (tier === "off" || failed) document.documentElement.dataset.scene = "off";
   }, [tier, failed]);
 
-  if (!tier || tier === "off" || failed) return null;
+  const live = tier && tier !== "off" && !failed ? tier : null;
 
+  // The poster is a still of the town: it shows until WebGL is ready, and stays when 3D is off.
   return (
-    <div className="scene-layer" aria-hidden="true">
-      <ScrollDirector />
-      <SceneBoundary onError={() => setFailed(true)}>
-        <Scene tier={tier} reduced={reduced} onReady={() => (document.documentElement.dataset.scene = "on")} />
-      </SceneBoundary>
+    <div className="world" aria-hidden="true">
+      <div className="world-poster" />
+      {live && (
+        <div className="scene-layer">
+          <ScrollDirector />
+          <SceneBoundary onError={() => setFailed(true)}>
+            <Scene tier={live} reduced={reduced} onReady={() => (document.documentElement.dataset.scene = "on")} />
+          </SceneBoundary>
+        </div>
+      )}
     </div>
   );
 }

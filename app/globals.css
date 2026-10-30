@@ -77,9 +77,30 @@ a { text-underline-offset: 4px; text-decoration-thickness: 1px }
 .btn-solid:hover { background: var(--color-cyan); color: var(--color-ink); box-shadow: 0 10px 40px -8px color-mix(in oklab, var(--color-cyan) 75%, transparent), 0 0 0 1px var(--color-cyan) }
 .btn:active { transform: scale(0.97) }
 
-/* The 3D layer sits behind the page and never takes pointer events. */
-.scene-layer { position: fixed; inset: 0; z-index: 0; pointer-events: none }
-.page { position: relative; z-index: 1 }
+/* The world and the panel. The 3D town fills the screen behind; all text lives in an opaque paper
+   panel on the left (desktop) or below a fixed band of the world (phones and tablets), so text is
+   never drawn over the 3D. */
+:root { --panel-w: min(46vw, 640px); --band-h: 40svh }
+.world { position: fixed; inset: 0; z-index: 0 }
+.world-poster { position: absolute; inset: 0; background: var(--color-ink) url("/images/world-poster.webp") center / cover no-repeat; transition: opacity 600ms ease-out }
+html[data-scene="on"] .world-poster { opacity: 0 }
+.scene-layer { position: absolute; inset: 0 }
+.panel { position: relative; z-index: 1; background-color: var(--color-ink) }
+.stop { padding: 88px 40px; border-top: 1.5px solid var(--color-fg) }
+@media (min-width: 1024px) {
+  .world-poster { left: var(--panel-w); background-position: left center }
+  .panel { width: var(--panel-w); border-right: 1.5px solid var(--color-fg); box-shadow: 6px 0 0 var(--color-fg) }
+  /* Each section is a stop on the tour: tall enough that the camera rests at its place while you read. */
+  .stop { min-height: 100svh; display: grid; align-content: center; padding: 96px clamp(28px, 3.4vw, 56px) }
+  .panel ~ footer { width: var(--panel-w); position: relative; z-index: 1; background: var(--color-ink); border-right: 1.5px solid var(--color-fg); box-shadow: 6px 0 0 var(--color-fg) }
+}
+@media (max-width: 1023px) {
+  .world { top: var(--header-h); bottom: auto; height: var(--band-h); z-index: 2; border-bottom: 1.5px solid var(--color-fg) }
+  .panel { margin-top: var(--band-h) }
+  html:has(.panel) { scroll-padding-top: calc(var(--header-h) + var(--band-h) + 16px) }
+  .panel ~ footer { position: relative; z-index: 1; background: var(--color-ink) }
+  .stop { padding: 64px max(var(--gutter), 20px) }
+}
 
 /* Boot sequence: hides itself with CSS so it never blocks the page, even without JavaScript. */
 .boot {
@@ -97,10 +118,6 @@ html[data-boot="skip"] .boot { display: none }
   .btn, .btn:active { transition: none; transform: none }
 }
 
-/* Poster stands in for the 3D core until WebGL is ready, and stays when 3D is off. */
-.core-poster { transition: opacity 600ms ease-out }
-html[data-scene="on"] .core-poster { opacity: 0 }
-
 /* Grid children may shrink below their content, so wide tables and diagrams scroll inside their own box. */
 .grid > * { min-width: 0 }
 
@@ -113,7 +130,6 @@ html[data-boot-initial="skip"] { --boot-delay: 120ms }
 .fade-up { animation: fade-up 900ms cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: calc(var(--d, 0ms) + var(--boot-delay)) }
 @keyframes rise { from { transform: translateY(108%) } to { transform: none } }
 @keyframes fade-up { from { opacity: 0; transform: translateY(14px) } to { opacity: 1; transform: none } }
-html[data-scene="off"] .stage-hint { display: none }
 
 /* Film grain: a fine moving texture over everything, for the printed-ink feel. */
 body::after {
@@ -190,14 +206,6 @@ html.js [data-reveal="line"]:not(.in) { opacity: 1; transform: scaleX(0) }
 .sticker { filter: drop-shadow(0 6px 10px rgb(0 0 0 / 0.45)); cursor: grab; touch-action: none; user-select: none }
 .sticker:active { cursor: grabbing }
 
-/* Halftone: the photo shows through a field of dots */
-.halftone { -webkit-mask-image: radial-gradient(circle, #000 60%, transparent 64%); mask-image: radial-gradient(circle, #000 60%, transparent 64%); -webkit-mask-size: 3.5px 3.5px; mask-size: 3.5px 3.5px; filter: saturate(1.1) contrast(1.1) }
-
-/* Peeking portrait: starts hidden below the crate edge and pops up once the box scrolls into view */
-.peek { transform: translate(-50%, 78%); transition: transform 1000ms cubic-bezier(0.34, 1.56, 0.64, 1) 350ms }
-.peek-box.in .peek, html:not(.js) .peek { transform: translate(-50%, 0) }
-html.js .peek-box[data-reveal]:not(.in) { opacity: 1; transform: none }
-@media (prefers-reduced-motion: reduce) { .peek { transform: translate(-50%, 0); transition: none } }
 
 /* Résumé sheet: pill headers and highlighter marks */
 .pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 999px; background: var(--color-fg); color: var(--color-ink); font: 800 12px/1 var(--font-display); font-variation-settings: "wdth" 115; letter-spacing: 0.08em; text-transform: uppercase; box-shadow: 0 0 0 3px var(--color-ink), 0 0 0 4px color-mix(in oklab, var(--color-fg) 40%, transparent) }

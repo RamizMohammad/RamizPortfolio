@@ -14,7 +14,7 @@ export default function Home() {
     <>
       <BootSequence />
       <SceneLayer />
-      <main id="main" className="page">
+      <main id="main" className="panel">
         <Hero />
         <Marquee />
         <About />
