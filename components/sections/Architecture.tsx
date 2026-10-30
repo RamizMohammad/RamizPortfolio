@@ -1,6 +1,7 @@
 "use client";
 
 import { Tabs } from "@animate-ui/react/primitives/radix-ui";
+import { taglines } from "@/content/personality";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import ArchitectureDiagram from "@/components/ArchitectureDiagram";
@@ -40,6 +41,7 @@ export default function Architecture() {
           <div className="flex flex-col justify-between gap-10 md:col-span-6 lg:col-span-5">
             <div>
               <p className="label eyebrow" data-reveal>How the parts fit</p>
+              <p className="mt-3" data-reveal style={{ ["--rd" as string]: "80ms" }}><span className="tape text-[12px]" style={{ ["--tilt" as string]: "-2deg" }}>{taglines.architecture}</span></p>
               <h2 id="architecture-title" className="display mt-4 text-[clamp(44px,7vw,96px)]" data-reveal="mask">
                 Architecture
               </h2>

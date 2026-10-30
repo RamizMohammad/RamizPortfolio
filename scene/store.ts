@@ -25,7 +25,7 @@ const form = (id: BeatId) => BEAT_ORDER.indexOf(id);
 export const BEATS: Record<BeatId, Pose> = {
   hero: { form: form("hero"), x: 0.56, y: -0.06, rotY: -0.6, rotX: 0, scale: 1, opacity: 1 },
   about: { form: form("about"), x: 0.5, y: 0, rotY: -0.25, rotX: 0.05, scale: 0.95, opacity: 1 },
-  systems: { form: form("systems"), x: 0.64, y: 0, rotY: -0.5, rotX: 0.08, scale: 0.85, opacity: 1 },
+  systems: { form: form("systems"), x: 0.54, y: 0.04, rotY: -0.42, rotX: 0.5, scale: 0.78, opacity: 1 },
   architecture: { form: form("architecture"), x: 0.52, y: 0, rotY: -0.3, rotX: 0.12, scale: 0.85, opacity: 1 },
   timeline: { form: form("timeline"), x: 0.6, y: 0, rotY: -0.18, rotX: 0.16, scale: 0.78, opacity: 1 },
   stack: { form: form("stack"), x: 0.46, y: 0.02, rotY: -0.6, rotX: 0.15, scale: 0.85, opacity: 1 },

@@ -9,7 +9,8 @@ import { LAYERS, type Layer } from "@/content/types";
  * (interests, systems, architecture components, timeline entries).
  */
 export const LAYER_BLOCKS = LAYERS.length;
-export const UNIT_BLOCKS = Math.max(systems.length, profile.interestTags.length, timeline.length, 6);
+// Systems need two extra units for the crate flaps.
+export const UNIT_BLOCKS = Math.max(systems.length + 2, profile.interestTags.length, timeline.length, 6);
 export const BLOCKS = LAYER_BLOCKS + UNIT_BLOCKS;
 export const FORMATIONS = 7; // one per beat, in BEAT_ORDER
 
@@ -27,7 +28,7 @@ export type Block = {
   label?: string;
   /** Where the label sits relative to the block centre, and which way it reads */
   la?: [number, number, number];
-  align?: "left" | "right";
+  align?: "left" | "right" | "center";
 };
 
 export type Ctx = {
@@ -88,35 +89,75 @@ function about(i: number, c: Ctx): Block {
   return { p: [x, (u % 2 ? 0.45 : -0.45) + Math.sin(c.time * 0.6 + u) * 0.05, z], s: [0.14, 0.14, 0.14], r: [c.time * 0.4 + u, c.time * 0.3, 0], lit: 1, edge: 0.95, color: u % 2 ? VIOLET : CYAN, label: tags[u], la: [x > 0 ? 0.14 : -0.14, 0, 0], align: x > 0 ? "right" : "left" };
 }
 
-/** 2 · Systems: a server rack. One unit per system, in Lab order; the hovered one slides out. */
-const RACK_U = 0.19;
-const RACK_GAP = 0.06;
-const RACK_H = systems.length * (RACK_U + RACK_GAP) - RACK_GAP;
-function rack(i: number, c: Ctx): Block {
-  const w = 1.7, d = 1.05;
+/**
+ * 2 · Systems: an open crate. Its walls are the five layers; each system sits inside as a piece of
+ * hardware shaped like what it is. The system hovered in the Lab lifts out and turns.
+ */
+const CRATE = { w: 2.3, d: 1.6, h: 0.82, y: -0.42 };
+const TAPE = "#ffd84a";
+type Kind = "blade" | "phone" | "screen" | "keyboard" | "router" | "usb";
+const KIND: Record<string, Kind> = {
+  "supplier-invoice-accuracy": "blade",
+  "sourcing-agent": "blade",
+  "ocr-accuracy-report-pipeline": "blade",
+  buddycode: "keyboard",
+  linkium: "router",
+  "backup-engine": "usb",
+  confess: "phone",
+  "confess-web": "screen",
+  timefold: "screen",
+};
+const SHAPE: Record<Kind, { s: [number, number, number]; r: [number, number, number] }> = {
+  blade: { s: [0.56, 0.1, 0.36], r: [0, 0, 0] },
+  phone: { s: [0.24, 0.48, 0.05], r: [-0.25, 0.2, 0] },
+  screen: { s: [0.5, 0.34, 0.04], r: [-0.35, -0.1, 0] },
+  keyboard: { s: [0.58, 0.06, 0.24], r: [0, 0.15, 0] },
+  router: { s: [0.46, 0.1, 0.3], r: [0, -0.2, 0] },
+  usb: { s: [0.13, 0.08, 0.42], r: [0, 0.6, 0] },
+};
+function crate(i: number, c: Ctx): Block {
+  const { w, d, h, y } = CRATE;
+  const wall = (p: Block["p"], sz: Block["s"]): Block => ({ p, s: sz, r: [0, 0, 0], lit: 0, edge: 0.75 });
   if (i < LAYER_BLOCKS) {
-    // Frame: top and bottom plates, two posts.
-    if (i === 0) return { p: [0, RACK_H / 2 + 0.08, 0], s: [w + 0.2, 0.05, d + 0.1], r: [0, 0, 0], lit: 0, edge: 0.6 };
-    if (i === 4) return { p: [0, -RACK_H / 2 - 0.08, 0], s: [w + 0.2, 0.05, d + 0.1], r: [0, 0, 0], lit: 0, edge: 0.6 };
-    if (i === 1) return { p: [-(w / 2 + 0.07), 0, 0], s: [0.05, RACK_H + 0.2, d + 0.1], r: [0, 0, 0], lit: 0, edge: 0.6 };
-    if (i === 2) return { p: [w / 2 + 0.07, 0, 0], s: [0.05, RACK_H + 0.2, d + 0.1], r: [0, 0, 0], lit: 0, edge: 0.6 };
-    return HIDDEN();
+    if (i === 0) return wall([-w / 2, y, 0], [0.05, h, d]);
+    if (i === 1) return wall([w / 2, y, 0], [0.05, h, d]);
+    if (i === 2) return wall([0, y, -d / 2], [w, h, 0.05]);
+    if (i === 3) return wall([0, y - 0.18, d / 2], [w, h - 0.36, 0.05]); // lower front wall lets you see inside
+    return wall([0, y - h / 2, 0], [w, 0.05, d]);
   }
   const u = i - LAYER_BLOCKS;
+  // Two flaps hinged on the side walls, folded open outwards, edged in tape yellow.
+  if (u === systems.length || u === systems.length + 1) {
+    const side = u === systems.length ? -1 : 1;
+    const theta = 1.05 + Math.sin(c.time * 0.8 + side) * 0.04;
+    const L = 0.7;
+    return {
+      p: [side * (w / 2 + Math.sin(theta) * (L / 2)), y + h / 2 + Math.cos(theta) * (L / 2), 0],
+      s: [0.04, L, d],
+      r: [0, 0, -side * theta],
+      lit: 1,
+      edge: 0.9,
+      color: TAPE,
+    };
+  }
   const sys = systems[u];
   if (!sys) return HIDDEN();
+  const shape = SHAPE[KIND[sys.slug] ?? "blade"];
+  const col = u % 3;
+  const row = Math.floor(u / 3);
   const hot = c.system === sys.slug;
   const any = c.system !== null;
+  const rest: [number, number, number] = [(col - 1) * 0.7, y - h / 2 + 0.05 + shape.s[1] / 2 + Math.sin(c.time * 1.3 + u) * 0.015, (row - 1) * 0.46];
   return {
-    p: [0, RACK_H / 2 - RACK_U / 2 - u * (RACK_U + RACK_GAP), hot ? 0.55 : 0],
-    s: [w, RACK_U, d],
-    r: [0, 0, 0],
+    p: hot ? [rest[0] * 0.5, y + h / 2 + 0.75, rest[2] * 0.3 + 0.25] : rest,
+    s: hot ? [shape.s[0] * 1.5, shape.s[1] * 1.5, shape.s[2] * 1.5] : shape.s,
+    r: hot ? [shape.r[0] * 0.5, c.time * 0.9, 0] : shape.r,
     lit: hot ? 1 : 0,
     color: ramp(u, systems.length),
     edge: !any || hot ? 0.95 : 0.3,
-    label: sys.name,
-    la: [-w / 2 - 0.16, 0, d / 2],
-    align: "left",
+    label: hot ? sys.name : undefined,
+    la: [0, shape.s[1] * 0.75 + 0.18, 0],
+    align: "center",
   };
 }
 
@@ -183,7 +224,7 @@ export function formation(f: number, i: number, c: Ctx): Block {
   switch (f) {
     case 0: return core(i, c);
     case 1: return about(i, c);
-    case 2: return rack(i, c);
+    case 2: return crate(i, c);
     case 3: return architecture(i, c);
     case 4: return timelineForm(i, c);
     case 5: return stackForm(i);

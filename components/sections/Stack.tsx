@@ -1,4 +1,5 @@
 import { stack } from "@/content/stack";
+import { taglines } from "@/content/personality";
 import { LAYERS } from "@/content/types";
 
 export default function Stack() {
@@ -7,6 +8,7 @@ export default function Stack() {
       <div className="wrap grid gap-14">
         <div className="grid min-h-[50svh] content-start gap-6 md:w-1/2">
           <p className="label eyebrow" data-reveal>Technology</p>
+              <p className="mt-3" data-reveal style={{ ["--rd" as string]: "80ms" }}><span className="tape text-[12px]" style={{ ["--tilt" as string]: "-2deg" }}>{taglines.stack}</span></p>
           <h2 id="stack-title" className="display text-[clamp(44px,7vw,96px)]" data-reveal="mask">
             Stack
           </h2>

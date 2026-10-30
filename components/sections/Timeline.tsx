@@ -1,4 +1,5 @@
 import { timeline } from "@/content/timeline";
+import { taglines } from "@/content/personality";
 
 export default function Timeline() {
   return (
@@ -7,6 +8,7 @@ export default function Timeline() {
       <div className="grid gap-14 md:col-span-8 lg:col-span-7">
         <div>
           <p className="label eyebrow" data-reveal>Work, products, study · bars to scale</p>
+              <p className="mt-3" data-reveal style={{ ["--rd" as string]: "80ms" }}><span className="tape text-[12px]" style={{ ["--tilt" as string]: "-2deg" }}>{taglines.timeline}</span></p>
           <h2 id="timeline-title" className="display mt-4 text-[clamp(44px,7vw,96px)]" data-reveal="mask">
             Timeline
           </h2>

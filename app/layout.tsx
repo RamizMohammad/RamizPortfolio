@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Archivo, Geist, Geist_Mono } from "next/font/google";
+import { Archivo, Doto, Geist, Geist_Mono } from "next/font/google";
 import Cursor from "@/components/Cursor";
 import RevealObserver from "@/components/RevealObserver";
 import SiteFooter from "@/components/SiteFooter";
@@ -10,6 +10,7 @@ import "./globals.css";
 const archivo = Archivo({ subsets: ["latin"], axes: ["wdth"], variable: "--font-archivo", display: "swap" });
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist", display: "swap" });
 const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono", display: "swap" });
+const doto = Doto({ subsets: ["latin"], axes: ["ROND"], variable: "--font-doto", display: "swap" });
 
 const description =
   "Mohammad Ramiz is a software engineer at Moglix building Python automation, backends, APIs and infrastructure, plus the Android and web apps on top.";
@@ -31,7 +32,7 @@ const bootGate = `document.documentElement.classList.add('js');try{var d=documen
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${archivo.variable} ${geist.variable} ${geistMono.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${archivo.variable} ${geist.variable} ${geistMono.variable} ${doto.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: bootGate }} />
       </head>

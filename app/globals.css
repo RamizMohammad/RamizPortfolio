@@ -12,6 +12,9 @@
   --color-cyan: #3be8ff;
   --color-violet: #a08bff;
   --color-violet-soft: #b3a2ff;
+  /* Highlighter tape: ink on it is 14.9:1 */
+  --color-tape: #ffd84a;
+  --font-led: var(--font-doto), var(--font-geist-mono), monospace;
 
   --font-display: var(--font-archivo), "Helvetica Neue", Arial, sans-serif;
   --font-sans: var(--font-geist), "Helvetica Neue", Arial, sans-serif;
@@ -168,3 +171,31 @@ html.js [data-reveal="line"]:not(.in) { opacity: 1; transform: scaleX(0) }
   html.js [data-reveal], html.js [data-reveal]:not(.in) { opacity: 1; transform: none; clip-path: none; transition: none }
   .cursor-ring, .cursor-dot { display: none }
 }
+
+/* Blueprint grid under everything: engineering paper, faint enough to never compete with text. */
+.page { background-image: linear-gradient(to right, color-mix(in oklab, var(--color-cyan) 6%, transparent) 1px, transparent 1px), linear-gradient(to bottom, color-mix(in oklab, var(--color-cyan) 6%, transparent) 1px, transparent 1px); background-size: 48px 48px; background-position: -1px -1px }
+
+/* LED dot-matrix display type */
+.led { font-family: var(--font-led); font-weight: 900; font-variation-settings: "ROND" 100; letter-spacing: 0.02em; line-height: 0.95; text-transform: uppercase }
+.led-glow { color: var(--color-cyan); text-shadow: 0 0 18px color-mix(in oklab, var(--color-cyan) 55%, transparent) }
+
+/* Highlighter tape: a yellow strip, slightly crooked, with a sheen like real tape */
+.tape { display: inline-block; padding: 0.18em 0.55em; background: linear-gradient(180deg, color-mix(in oklab, var(--color-tape) 92%, white) 0%, var(--color-tape) 55%, color-mix(in oklab, var(--color-tape) 88%, #c79a00) 100%); color: var(--color-ink); font-weight: 600; transform: rotate(var(--tilt, -1.5deg)); box-shadow: 0 6px 18px -8px rgb(0 0 0 / 0.6); clip-path: polygon(0.6% 6%, 4% 0, 30% 4%, 62% 0, 96% 3%, 100% 10%, 99.4% 92%, 97% 100%, 70% 96%, 35% 100%, 3% 97%, 0 88%) }
+.tape-line { display: block; width: fit-content }
+
+/* Die-cut sticker look: thick light outline and a soft drop shadow */
+.sticker { filter: drop-shadow(0 6px 10px rgb(0 0 0 / 0.45)); cursor: grab; touch-action: none; user-select: none }
+.sticker:active { cursor: grabbing }
+
+/* Halftone: the photo shows through a field of dots */
+.halftone { -webkit-mask-image: radial-gradient(circle, #000 60%, transparent 64%); mask-image: radial-gradient(circle, #000 60%, transparent 64%); -webkit-mask-size: 3.5px 3.5px; mask-size: 3.5px 3.5px; filter: saturate(1.15) contrast(1.05) brightness(1.2) drop-shadow(0 0 18px rgb(59 232 255 / 0.25)) }
+
+/* Peeking portrait: starts hidden below the crate edge and pops up once the box scrolls into view */
+.peek { transform: translate(-50%, 78%); transition: transform 1000ms cubic-bezier(0.34, 1.56, 0.64, 1) 350ms }
+.peek-box.in .peek, html:not(.js) .peek { transform: translate(-50%, 0) }
+html.js .peek-box[data-reveal]:not(.in) { opacity: 1; transform: none }
+@media (prefers-reduced-motion: reduce) { .peek { transform: translate(-50%, 0); transition: none } }
+
+/* Résumé sheet: pill headers and highlighter marks */
+.pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 999px; background: var(--color-violet); color: var(--color-ink); font: 800 12px/1 var(--font-display); font-variation-settings: "wdth" 115; letter-spacing: 0.08em; text-transform: uppercase; box-shadow: 0 0 0 3px var(--color-ink), 0 0 0 4px color-mix(in oklab, var(--color-violet) 60%, transparent) }
+mark, .mark { background: linear-gradient(transparent 12%, var(--color-tape) 12%, var(--color-tape) 88%, transparent 88%); color: var(--color-ink); padding: 0 0.2em; border-radius: 2px; -webkit-box-decoration-break: clone; box-decoration-break: clone }

@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import CurvedLed from "@/components/CurvedLed";
+import { taglines } from "@/content/personality";
 import { useMemo, useState, useSyncExternalStore } from "react";
 import { DOMAIN_LAYERS } from "@/content/layers";
 import { systems } from "@/content/systems";
@@ -36,12 +38,17 @@ export default function SystemsLab() {
         <div className="grid gap-6">
           <div>
             <p className="label eyebrow" data-reveal>Index of work</p>
-            <h2 id="systems-title" className="display mt-4 text-[clamp(44px,7vw,96px)]" data-reveal="mask">
+            <CurvedLed text="Unboxing my······" className="-mb-4 mt-2 w-[min(100%,460px)]" />
+            <h2 id="systems-title" className="display text-[clamp(44px,7vw,96px)]" data-reveal="mask">
               Systems Lab
             </h2>
+            <p className="mt-5 grid gap-1 text-[15px]" data-reveal style={{ ["--rd" as string]: "200ms" }}>
+              <span className="tape tape-line" style={{ ["--tilt" as string]: "-1.5deg" }}>{taglines.systems[0]}</span>
+              <span className="tape tape-line ml-5" style={{ ["--tilt" as string]: "1deg" }}>{taglines.systems[1]}</span>
+            </p>
           </div>
           <p className="max-w-[46ch] text-fg-2" data-reveal style={{ ["--rd" as string]: "120ms" }}>
-            Things I have built and shipped, one rack unit each. Each public system opens a case study. Work done inside Moglix is listed by name only.
+            Everything I have built and shipped, unpacked one piece at a time. Point at a system and it lifts out of the crate. Public systems open a case study; work done inside Moglix is listed by name only.
           </p>
         </div>
 

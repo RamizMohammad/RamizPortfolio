@@ -272,7 +272,8 @@ export default function SystemCore({ packets, labels, reduced }: Props) {
           g.localToWorld(anchor).project(state.camera);
           const x = (anchor.x * 0.5 + 0.5) * size.width;
           const y = (-anchor.y * 0.5 + 0.5) * size.height;
-          el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0) translate(${D.align === "left" ? "-100%" : "0"}, -50%)`;
+          const shift = D.align === "left" ? "-100%" : D.align === "center" ? "-50%" : "0";
+          el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0) translate(${shift}, -50%)`;
         }
       }
     }

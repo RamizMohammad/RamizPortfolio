@@ -74,9 +74,9 @@ export default function SiteHeader() {
               </Link>
             </li>
             <li>
-              <a href={profile.resume} className="btn h-10 min-h-0 px-4 text-[13px]">
+              <Link href="/resume" className="btn h-10 min-h-0 px-4 text-[13px]">
                 Résumé
-              </a>
+              </Link>
             </li>
           </ul>
         </nav>
@@ -124,9 +124,9 @@ export default function SiteHeader() {
                   </Link>
                 </li>
               </ul>
-              <a href={profile.resume} className="btn btn-solid mt-8 w-full justify-center">
-                Download résumé
-              </a>
+              <Link href="/resume" onClick={() => setOpen(false)} className="btn btn-solid mt-8 w-full justify-center">
+                Résumé
+              </Link>
             </nav>
           </Drawer.Content>
         </Drawer.Portal>

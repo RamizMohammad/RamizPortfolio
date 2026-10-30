@@ -1,4 +1,6 @@
 import HeroStage from "@/components/HeroStage";
+import HeroStickers from "@/components/HeroStickers";
+import { taglines } from "@/content/personality";
 import { profile } from "@/content/profile";
 
 const d = (ms: number) => ({ ["--d" as string]: `${ms}ms` });
@@ -20,6 +22,10 @@ export default function Hero() {
                 <span style={d(200)} className="accent-text">{profile.lastName}</span>
               </span>
             </h1>
+            <p className="fade-up mt-6 grid gap-1 text-[clamp(15px,1.4vw,19px)]" style={d(380)}>
+              <span className="tape tape-line" style={{ ["--tilt" as string]: "-2deg" }}>{taglines.hero[0]}</span>
+              <span className="tape tape-line ml-6" style={{ ["--tilt" as string]: "1.5deg" }}>{taglines.hero[1]}</span>
+            </p>
             <p className="fade-up mt-8 max-w-[44ch] text-[18px] leading-[1.55] text-fg-2 md:text-[19px]" style={d(520)}>
               {profile.summary}
             </p>
@@ -43,6 +49,7 @@ export default function Hero() {
         </div>
         <HeroStage />
       </div>
+      <HeroStickers />
     </section>
   );
 }

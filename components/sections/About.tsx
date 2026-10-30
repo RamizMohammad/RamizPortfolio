@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { taglines } from "@/content/personality";
 import { profile } from "@/content/profile";
 
 const details = [
@@ -18,19 +19,31 @@ export default function About() {
           <div className="flex items-end justify-between gap-6">
             <div>
               <p className="label eyebrow" data-reveal>Personal</p>
+              <p className="mt-3" data-reveal style={{ ["--rd" as string]: "80ms" }}><span className="tape text-[12px]" style={{ ["--tilt" as string]: "-2deg" }}>{taglines.about}</span></p>
               <h2 id="about-title" className="display mt-4 text-[clamp(44px,7vw,96px)]" data-reveal="mask">
                 About
               </h2>
             </div>
-            <Image
-              src={profile.portrait.src}
-              alt={profile.portrait.alt}
-              width={profile.portrait.width}
-              height={profile.portrait.height}
-              sizes="140px"
-              className="h-28 w-28 shrink-0 border border-cyan/40 object-cover shadow-[0_0_40px_-10px_var(--color-cyan)] md:h-36 md:w-36"
-              data-reveal
-            />
+            {/* Halftone portrait peeking over the edge of a crate; rises when the section scrolls in. */}
+            <div className="peek-box relative h-36 w-44 shrink-0 md:h-48 md:w-60" data-reveal>
+              <div className="absolute inset-0 overflow-hidden">
+                <Image
+                  src="/images/portrait-cut.webp"
+                  alt={profile.portrait.alt}
+                  width={640}
+                  height={640}
+                  sizes="240px"
+                  className="peek halftone absolute left-1/2 top-2 w-[112%] max-w-none"
+                />
+              </div>
+              <div aria-hidden="true" className="absolute -inset-x-3 bottom-0 h-10 border-t-2 border-tape bg-panel shadow-[0_-12px_30px_-10px_rgb(0_0_0/0.8)]">
+                <div className="absolute inset-x-0 top-2 h-px bg-violet/40" />
+                <div className="absolute left-1/2 top-0 h-full w-14 -translate-x-1/2 bg-tape/90" />
+              </div>
+              <span className="tape absolute -right-3 -top-2 text-[12px]" style={{ ["--tilt" as string]: "6deg" }} aria-hidden="true">
+                hi, that&rsquo;s me
+              </span>
+            </div>
           </div>
 
           <p className="max-w-[52ch] text-[18px] leading-[1.6] text-fg-2" data-reveal style={{ ["--rd" as string]: "120ms" }}>

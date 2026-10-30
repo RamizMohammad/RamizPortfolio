@@ -1,3 +1,4 @@
+import { taglines } from "@/content/personality";
 import CopyEmail from "@/components/CopyEmail";
 import { profile } from "@/content/profile";
 
@@ -8,6 +9,10 @@ export default function Contact() {
         <div className="grid gap-10 md:w-[58%]">
           <div>
             <p className="label eyebrow" data-reveal>Contact</p>
+            <p className="mt-3 grid gap-1 text-[13px]" data-reveal style={{ ["--rd" as string]: "80ms" }}>
+              <span className="tape tape-line" style={{ ["--tilt" as string]: "-2deg" }}>{taglines.contact[0]}</span>
+              <span className="tape tape-line ml-4" style={{ ["--tilt" as string]: "1.5deg" }}>{taglines.contact[1]}</span>
+            </p>
             <h2 id="contact-title" className="display mt-4 text-[clamp(44px,7vw,96px)]" data-reveal="mask">
               Let&rsquo;s build <span className="accent-text">the system.</span>
             </h2>
