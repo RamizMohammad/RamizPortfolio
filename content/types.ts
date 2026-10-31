@@ -31,6 +31,8 @@ export type System = {
   domains: Domain[];
   stack: string[];
   shipsAs: string;
+  /** Where it runs; picks the IDE and device a project opens in on the home page. */
+  platform: "web" | "android" | "desktop" | "internal";
   /** Internal work has no public page or link. */
   internal?: boolean;
   links?: { label: string; href: string }[];

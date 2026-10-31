@@ -8,6 +8,7 @@ export const systems: System[] = [
     domains: ["ai", "automation"],
     stack: ["Python"],
     shipsAs: "Internal · Moglix",
+    platform: "internal",
     internal: true,
   },
   {
@@ -17,6 +18,7 @@ export const systems: System[] = [
     domains: ["ai"],
     stack: ["Python", "Agentic AI"],
     shipsAs: "Internal · Moglix",
+    platform: "internal",
     internal: true,
   },
   {
@@ -26,6 +28,7 @@ export const systems: System[] = [
     domains: ["ai", "automation"],
     stack: ["Python", "OCR"],
     shipsAs: "Internal · Moglix",
+    platform: "internal",
     internal: true,
   },
   {
@@ -35,6 +38,7 @@ export const systems: System[] = [
     domains: ["tools"],
     stack: ["Python", "Flask", "WebSocket", "CodeMirror"],
     shipsAs: "Web app",
+    platform: "web",
     links: [{ label: "buddycode.online", href: "https://www.buddycode.online" }],
     logo: "/images/logos/buddycode.webp",
     points: [
@@ -68,6 +72,7 @@ export const systems: System[] = [
     domains: ["tools"],
     stack: ["Python", "Tkinter", "WebSocket", "Networking"],
     shipsAs: "Desktop app",
+    platform: "desktop",
     links: [{ label: "linkium.space", href: "https://www.linkium.space" }],
     logo: "/images/logos/linkium.webp",
     points: [
@@ -100,6 +105,7 @@ export const systems: System[] = [
     domains: ["automation", "tools"],
     stack: ["Python", "PyQt", "Multithreading", "File hashing"],
     shipsAs: "Desktop release v1.0",
+    platform: "desktop",
     links: [{ label: "Release v1.0 on GitHub", href: "https://github.com/RamizMohammad/Backup_Engine/releases/tag/v1.0" }],
     logo: "/images/logos/backup-engine.webp",
     points: [
@@ -132,8 +138,9 @@ export const systems: System[] = [
     domains: ["apps", "api"],
     stack: ["Java", "Firebase", "Firestore", "Cloud Functions", "FCM"],
     shipsAs: "Android · Google Play",
+    platform: "android",
     links: [{ label: "Google Play", href: "https://play.google.com/store/apps/details?id=in.mohammad.ramiz.confess" }],
-    logo: "/images/logos/confess.webp",
+    logo: "/images/logos/confess-app.webp",
     screen: { src: "/images/screens/confess-app.webp", width: 1024, height: 512, kind: "phone" },
     points: [
       "Real-time Firebase listeners update the feed instantly.",
@@ -148,6 +155,7 @@ export const systems: System[] = [
     domains: ["apps", "api"],
     stack: ["React", "FastAPI", "Firebase", "Tailwind CSS"],
     shipsAs: "Web",
+    platform: "web",
     links: [{ label: "confess.mohammadramiz.in", href: "https://confess.mohammadramiz.in/" }],
     logo: "/images/logos/confess-web.webp",
     screen: { src: "/images/screens/confess-web.webp", width: 1024, height: 640, kind: "web" },
@@ -159,6 +167,7 @@ export const systems: System[] = [
     domains: ["api"],
     stack: ["Python", "FastAPI", "Data processing"],
     shipsAs: "Web app",
+    platform: "web",
     links: [{ label: "timefold.space", href: "https://www.timefold.space/" }],
     logo: "/images/logos/timefold.webp",
     screen: { src: "/images/screens/timefold.webp", width: 1024, height: 640, kind: "web" },

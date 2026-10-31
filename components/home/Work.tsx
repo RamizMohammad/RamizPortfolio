@@ -1,147 +1,165 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
-import { useMemo, useState, useSyncExternalStore } from "react";
+import { useState, useSyncExternalStore, type ReactNode } from "react";
+import SystemViewer from "@/components/work/SystemViewer";
 import { systems } from "@/content/systems";
-import { DOMAINS, type Domain, type System } from "@/content/types";
+import type { System } from "@/content/types";
 import SectionLabel from "./SectionLabel";
 
-const noop = () => () => {};
-const readDomainParam = () => new URLSearchParams(window.location.search).get("domain");
-const label = (d: Domain) => DOMAINS.find((x) => x.id === d)?.label ?? d;
-
-const publicOnes = systems.filter((s) => !s.internal);
+const pub = systems.filter((s) => !s.internal);
 const internal = systems.filter((s) => s.internal);
+const PLATFORM = { web: "Web", android: "Android", desktop: "Desktop", internal: "Internal" } as const;
 
-/** Each project sits on its own flat colour block, like a sticker sheet. */
-const PANELS = ["bg-blue", "bg-pink", "bg-lime", "bg-sun", "bg-violet", "bg-mint"];
+// Every number on the collage is counted from content/systems.ts.
+const count = (p: System["platform"]) => pub.filter((s) => s.platform === p).length;
+const python = pub.filter((s) => s.stack.some((t) => t.startsWith("Python"))).length;
 
-/** The object of each project screen: a screenshot of the live product, or its logo, on a colour block. */
-function Artifact({ s, i }: { s: System; i: number }) {
-  return (
-    <div className={`grid aspect-[16/11] place-items-center rounded-[28px] border-[1.5px] border-ink p-[7%] ${PANELS[i % PANELS.length]}`}>
-      {s.screen ? (
-        <Image
-          src={s.screen.src}
-          alt={`Screenshot of ${s.name}`}
-          width={s.screen.width}
-          height={s.screen.height}
-          sizes="(min-width: 1024px) 36vw, 84vw"
-          className="h-auto w-full rounded-[14px] border-[1.5px] border-ink"
-        />
-      ) : (
-        <div className="grid justify-items-center gap-4">
-          {s.logo && <Image src={s.logo} alt="" width={120} height={120} className="h-24 w-24 rounded-[24px] border-[1.5px] border-ink md:h-28 md:w-28" />}
-          <span className="btn-ghost btn-sm pointer-events-none">{s.name}</span>
-        </div>
-      )}
+// Collage placement: [phone layout, desktop layout] spans, a tint and a tilt for each tile.
+// Desktop rows each fill all 12 columns: [Confess 5 · Time Fold 4 · count 3], [Confess Web 5 · platforms 3 ·
+// BuddyCode 4], [Linkium 3 · Backup Engine 3 · Python 3 · Moglix 3].
+const LAYOUT: Record<string, { m: string; d: string; tone: string; rot: number }> = {
+  confess: { m: "col-span-2 row-span-3", d: "lg:col-span-5 lg:row-span-3", tone: "bg-mint", rot: -1.5 },
+  timefold: { m: "col-span-2 row-span-2", d: "lg:col-span-4 lg:row-span-3", tone: "bg-blue", rot: 1.2 },
+  "confess-web": { m: "col-span-2 row-span-2", d: "lg:col-span-5 lg:row-span-3", tone: "bg-violet", rot: -1 },
+  buddycode: { m: "col-span-1 row-span-2", d: "lg:col-span-4 lg:row-span-3", tone: "bg-pink", rot: 2 },
+  linkium: { m: "col-span-1 row-span-2", d: "lg:col-span-3 lg:row-span-2", tone: "bg-sun", rot: -2 },
+  "backup-engine": { m: "col-span-1 row-span-2", d: "lg:col-span-3 lg:row-span-2", tone: "bg-lime", rot: 1.5 },
+};
+const bySlug = (slug: string) => pub.find((s) => s.slug === slug);
+
+const noop = () => () => {};
+const readParam = () => new URLSearchParams(window.location.search).get("system");
+
+function Tile({ className, rot, i, children, onOpen, label }: { className: string; rot: number; i: number; children: ReactNode; onOpen?: () => void; label?: string }) {
+  const style = { ["--rot" as string]: `${rot}deg`, ["--rd" as string]: `${i * 70}ms` };
+  const cls = `collage-tile pop-in relative overflow-hidden rounded-[24px] border-[1.5px] border-ink ${className}`;
+  return onOpen ? (
+    <button type="button" onClick={onOpen} aria-label={label} className={`${cls} cursor-pointer text-left`} style={style} data-reveal>
+      {children}
+    </button>
+  ) : (
+    <div className={cls} style={style} data-reveal>
+      {children}
     </div>
   );
 }
 
-export default function Work() {
-  // Only offer filters that have at least one real system behind them.
-  const domains = useMemo(() => DOMAINS.filter((d) => systems.some((s) => s.domains.includes(d.id))), []);
-  // A shared link like /?domain=ai opens the list already filtered.
-  const fromUrl = useSyncExternalStore(noop, readDomainParam, () => null);
-  const [chosen, setChosen] = useState<Domain | "all" | null>(null);
-  const filter = chosen ?? (fromUrl && domains.some((x) => x.id === fromUrl) ? (fromUrl as Domain) : "all");
-  const fits = (s: System) => filter === "all" || s.domains.includes(filter);
+/** A project on the collage: its screenshot or logo, with a label bar underneath (never on top). */
+function ProjectTile({ s, i, onOpen }: { s: System; i: number; onOpen: () => void }) {
+  const l = LAYOUT[s.slug] ?? { m: "col-span-1 row-span-2", d: "lg:col-span-3 lg:row-span-2", tone: "bg-card", rot: 0 };
+  return (
+    <Tile className={`${l.m} ${l.d} ${l.tone} flex flex-col`} rot={l.rot} i={i} onOpen={onOpen} label={`Open ${s.name} in its editor`}>
+      <div className="relative min-h-0 flex-1">
+        {s.screen ? (
+          <Image src={s.screen.src} alt="" fill sizes="(min-width: 1024px) 40vw, 90vw" className={`rounded-[18px] object-cover p-3 ${s.screen.kind === "phone" ? "object-left" : "object-top"}`} />
+        ) : (
+          <div className="grid h-full place-items-center">{s.logo && <Image src={s.logo} alt="" width={96} height={96} className="h-16 w-16 rounded-[18px] border-[1.5px] border-ink md:h-20 md:w-20" />}</div>
+        )}
+      </div>
+      <div className="flex items-center justify-between gap-2 border-t-[1.5px] border-ink bg-card px-4 py-2.5">
+        <span className="t-h2 truncate !text-[20px]">{s.name}</span>
+        <span className="t-micro shrink-0 rounded-full bg-ink px-2 py-1 text-card">{PLATFORM[s.platform]}</span>
+      </div>
+    </Tile>
+  );
+}
 
-  const choose = (d: Domain | "all") => {
-    setChosen(d);
+/**
+ * Built and shipped: a collage of every project with a few counted facts, then a rail of the
+ * same projects. Clicking any project opens it in the editor it was built in, next to the device
+ * it runs on (?system=slug links straight to it).
+ */
+export default function Work() {
+  const fromUrl = useSyncExternalStore(noop, readParam, () => null);
+  const [chosen, setChosen] = useState<string | null | undefined>(undefined);
+  const open = chosen === undefined ? fromUrl : chosen;
+
+  const show = (slug: string | null) => {
+    setChosen(slug);
     const url = new URL(window.location.href);
-    if (d === "all") url.searchParams.delete("domain");
-    else url.searchParams.set("domain", d);
+    if (slug) url.searchParams.set("system", slug);
+    else url.searchParams.delete("system");
     window.history.replaceState(null, "", url);
   };
 
-  const shown = publicOnes.filter(fits);
-  const shownInternal = internal.filter(fits);
+  const rail: (Pick<System, "slug" | "name" | "platform"> & { logo?: string })[] = [...pub, { slug: "moglix", name: `Moglix ×${internal.length}`, platform: "internal" }];
+  const tile = (slug: string, i: number) => {
+    const s = bySlug(slug);
+    return s ? <ProjectTile key={slug} s={s} i={i} onOpen={() => show(slug)} /> : null;
+  };
 
   return (
-    <section id="work" aria-labelledby="work-title" className="edge">
+    <section id="work" aria-labelledby="work-title" className="edge pb-24">
       <SectionLabel n={4}>Systems</SectionLabel>
-      <div className="grid gap-8 pb-12 pt-24 lg:grid-cols-[3fr_7fr] lg:gap-[41px]">
+      <div className="grid gap-4 pb-12 pt-16 lg:grid-cols-[1fr_auto] lg:items-end">
         <h2 id="work-title" className="t-h1" data-reveal>
           Built and shipped.
         </h2>
-        <div className="grid content-end gap-8">
-          <p className="voice max-w-[34ch]" data-reveal>
-            {publicOnes.length} public systems, from a collaborative code editor to an app on Google Play, plus the internal work I do at Moglix.
-          </p>
-          <div role="group" aria-label="Filter systems by domain" className="t-label flex flex-wrap gap-x-6 gap-y-3">
-            {[{ id: "all" as const, label: "All" }, ...domains].map((d) => (
-              <button key={d.id} type="button" aria-pressed={filter === d.id} onClick={() => choose(d.id)} className={`uppercase ${filter === d.id ? "link" : "link-quiet muted hover:text-ink"}`}>
-                {d.label}
-              </button>
-            ))}
-          </div>
-        </div>
+        <p className="voice-sm muted max-w-[44ch]" data-reveal>
+          Click any project to open it where it was built: Android work in an Android IDE beside a phone, web apps in a code editor beside a browser.
+        </p>
       </div>
 
-      {shown.map((s) => (
-        <article key={s.slug} aria-labelledby={`sys-${s.slug}`} className="void dash-t">
-          <div className="grid content-start gap-5" data-reveal>
-            <p className="t-label muted">
-              {String(publicOnes.indexOf(s) + 1).padStart(2, "0")} / {String(publicOnes.length).padStart(2, "0")}
-            </p>
-            <h3 id={`sys-${s.slug}`} className="t-h1">{s.name}</h3>
-            <p className="t-label">
-              <span className="dot mr-2" /> {s.shipsAs}
-            </p>
-          </div>
-          <Link href={`/work/${s.slug}`} aria-label={`${s.name} case study`} tabIndex={-1} data-reveal style={{ ["--rd" as string]: "80ms" }}>
-            <Artifact s={s} i={publicOnes.indexOf(s)} />
-          </Link>
-          <div className="grid content-start gap-6" data-reveal style={{ ["--rd" as string]: "160ms" }}>
-            <p className="voice">{s.summary}</p>
-            <dl className="t-label grid">
-              <div className="dash-t grid grid-cols-[96px_1fr] gap-3 py-3">
-                <dt className="muted">Stack</dt>
-                <dd>{s.stack.join(" · ")}</dd>
-              </div>
-              <div className="dash-t dash-b grid grid-cols-[96px_1fr] gap-3 py-3">
-                <dt className="muted">Domain</dt>
-                <dd>{s.domains.map(label).join(" · ")}</dd>
-              </div>
-            </dl>
-            <div className="flex flex-wrap items-center gap-5">
-              <Link href={`/work/${s.slug}`} className="btn-ghost">Read case study</Link>
-              {s.links?.[0] && (
-                <a href={s.links[0].href} target="_blank" rel="noopener noreferrer" className="t-label link">
-                  {s.links[0].label} ↗
-                </a>
-              )}
-            </div>
-          </div>
-        </article>
-      ))}
-
-      {shownInternal.length > 0 && (
-        <div className="dash-t grid gap-8 py-24 lg:grid-cols-[3fr_7fr] lg:gap-[41px]">
-          <div className="grid content-start gap-4" data-reveal>
-            <h3 className="t-h1">Inside Moglix</h3>
-            <p className="voice-sm muted max-w-[34ch]">Internal systems, listed by name only.</p>
-          </div>
-          <ul className="dash-b">
-            {shownInternal.map((s) => (
-              <li key={s.slug} className="dash-t grid gap-2 py-5 md:grid-cols-[1fr_auto] md:items-baseline md:gap-6" data-reveal>
-                <div className="grid gap-2">
-                  <p className="t-h2">{s.name}</p>
-                  <p className="voice-sm muted">{s.summary}</p>
-                </div>
-                <p className="t-label muted">
-                  {s.stack.join(" · ")} — Internal
-                </p>
+      {/* Collage */}
+      <div className="grid auto-rows-[96px] grid-cols-2 gap-3 md:gap-4 lg:auto-rows-[92px] lg:grid-cols-12">
+        {tile("confess", 0)}
+        {tile("timefold", 1)}
+        <Tile className="col-span-1 row-span-2 bg-ink p-5 text-card lg:col-span-3 lg:row-span-3" rot={-1} i={2}>
+          <p className="t-display !text-[clamp(56px,7vw,120px)] text-lime">{pub.length}</p>
+          <p className="t-label">Public systems shipped</p>
+        </Tile>
+        <Tile className="col-span-1 row-span-2 bg-card p-5 lg:order-none lg:col-span-3 lg:row-span-3" rot={1} i={3}>
+          <p className="t-label mb-3">Runs on</p>
+          <ul className="grid gap-2 lg:gap-3">
+            {(["web", "android", "desktop"] as const).map((p) => (
+              <li key={p} className="grid grid-cols-[60px_1fr_auto] items-center gap-2 text-[13px] font-semibold">
+                <span>{PLATFORM[p]}</span>
+                <span className="h-3 overflow-hidden rounded-full border-[1.5px] border-ink">
+                  <span className="collage-bar block h-full bg-pink" style={{ width: `${(count(p) / pub.length) * 100}%` }} />
+                </span>
+                <span className="font-display text-[18px]">{count(p)}</span>
               </li>
             ))}
           </ul>
-        </div>
-      )}
+        </Tile>
+        {tile("confess-web", 4)}
+        {tile("buddycode", 5)}
+        {tile("linkium", 6)}
+        {tile("backup-engine", 7)}
+        <Tile className="col-span-1 row-span-2 bg-sun p-5 lg:col-span-3 lg:row-span-2" rot={-1.5} i={8}>
+          <p className="t-display !text-[clamp(48px,5vw,80px)]">
+            {python}/{pub.length}
+          </p>
+          <p className="t-label">Built with Python</p>
+        </Tile>
+        <Tile className="col-span-1 row-span-2 bg-ink p-5 text-card lg:col-span-3 lg:row-span-2" rot={1.5} i={9} onOpen={() => show("moglix")} label="Open the internal Moglix systems">
+          <p className="t-label text-lime">🔒 Inside Moglix</p>
+          <p className="t-display mt-2 !text-[clamp(48px,5vw,80px)]">{internal.length}</p>
+          <p className="t-label">Internal systems →</p>
+        </Tile>
+      </div>
 
-      {shown.length === 0 && shownInternal.length === 0 && <p className="t-label muted pb-24">Nothing in this domain yet.</p>}
+      {/* Rail */}
+      <div className="mt-20 grid gap-6" data-reveal>
+        <p className="t-label">Every system, in one line — click to open</p>
+        <ol className="relative grid grid-cols-2 gap-6 sm:grid-cols-4 lg:flex lg:justify-between">
+          <span aria-hidden="true" className="road-line absolute left-8 right-8 top-8 hidden h-[2px] bg-ink lg:block" />
+          {rail.map((s, i) => (
+            <li key={s.slug} className="relative">
+              <button type="button" onClick={() => show(s.slug)} className="group grid w-full justify-items-center gap-2 text-center">
+                <span style={{ ["--i" as string]: i }} className="road-step grid h-16 w-16 place-items-center overflow-hidden rounded-full border-[2px] border-ink bg-card transition-transform group-hover:-translate-y-1 group-hover:rotate-6">
+                  {s.logo ? <Image src={s.logo} alt="" width={64} height={64} className="h-full w-full object-cover" /> : <span className="text-[22px]">🔒</span>}
+                </span>
+                <span className="t-label group-hover:underline">{s.name}</span>
+                <span className="t-micro muted">{PLATFORM[s.platform]}</span>
+              </button>
+            </li>
+          ))}
+        </ol>
+      </div>
+
+      <SystemViewer slug={open} onClose={() => show(null)} />
     </section>
   );
 }
