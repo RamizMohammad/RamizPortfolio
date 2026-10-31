@@ -1,6 +1,7 @@
 import Image from "next/image";
 import CountUp from "@/components/CountUp";
 import Parallax from "@/components/Parallax";
+import Words from "@/components/Words";
 import { achievements } from "@/content/achievements";
 import { profile } from "@/content/profile";
 import { systems } from "@/content/systems";
@@ -37,8 +38,8 @@ export default function About() {
                 <p className="t-label muted">The person behind the systems</p>
               </div>
             </div>
-            <h2 id="about-title" className="t-display">
-              Hi, I&rsquo;m Ramiz.
+            <h2 id="about-title" className="t-display split">
+              <Words text="Hi, I’m Ramiz." />
             </h2>
             <p className="voice-sm max-w-[58ch] text-[18px]">
               I&rsquo;m a software engineer at {profile.company}, based in {profile.location}, and I like building scalable applications that solve real problems. Day to day that means REST APIs, backend systems, LLM agents, OCR and forecasting models in Python. I&rsquo;ve been building since {STATS[0].value}: my own products first, then freelance Android apps, internships at Bluestock and {profile.company}, and now the AI and Analytics team at {profile.company}, where my demand-planning work for Tata Steel won the Jungle Torchbearer Award. I build the apps on top too, mostly Android and the web.

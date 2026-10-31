@@ -1,5 +1,6 @@
 "use client";
 
+import Words from "@/components/Words";
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { moments } from "@/content/moments";
@@ -70,8 +71,8 @@ export default function Moments() {
       <div className="moments-stage edge flex flex-col">
         <SectionLabel n={2}>Moments</SectionLabel>
         <div className="grid gap-4 pb-8 pt-12 lg:grid-cols-[1fr_auto] lg:items-end lg:pb-4 lg:pt-8">
-          <h2 id="moments-title" className="t-h1" data-reveal>
-            Places I&rsquo;ve been.
+          <h2 id="moments-title" className="t-h1 split" data-reveal>
+            <Words text="Places I’ve been." />
           </h2>
           <p className="voice-sm muted max-w-[44ch]" data-reveal>
             Hackathons, an internship, a patent — the moments behind the work, oldest first.

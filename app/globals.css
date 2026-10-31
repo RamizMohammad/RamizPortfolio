@@ -254,8 +254,33 @@ html.js .medal[data-reveal] { opacity: 1; transform: none }
 @keyframes otif { from { transform: scaleX(0.714) } to { transform: scaleX(1) } }
 html[data-paused] .sparkle, html[data-paused] .award-rays { animation-play-state: paused }
 
+/* Header links: the active one sits on the sliding highlight, so its text flips to the page colour. */
+.nav-link:hover { background: color-mix(in oklab, var(--color-ink) 8%, transparent) }
+.nav-link[aria-current="true"] { color: var(--color-paper); background: transparent }
+
+/* Section headings: words rise from behind a mask, one after another. */
+html.js .split[data-reveal] { opacity: 1; transform: none }
+.split .w { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.08em; margin-bottom: -0.08em }
+.split .w > span { display: inline-block }
+html.js .split .w > span { transform: translateY(110%) rotate(5deg); transform-origin: left bottom; transition: transform 900ms cubic-bezier(0.16, 1, 0.3, 1); transition-delay: calc(var(--wi, 0) * 80ms + 60ms) }
+html.js .split.in .w > span, html.js .in .split .w > span { transform: none }
+
+/* Section labels: the text slides up and the hairline draws across. */
+html.js .section-label[data-reveal] { opacity: 1; transform: none }
+html.js .section-label .section-label-text { transform: translateY(110%); transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1) }
+html.js .section-label .section-label-line { transform: scaleX(0); transform-origin: left; transition: transform 1200ms cubic-bezier(0.65, 0, 0.35, 1) 150ms }
+html.js .section-label.in .section-label-text, html.js .section-label.in .section-label-line { transform: none }
+
+/* Mobile menu: the panel drops in, then each link rises in turn. */
+.menu { animation: menu-in 450ms cubic-bezier(0.65, 0, 0.35, 1) both }
+@keyframes menu-in { from { clip-path: inset(0 0 100% 0) } to { clip-path: inset(0 0 0 0) } }
+.menu-item > * { animation: menu-item 600ms cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: calc(var(--mi, 0) * 45ms + 200ms) }
+@keyframes menu-item { from { transform: translateY(100%); opacity: 0 } }
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto }
+  html.js .split .w > span, html.js .section-label .section-label-text, html.js .section-label .section-label-line { transform: none; transition: none }
+  .menu, .menu-item > * { animation: none }
   .medal-swing, .medal.in .medal-swing { animation: none; opacity: 1; transform: none }
   .medal:hover .medal-face, .in .trophy-star, .sparkle, .award-rays, .in .otif-fill { animation: none }
   .otif-fill { transform: none }

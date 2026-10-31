@@ -1,5 +1,6 @@
 "use client";
 
+import Words from "@/components/Words";
 import Image from "next/image";
 import { useState } from "react";
 import { profile } from "@/content/profile";
@@ -116,8 +117,8 @@ export default function Publications() {
     <section id="publications" aria-labelledby="publications-title" className="edge pb-24">
       <SectionLabel n={8}>Publications</SectionLabel>
       <div className="grid gap-4 pb-12 pt-16 lg:grid-cols-[1fr_auto] lg:items-end">
-        <h2 id="publications-title" className="t-h1" data-reveal>
-          Published.
+        <h2 id="publications-title" className="t-h1 split" data-reveal>
+          <Words text="Published." />
         </h2>
         <p className="voice-sm muted max-w-[44ch]" data-reveal>
           {sorted.length} {sorted.length === 1 ? "publication" : "publications"} · {kinds.join(", ")}. Open one for its abstract and a ready-to-paste citation.

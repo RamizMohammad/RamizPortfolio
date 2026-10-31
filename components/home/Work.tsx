@@ -1,5 +1,6 @@
 "use client";
 
+import Words from "@/components/Words";
 import Image from "next/image";
 import { useState, useSyncExternalStore, type ReactNode } from "react";
 import SystemViewer from "@/components/work/SystemViewer";
@@ -113,8 +114,8 @@ export default function Work() {
     <section id="work" aria-labelledby="work-title" className="edge pb-24">
       <SectionLabel n={4}>Systems</SectionLabel>
       <div className="grid gap-4 pb-12 pt-16 lg:grid-cols-[1fr_auto] lg:items-end">
-        <h2 id="work-title" className="t-h1" data-reveal>
-          Built and shipped.
+        <h2 id="work-title" className="t-h1 split" data-reveal>
+          <Words text="Built and shipped." />
         </h2>
         <p className="voice-sm muted max-w-[44ch]" data-reveal>
           Click any project to open it where it was built: Android work in an Android IDE beside a phone, web apps in a code editor beside a browser.

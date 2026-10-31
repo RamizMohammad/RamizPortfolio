@@ -1,5 +1,6 @@
 "use client";
 
+import Words from "@/components/Words";
 import Link from "next/link";
 import { useState } from "react";
 import ArchitectureDiagram from "@/components/ArchitectureDiagram";
@@ -21,8 +22,8 @@ export default function Architecture() {
       <SectionLabel n={5}>Architecture</SectionLabel>
       <div className="grid min-h-[100svh] content-center gap-[41px] py-24 lg:grid-cols-[3fr_7fr]">
         <div className="grid content-start gap-8">
-          <h2 id="architecture-title" className="t-h1" data-reveal>
-            Five layers, one system.
+          <h2 id="architecture-title" className="t-h1 split" data-reveal>
+            <Words text="Five layers, one system." />
           </h2>
           <p className="voice" data-reveal>
             Every system I build sits on five layers. Pick one to see how data moves.

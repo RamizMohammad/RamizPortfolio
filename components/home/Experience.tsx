@@ -1,5 +1,6 @@
 "use client";
 
+import Words from "@/components/Words";
 import { useEffect, useRef } from "react";
 import { timeline } from "@/content/timeline";
 import SectionLabel from "./SectionLabel";
@@ -50,8 +51,8 @@ export default function Experience() {
     <section id="experience" aria-labelledby="experience-title" className="edge pb-24">
       <SectionLabel n={3}>Experience</SectionLabel>
       <div className="grid gap-4 pb-14 pt-16 lg:grid-cols-[1fr_auto] lg:items-end">
-        <h2 id="experience-title" className="t-h1" data-reveal>
-          Where I&rsquo;ve worked.
+        <h2 id="experience-title" className="t-h1 split" data-reveal>
+          <Words text="Where I’ve worked." />
         </h2>
         <p className="voice-sm muted max-w-[44ch]" data-reveal>
           Building since 2021: my own products first, then freelance Android, a B.Tech in AI and ML, internships at Bluestock and Moglix, and now software engineer at Moglix.

@@ -1,4 +1,5 @@
 import Terminal from "@/components/Terminal";
+import Words from "@/components/Words";
 import { stack } from "@/content/stack";
 import { LAYERS } from "@/content/types";
 import SectionLabel from "./SectionLabel";
@@ -10,8 +11,8 @@ export default function Stack() {
       <SectionLabel n={6}>Stack</SectionLabel>
       <div className="grid gap-[41px] py-24 lg:grid-cols-[3fr_7fr]">
         <div className="grid content-start gap-8">
-          <h2 id="stack-title" className="t-h1" data-reveal>
-            Tools, by layer.
+          <h2 id="stack-title" className="t-h1 split" data-reveal>
+            <Words text="Tools, by layer." />
           </h2>
           <p className="voice" data-reveal>
             Every tool sits in the layer it works in.
