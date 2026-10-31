@@ -118,40 +118,72 @@ function Ide({ s, theme, onClose }: { s: System; theme: IdeTheme; onClose: () =>
   );
 }
 
-/** Moglix work is private: a plain terminal with the names and summaries only. */
-function InternalTerminal({ onClose }: { onClose: () => void }) {
+// One accent per card, in the site's candy colours.
+const CARD_TONES = ["#d4f25b", "#f47a9a", "#b9a6f5", "#5fd3a4", "#ffcf3a"];
+
+/** Moglix work is private: one card per system, with the details from my résumé and no links. */
+function InternalBoard({ onClose }: { onClose: () => void }) {
   return (
-    <div className="mx-auto flex h-full max-h-[720px] w-full max-w-[860px] flex-col overflow-hidden rounded-[14px] border border-[#3c3f41] bg-[#121016] font-mono text-[13px] text-[#e6e3f2]">
-      <div className="flex h-10 items-center gap-3 border-b border-[#3c3f41] px-3">
-        <span className="flex gap-1.5" aria-hidden="true">
-          <i className="h-3 w-3 rounded-full bg-[#ff5f57]" />
-          <i className="h-3 w-3 rounded-full bg-[#febc2e]" />
-          <i className="h-3 w-3 rounded-full bg-[#28c840]" />
-        </span>
-        <p className="flex-1 text-center text-[12px] text-[#a9a5bf]">moglix — internal</p>
-        <button type="button" onClick={onClose} className="grid h-7 w-7 place-items-center rounded-md text-[16px] hover:bg-white/10" aria-label="Close">
-          ×
+    <div className="mx-auto flex h-full max-h-[860px] w-full max-w-[1200px] flex-col overflow-hidden rounded-[28px] border-[1.5px] border-ink bg-paper">
+      <header className="flex items-center justify-between gap-4 border-b-[1.5px] border-ink px-6 py-4">
+        <div className="grid gap-1">
+          <p className="t-label muted">🔒 Internal · code is private</p>
+          <p className="t-h1 !text-[clamp(30px,3.4vw,48px)]">Inside Moglix</p>
+        </div>
+        <button type="button" onClick={onClose} className="btn-ghost btn-sm" aria-label="Close">
+          Close ✕
         </button>
-      </div>
-      <div className="flex-1 overflow-auto p-5 leading-[1.8]">
-        {internal.map((s, i) => (
-          <div key={s.slug} className="ide-line mb-4" style={{ ["--i" as string]: i * 3 } as CSSProperties}>
-            <p>
-              <span className="text-[#d4f25b]">$</span> cat {s.slug}/README
-            </p>
-            <p className="font-semibold">{s.name}</p>
-            <p className="text-[#a9a5bf]">{s.summary}</p>
-            {s.points?.map((p) => (
-              <p key={p} className="text-[#a9a5bf]">
-                <span className="text-[#d4f25b]">→</span> {p}
-              </p>
-            ))}
-            <p className="text-[#a9a5bf]">stack: {s.stack.join(", ")}</p>
-          </div>
-        ))}
-        <p className="ide-line text-[#f47a9a]" style={{ ["--i" as string]: 10 } as CSSProperties}>
-          🔒 Built inside Moglix — the code is private; these notes are from my résumé.
-        </p>
+      </header>
+      <div className="flex-1 overflow-auto p-4 md:p-6">
+        <ul className="grid gap-4 md:grid-cols-2">
+          {internal.map((s, i) => {
+            const tone = CARD_TONES[i % CARD_TONES.length];
+            // A highlight figure, only where the text itself states one (e.g. "below 50% to over 70%").
+            const figure = s.points?.join(" ").match(/below (\d+%) to over (\d+%)/i);
+            return (
+              <li
+                key={s.slug}
+                className="ide-line flex flex-col overflow-hidden rounded-[22px] border-[1.5px] border-ink bg-card"
+                style={{ ["--i" as string]: i * 3 } as CSSProperties}
+              >
+                <div className="flex items-start justify-between gap-3 border-b-[1.5px] border-ink px-5 py-4 text-[#121016]" style={{ background: tone }}>
+                  <div className="grid gap-1">
+                    <span className="t-micro opacity-70">{String(i + 1).padStart(2, "0")} · {s.shipsAs}</span>
+                    <h3 className="t-h2">{s.name}</h3>
+                  </div>
+                  {figure && (
+                    <span className="shrink-0 rounded-[14px] border-[1.5px] border-[#121016] bg-white px-3 py-1.5 text-center">
+                      <span className="block font-display text-[22px] leading-none">&lt;{figure[1]} → &gt;{figure[2]}</span>
+                      <span className="t-micro">OTIF</span>
+                    </span>
+                  )}
+                </div>
+                <div className="grid flex-1 content-start gap-4 p-5">
+                  <p className="voice-sm">{s.summary}</p>
+                  {s.points && (
+                    <ul className="grid gap-2 text-[14px] leading-snug">
+                      {s.points.map((pt) => (
+                        <li key={pt} className="grid grid-cols-[18px_1fr]">
+                          <span aria-hidden="true" className="font-bold" style={{ color: tone === "#d4f25b" ? "#6f8a12" : tone }}>
+                            →
+                          </span>
+                          {pt}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+                <ul className="flex flex-wrap gap-1.5 border-t-[1.5px] border-dashed border-line px-5 py-3" aria-label="Stack">
+                  {s.stack.map((t) => (
+                    <li key={t} className="t-micro rounded-full border-[1.5px] border-ink px-2.5 py-1">
+                      {t}
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            );
+          })}
+        </ul>
       </div>
     </div>
   );
@@ -180,7 +212,7 @@ export default function SystemViewer({ slug, onClose }: { slug: string | null; o
             </div>
           ) : (
             <div className="viewer-ide h-full w-full">
-              <InternalTerminal onClose={onClose} />
+              <InternalBoard onClose={onClose} />
             </div>
           )}
         </Dialog.Content>
