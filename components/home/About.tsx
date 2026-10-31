@@ -16,7 +16,7 @@ const STATS = [
   { value: String(systems.filter((s) => s.internal).length), label: "Internal systems at Moglix", tone: "bg-sun" },
   { value: String(achievements.filter((a) => a.kind === "Patent").length), label: "Patent filed", tone: "bg-blue text-card" },
   { value: String(achievements.filter((a) => a.kind === "Hackathon" || a.kind === "Competition").length), label: "Hackathons and competitions", tone: "bg-mint" },
-  { value: String(systems.filter((s) => s.shipsAs.includes("Google Play")).length), label: "App live on Google Play", tone: "bg-card" },
+  { value: String(achievements.filter((a) => a.kind === "Award").length), label: "Award at Moglix", tone: "bg-card" },
 ];
 const CHIP_TONES = ["bg-pink", "bg-lime", "bg-sun", "bg-violet", "bg-mint", "bg-card"];
 
@@ -41,12 +41,12 @@ export default function About() {
               Hi, I&rsquo;m Ramiz.
             </h2>
             <p className="voice-sm max-w-[58ch] text-[18px]">
-              I&rsquo;m a software engineer at {profile.company}, based in {profile.location}. I like the parts of software most people never see: the scripts that remove manual work, the APIs that connect systems, and the servers they run on. I&rsquo;ve been building since {STATS[0].value}, first my own products, then freelance Android apps, an internship as project lead, and now backend and agentic AI work at {profile.company}. I build the apps on top too, mostly Android and the web.
+              I&rsquo;m a software engineer at {profile.company}, based in {profile.location}, and I like building scalable applications that solve real problems. Day to day that means REST APIs, backend systems, LLM agents, OCR and forecasting models in Python. I&rsquo;ve been building since {STATS[0].value}: my own products first, then freelance Android apps, internships at Bluestock and {profile.company}, and now the AI and Analytics team at {profile.company}, where my demand-planning work for Tata Steel won the Jungle Torchbearer Award. I build the apps on top too, mostly Android and the web.
             </p>
           </div>
           <ul className="flex flex-wrap gap-2" aria-label="At a glance">
             <li className="btn-ghost btn-sm pointer-events-none">{profile.role}</li>
-            <li className="btn-ghost btn-sm pointer-events-none">{profile.education}</li>
+            <li className="btn-ghost btn-sm pointer-events-none">B.Tech CSE (AI &amp; ML) · CGPA 8.3</li>
             <li className="btn-ghost btn-sm pointer-events-none">Greater Noida, India</li>
             <li className="btn-pill btn-sm pointer-events-none">
               <span className="dot pulse !bg-lime" /> Open to work
@@ -103,10 +103,11 @@ export default function About() {
         {/* Journey */}
         <div className={`${card} pop-in grid content-start gap-8 bg-card p-7 md:p-10 lg:col-span-7`} data-reveal>
           <h3 className="t-h2">The road so far</h3>
-          <ol className="relative grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
-            <span aria-hidden="true" className="road-line absolute left-5 right-10 top-5 hidden h-[2px] bg-ink xl:block" />
+          <ol className="relative grid gap-6 sm:grid-cols-3">
             {journey.map((t, i) => (
               <li key={t.org + t.title} className="relative grid content-start gap-2">
+                {/* Connector to the next step in the same row (three per row) */}
+                {i % 3 !== 2 && i !== journey.length - 1 && <span aria-hidden="true" className="road-line absolute left-10 right-[-24px] top-5 hidden h-[2px] bg-ink sm:block" />}
                 <span className="grid justify-items-start gap-3">
                   <span style={{ ["--i" as string]: i }} className={`road-step relative z-[1] grid h-10 w-10 shrink-0 place-items-center rounded-full border-[1.5px] border-ink font-display text-[17px] ${CHIP_TONES[i % CHIP_TONES.length]}`}>{i + 1}</span>
                   <span className="t-h2">{Math.floor(t.span![0])}</span>

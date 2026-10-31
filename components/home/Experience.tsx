@@ -4,8 +4,7 @@ import { useEffect, useRef } from "react";
 import { timeline } from "@/content/timeline";
 import SectionLabel from "./SectionLabel";
 
-// Oldest first, so the story runs down the page and ends at what I do now (HEAD).
-// Education has no dates yet, so it opens the history.
+// Oldest first, so the story runs from the first commit (git init) down to what I do now (HEAD).
 const entries = [...timeline].sort((a, b) => (a.span?.[0] ?? 0) - (b.span?.[0] ?? 0));
 const TONES = ["bg-violet", "bg-mint", "bg-sun", "bg-pink", "bg-lime"];
 const branch = (org: string) => org.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -55,7 +54,7 @@ export default function Experience() {
           Where I&rsquo;ve worked.
         </h2>
         <p className="voice-sm muted max-w-[44ch]" data-reveal>
-          Backend work since 2021: my own products first, then freelance Android, an internship as project lead, and now Moglix.
+          Building since 2021: my own products first, then freelance Android, a B.Tech in AI and ML, internships at Bluestock and Moglix, and now software engineer at Moglix.
         </p>
       </div>
 
@@ -68,7 +67,18 @@ export default function Experience() {
         {entries.map((t, i) => {
           const current = t.span && t.span[1] === null && t.kind === "Work";
           const right = i % 2 === 1;
-          const cmd = t.kind === "Education" ? "git init" : `git checkout -b ${branch(t.org)}`;
+          // Internships live on intern/ branches; a role that follows an internship at the same company merges it.
+          const prev = entries[i - 1];
+          const cmd =
+            i === 0
+              ? "git init"
+              : t.kind === "Education"
+                ? `git checkout -b study/${branch(t.org)}`
+                : t.kind === "Internship"
+                ? `git checkout -b intern/${branch(t.org)}`
+                : prev?.kind === "Internship" && prev.org === t.org
+                  ? `git merge intern/${branch(t.org)}`
+                  : `git checkout -b ${branch(t.org)}`;
           return (
             <li key={`${t.org}-${t.title}`} className={`exp-item relative grid pl-14 lg:grid-cols-2 lg:pl-0 ${right ? "exp-right" : "exp-left"}`}>
               {/* Commit node on the spine */}

@@ -22,7 +22,6 @@ function Row({ title, children }: { title: string; children: React.ReactNode }) 
 
 export default function ResumePage() {
   const work = timeline.filter((t) => t.kind !== "Education");
-  const edu = timeline.find((t) => t.kind === "Education");
 
   return (
     <main id="main" className="edge pt-[var(--nav-h)]">
@@ -31,7 +30,7 @@ export default function ResumePage() {
           <p className="t-label muted">~/resume</p>
           <h1 className="t-display">{profile.name}</h1>
           <p className="t-label">
-            {profile.role}, {profile.company} — {profile.location}
+            {profile.headline} — {profile.role}, {profile.company} — {profile.location}
           </p>
         </div>
         <a href={profile.resume} className="btn-pill w-fit">Download PDF</a>
@@ -87,12 +86,20 @@ export default function ResumePage() {
         </ul>
       </Row>
 
-      {edu && (
-        <Row title="Education">
-          <p className="t-sub">{edu.title}</p>
-          <p className="t-label muted mt-2">{edu.org}</p>
-        </Row>
-      )}
+      <Row title="Education">
+        <ul className="grid gap-4">
+          {profile.schooling.map((e) => (
+            <li key={e.degree} className="grid gap-1 md:grid-cols-[200px_1fr] md:gap-6">
+              <p className="t-label muted">
+                {e.period} — {e.score}
+              </p>
+              <p className="t-label leading-[1.5]">
+                {e.degree} <span className="muted">— {e.school}</span>
+              </p>
+            </li>
+          ))}
+        </ul>
+      </Row>
 
       <Row title="Contact">
         <ul className="t-label grid gap-3">

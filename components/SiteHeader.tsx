@@ -38,7 +38,7 @@ export default function SiteHeader() {
 
   const href = (id: string) => (onHome ? `#${id}` : `/#${id}`);
 
-  const strip = ["Open to engineering roles and freelance work", `${profile.role} at ${profile.company}`, "Python · FastAPI · Docker · Linux", "Automation · Backends · Infrastructure"];
+  const strip = ["Open to engineering roles and freelance work", `${profile.role} at ${profile.company}`, "Python · FastAPI · LLM agents · Docker", "Automation · Backends · Infrastructure"];
 
   return (
     <header className="fixed inset-x-0 top-0 z-50" style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}>

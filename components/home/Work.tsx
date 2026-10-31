@@ -9,22 +9,26 @@ import SectionLabel from "./SectionLabel";
 
 const pub = systems.filter((s) => !s.internal);
 const internal = systems.filter((s) => s.internal);
-const PLATFORM = { web: "Web", android: "Android", desktop: "Desktop", internal: "Internal" } as const;
+const PLATFORM = { web: "Web", android: "Android", desktop: "Desktop", service: "Service", internal: "Internal" } as const;
 
 // Every number on the collage is counted from content/systems.ts.
 const count = (p: System["platform"]) => pub.filter((s) => s.platform === p).length;
 const python = pub.filter((s) => s.stack.some((t) => t.startsWith("Python"))).length;
 
 // Collage placement: [phone layout, desktop layout] spans, a tint and a tilt for each tile.
-// Desktop rows each fill all 12 columns: [Confess 5 · Time Fold 4 · count 3], [Confess Web 5 · platforms 3 ·
-// BuddyCode 4], [Linkium 3 · Backup Engine 3 · Python 3 · Moglix 3].
+// Desktop rows each fill all 12 columns:
+// [Confess 5 · Bakup 4 · count 3] [Ramanujan 4 · Confess Web 5 · platforms 3]
+// [Time Fold 5 · Snapy 4 · Python 3] [BuddyCode 3 · Linkium 3 · Backup Engine 3 · Moglix 3]
 const LAYOUT: Record<string, { m: string; d: string; tone: string; rot: number }> = {
   confess: { m: "col-span-2 row-span-3", d: "lg:col-span-5 lg:row-span-3", tone: "bg-mint", rot: -1.5 },
-  timefold: { m: "col-span-2 row-span-2", d: "lg:col-span-4 lg:row-span-3", tone: "bg-blue", rot: 1.2 },
-  "confess-web": { m: "col-span-2 row-span-2", d: "lg:col-span-5 lg:row-span-3", tone: "bg-violet", rot: -1 },
-  buddycode: { m: "col-span-1 row-span-2", d: "lg:col-span-4 lg:row-span-3", tone: "bg-pink", rot: 2 },
+  bakup: { m: "col-span-2 row-span-2", d: "lg:col-span-4 lg:row-span-3", tone: "bg-ink", rot: 1.2 },
+  ramanujan: { m: "col-span-1 row-span-2", d: "lg:col-span-4 lg:row-span-3", tone: "bg-violet", rot: 1.5 },
+  "confess-web": { m: "col-span-2 row-span-2", d: "lg:col-span-5 lg:row-span-3", tone: "bg-pink", rot: -1 },
+  timefold: { m: "col-span-2 row-span-2", d: "lg:col-span-5 lg:row-span-3", tone: "bg-blue", rot: -1.2 },
+  snapy: { m: "col-span-1 row-span-2", d: "lg:col-span-4 lg:row-span-3", tone: "bg-lime", rot: 2 },
+  buddycode: { m: "col-span-1 row-span-2", d: "lg:col-span-3 lg:row-span-2", tone: "bg-pink", rot: 2 },
   linkium: { m: "col-span-1 row-span-2", d: "lg:col-span-3 lg:row-span-2", tone: "bg-sun", rot: -2 },
-  "backup-engine": { m: "col-span-1 row-span-2", d: "lg:col-span-3 lg:row-span-2", tone: "bg-lime", rot: 1.5 },
+  "backup-engine": { m: "col-span-2 row-span-2", d: "lg:col-span-3 lg:row-span-2", tone: "bg-mint", rot: 1.5 },
 };
 const bySlug = (slug: string) => pub.find((s) => s.slug === slug);
 
@@ -54,7 +58,23 @@ function ProjectTile({ s, i, onOpen }: { s: System; i: number; onOpen: () => voi
         {s.screen ? (
           <Image src={s.screen.src} alt="" fill sizes="(min-width: 1024px) 40vw, 90vw" className={`rounded-[18px] object-cover p-3 ${s.screen.kind === "phone" ? "object-left" : "object-top"}`} />
         ) : (
-          <div className="grid h-full place-items-center">{s.logo && <Image src={s.logo} alt="" width={96} height={96} className="h-16 w-16 rounded-[18px] border-[1.5px] border-ink md:h-20 md:w-20" />}</div>
+          <div className="grid h-full place-items-center p-4">
+            {s.logo ? (
+              <Image src={s.logo} alt="" width={96} height={96} className="h-16 w-16 rounded-[18px] border-[1.5px] border-ink md:h-20 md:w-20" />
+            ) : (
+              // No screenshot or logo yet: a monogram and the first few tools
+              <div className="grid justify-items-center gap-3">
+                <span className="grid h-16 w-16 place-items-center rounded-[18px] border-[1.5px] border-ink bg-card font-display text-[34px] md:h-20 md:w-20 md:text-[44px]">{s.name[0]}</span>
+                <ul className="hidden flex-wrap justify-center gap-1 md:flex">
+                  {s.stack.slice(0, 3).map((t) => (
+                    <li key={t} className="t-micro rounded-full border-[1.5px] border-ink bg-card px-2 py-0.5">
+                      {t}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
         )}
       </div>
       <div className="flex items-center justify-between gap-2 border-t-[1.5px] border-ink bg-card px-4 py-2.5">
@@ -102,17 +122,19 @@ export default function Work() {
       </div>
 
       {/* Collage */}
-      <div className="grid auto-rows-[96px] grid-cols-2 gap-3 md:gap-4 lg:auto-rows-[92px] lg:grid-cols-12">
+      <div className="grid grid-flow-dense auto-rows-[96px] grid-cols-2 gap-3 md:gap-4 lg:grid-flow-row lg:auto-rows-[92px] lg:grid-cols-12">
         {tile("confess", 0)}
-        {tile("timefold", 1)}
+        {tile("bakup", 1)}
         <Tile className="col-span-1 row-span-2 bg-ink p-5 text-card lg:col-span-3 lg:row-span-3" rot={-1} i={2}>
           <p className="t-display !text-[clamp(56px,7vw,120px)] text-lime">{pub.length}</p>
           <p className="t-label">Public systems shipped</p>
         </Tile>
-        <Tile className="col-span-1 row-span-2 bg-card p-5 lg:order-none lg:col-span-3 lg:row-span-3" rot={1} i={3}>
+        {tile("ramanujan", 4)}
+        {tile("confess-web", 5)}
+        <Tile className="col-span-1 row-span-2 bg-card p-5 lg:order-none lg:col-span-3 lg:row-span-3" rot={1} i={6}>
           <p className="t-label mb-3">Runs on</p>
           <ul className="grid gap-2 lg:gap-3">
-            {(["web", "android", "desktop"] as const).map((p) => (
+            {(["web", "android", "desktop", "service"] as const).map((p) => (
               <li key={p} className="grid grid-cols-[60px_1fr_auto] items-center gap-2 text-[13px] font-semibold">
                 <span>{PLATFORM[p]}</span>
                 <span className="h-3 overflow-hidden rounded-full border-[1.5px] border-ink">
@@ -123,17 +145,18 @@ export default function Work() {
             ))}
           </ul>
         </Tile>
-        {tile("confess-web", 4)}
-        {tile("buddycode", 5)}
-        {tile("linkium", 6)}
-        {tile("backup-engine", 7)}
-        <Tile className="col-span-1 row-span-2 bg-sun p-5 lg:col-span-3 lg:row-span-2" rot={-1.5} i={8}>
+        {tile("timefold", 7)}
+        {tile("snapy", 8)}
+        <Tile className="col-span-1 row-span-2 bg-sun p-5 lg:col-span-3 lg:row-span-3" rot={-1.5} i={9}>
           <p className="t-display !text-[clamp(48px,5vw,80px)]">
             {python}/{pub.length}
           </p>
           <p className="t-label">Built with Python</p>
         </Tile>
-        <Tile className="col-span-1 row-span-2 bg-ink p-5 text-card lg:col-span-3 lg:row-span-2" rot={1.5} i={9} onOpen={() => show("moglix")} label="Open the internal Moglix systems">
+        {tile("buddycode", 9)}
+        {tile("linkium", 10)}
+        {tile("backup-engine", 11)}
+        <Tile className="col-span-1 row-span-2 bg-ink p-5 text-card lg:col-span-3 lg:row-span-2" rot={1.5} i={12} onOpen={() => show("moglix")} label="Open the internal Moglix systems">
           <p className="t-label text-lime">🔒 Inside Moglix</p>
           <p className="t-display mt-2 !text-[clamp(48px,5vw,80px)]">{internal.length}</p>
           <p className="t-label">Internal systems →</p>
@@ -149,7 +172,13 @@ export default function Work() {
             <li key={s.slug} className="relative">
               <button type="button" onClick={() => show(s.slug)} className="group grid w-full justify-items-center gap-2 text-center">
                 <span style={{ ["--i" as string]: i }} className="road-step grid h-16 w-16 place-items-center overflow-hidden rounded-full border-[2px] border-ink bg-card transition-transform group-hover:-translate-y-1 group-hover:rotate-6">
-                  {s.logo ? <Image src={s.logo} alt="" width={64} height={64} className="h-full w-full object-cover" /> : <span className="text-[22px]">🔒</span>}
+                  {s.logo ? (
+                    <Image src={s.logo} alt="" width={64} height={64} className="h-full w-full object-cover" />
+                  ) : s.platform === "internal" ? (
+                    <span className="text-[22px]">🔒</span>
+                  ) : (
+                    <span className="font-display text-[26px]">{s.name[0]}</span>
+                  )}
                 </span>
                 <span className="t-label group-hover:underline">{s.name}</span>
                 <span className="t-micro muted">{PLATFORM[s.platform]}</span>

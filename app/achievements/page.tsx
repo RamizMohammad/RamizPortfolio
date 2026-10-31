@@ -4,11 +4,12 @@ import { achievements, type Achievement } from "@/content/achievements";
 
 export const metadata: Metadata = {
   title: "Achievements",
-  description: "Patent, hackathons, competitions and certifications of Mohammad Ramiz.",
+  description: "Award, patent, hackathons, competitions and certifications of Mohammad Ramiz.",
   alternates: { canonical: "/achievements" },
 };
 
 const GROUPS: { title: string; kinds: Achievement["kind"][] }[] = [
+  { title: "Award", kinds: ["Award"] },
   { title: "Patent", kinds: ["Patent"] },
   { title: "Hackathons and competitions", kinds: ["Hackathon", "Competition"] },
   { title: "Certifications and internship", kinds: ["Certification", "Internship"] },

@@ -120,3 +120,34 @@ export function DesktopWindow({ s }: { s: System }) {
     </div>
   );
 }
+
+/** A chat window for assistants that live in a chat app: the assistant introduces itself with its real description. */
+export function ChatWindow({ s }: { s: System }) {
+  return (
+    <div className="w-full overflow-hidden rounded-[12px] border border-black/40 bg-[#f5f5f5] text-[#242424] shadow-[0_30px_60px_-20px_rgb(0_0_0/0.7)]">
+      <div className="flex items-center gap-3 bg-[#464775] px-4 py-2.5 text-white">
+        <span className="grid h-8 w-8 place-items-center rounded-md bg-white/20 font-display text-[16px]">{s.name[0]}</span>
+        <div className="grid">
+          <p className="text-[14px] font-semibold leading-tight">{s.name}</p>
+          <p className="text-[11px] opacity-80">{s.shipsAs}</p>
+        </div>
+      </div>
+      <div className="grid gap-3 p-4">
+        <div className="flex gap-2">
+          <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-[#464775] text-[12px] font-semibold text-white">{s.name[0]}</span>
+          <div className="max-w-[85%] rounded-lg bg-white p-3 text-[13px] leading-snug shadow-sm">
+            <p className="mb-1 text-[11px] font-semibold text-[#616161]">{s.name}</p>
+            {s.summary}
+          </div>
+        </div>
+        {s.points?.slice(0, 2).map((p) => (
+          <div key={p} className="flex gap-2">
+            <span className="w-7 shrink-0" />
+            <div className="max-w-[85%] rounded-lg bg-white p-3 text-[13px] leading-snug shadow-sm">{p}</div>
+          </div>
+        ))}
+        <div className="mt-1 rounded-md border border-[#e0e0e0] bg-white px-3 py-2 text-[13px] text-[#9e9e9e]">Type a question in plain English…</div>
+      </div>
+    </div>
+  );
+}

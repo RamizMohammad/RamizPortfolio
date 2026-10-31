@@ -2,10 +2,10 @@ import Link from "next/link";
 import { achievements } from "@/content/achievements";
 import SectionLabel from "./SectionLabel";
 
-const HIGHLIGHTS = ["56-hour hackathon", "Flipkart GRiD 6.0, Software Development track", "Deep Dive on AWS"];
+const HIGHLIGHTS = ["Hack KRMU 4.0", "Build with India Hackathon"];
 
 export default function Recognition() {
-  const picks = achievements.filter((a) => a.kind === "Patent" || HIGHLIGHTS.includes(a.title));
+  const picks = achievements.filter((a) => a.kind === "Award" || a.kind === "Patent" || HIGHLIGHTS.includes(a.title));
   return (
     <section id="recognition" aria-labelledby="recognition-title" className="edge">
       <SectionLabel n={7}>Recognition</SectionLabel>
@@ -28,7 +28,7 @@ export default function Recognition() {
                 <p className="t-label muted">
                   {a.org} — {a.status}
                 </p>
-                {a.kind === "Patent" && a.detail && <p className="voice-sm muted">{a.detail}</p>}
+                {(a.kind === "Patent" || a.kind === "Award") && a.detail && <p className="voice-sm muted">{a.detail}</p>}
               </div>
             </li>
           ))}

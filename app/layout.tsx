@@ -12,7 +12,7 @@ const anton = Anton({ subsets: ["latin"], weight: "400", variable: "--font-anton
 const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jbm", display: "swap" });
 
 const description =
-  "Mohammad Ramiz is a software engineer at Moglix building Python automation, backends, APIs and infrastructure, plus the Android and web apps on top.";
+  "Mohammad Ramiz is a software engineer at Moglix building LLM agents, Python backends, APIs and data pipelines, plus the Android and web apps on top.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(profile.siteUrl),

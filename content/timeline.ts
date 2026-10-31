@@ -9,30 +9,40 @@ export type TimelineEntry = {
   span?: [number, number | null];
 };
 
-// Ordered newest first. Education details (institution, years) are not yet supplied.
+// Ordered newest first.
 export const timeline: TimelineEntry[] = [
   {
-    period: "Jan 2026 – Present",
+    period: "Jul 2026 – Present",
     kind: "Work",
     title: "Software Engineer",
     org: "Moglix",
-    span: [2026, null],
+    span: [2026.5, null],
     points: [
-      "Python backend development, backend APIs and integrations.",
-      "Analysing operational reports and solving the problems they show through code.",
-      "Agentic AI support system and chatbot development.",
-      "Supplier Invoice Accuracy, Sourcing Agent, OCR Accuracy Report Pipeline.",
+      "REST APIs and backend systems, with VLLMs, OCR techniques and predictive LLM models.",
+      "Working with the AI and Analytics team to deliver solutions for major clients and for Moglix itself.",
     ],
-    tags: ["Python", "FastAPI", "Vertex AI", "OCR"],
+    tags: ["Python", "REST APIs", "Kafka", "Docker", "AI models"],
+  },
+  {
+    period: "Jan – Jul 2026",
+    kind: "Internship",
+    title: "Python Engineering Intern",
+    org: "Moglix",
+    span: [2026, 2026.5],
+    points: [
+      "Designed and built analytical solutions involving data processing, analysis and programming.",
+      "Worked with teams to deliver insights and automate workflows across ongoing projects.",
+    ],
+    tags: ["Python", "REST APIs", "MySQL", "PostgreSQL", "MongoDB", "Kafka"],
   },
   {
     period: "May – Jun 2025",
     kind: "Internship",
-    title: "Software Development Engineer",
+    title: "Software Development Engineer Intern",
     org: "Bluestock Fintech",
     span: [2025.33, 2025.5],
-    points: ["Led the team as project lead.", "Built the complete admin panel and its frontend architecture."],
-    tags: ["Flask", "Python"],
+    points: ["Developed the internal admin panel as project lead.", "Designed the backend logic with the team and built the core features."],
+    tags: ["Python", "REST APIs", "Flask"],
   },
   {
     period: "2022 – Present",
@@ -41,7 +51,15 @@ export const timeline: TimelineEntry[] = [
     org: "Freelance",
     span: [2022, null],
     points: ["Published Confess on Google Play.", "Firebase integration and real-time features.", "Confess, Share Wheels, BuddyCode."],
-    tags: ["Java", "Kotlin", "Firebase"],
+    tags: ["Java", "Kotlin", "Jetpack Compose", "Firebase"],
+  },
+  {
+    period: "2022 – 2026",
+    kind: "Education",
+    title: "B.Tech CSE, AI & ML",
+    org: "Sharda University",
+    span: [2022.1, 2026],
+    points: ["Computer science with a specialisation in AI and machine learning. CGPA 8.3."],
   },
   {
     period: "2021 – Present",
@@ -49,14 +67,7 @@ export const timeline: TimelineEntry[] = [
     title: "Backend and product development",
     org: "Independent",
     span: [2021, null],
-    points: ["Backend systems in Python, Flask and FastAPI for web and mobile apps.", "Linkium, Backup Engine, Time Fold, Confess Web."],
-    tags: ["Python", "Flask", "FastAPI"],
-  },
-  {
-    period: "",
-    kind: "Education",
-    title: "Computer Science",
-    org: "Undergraduate studies",
-    points: ["Computer science, alongside building and shipping products."],
+    points: ["Backend systems in Python, Flask and FastAPI for web and mobile apps.", "Bakup, Snapy, Linkium, Time Fold, Confess Web."],
+    tags: ["Python", "Flask", "FastAPI", "Docker"],
   },
 ];

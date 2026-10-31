@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { publicSystems } from "@/content/systems";
 
 const SESSION = [
   { cmd: "whoami", out: "mohammad-ramiz — software engineer @ moglix" },
-  { cmd: "cat focus.txt", out: "automation · backend apis · infrastructure" },
-  { cmd: "ls ~/systems", out: "buddycode  linkium  backup-engine  confess  confess-web  timefold" },
+  { cmd: "cat focus.txt", out: "llm agents · backend apis · automation · infrastructure" },
+  { cmd: "ls ~/systems", out: publicSystems.map((s) => s.slug).join("  ") },
 ];
 
 // Commands are typed character by character; output appears all at once, as in a real shell.

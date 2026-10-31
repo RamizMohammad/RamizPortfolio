@@ -5,7 +5,7 @@ import { Dialog } from "radix-ui";
 import { useState, type CSSProperties } from "react";
 import { systems } from "@/content/systems";
 import type { System } from "@/content/types";
-import { Browser, DesktopWindow, Phone } from "./Devices";
+import { Browser, ChatWindow, DesktopWindow, Phone } from "./Devices";
 import { filesFor, THEMES, tokenize, type IdeTheme } from "./ide";
 
 const internal = systems.filter((s) => s.internal);
@@ -15,7 +15,7 @@ function Ide({ s, theme, onClose }: { s: System; theme: IdeTheme; onClose: () =>
   const files = filesFor(s);
   const [active, setActive] = useState(0);
   const file = files[active];
-  const vscode = s.platform === "web";
+  const vscode = s.platform === "web" || s.platform === "service";
   const c = (k?: keyof IdeTheme) => (k ? theme[k] : theme.text);
 
   return (
@@ -121,7 +121,7 @@ function Ide({ s, theme, onClose }: { s: System; theme: IdeTheme; onClose: () =>
 /** Moglix work is private: a plain terminal with the names and summaries only. */
 function InternalTerminal({ onClose }: { onClose: () => void }) {
   return (
-    <div className="mx-auto flex h-full max-h-[560px] w-full max-w-[760px] flex-col overflow-hidden rounded-[14px] border border-[#3c3f41] bg-[#121016] font-mono text-[13px] text-[#e6e3f2]">
+    <div className="mx-auto flex h-full max-h-[720px] w-full max-w-[860px] flex-col overflow-hidden rounded-[14px] border border-[#3c3f41] bg-[#121016] font-mono text-[13px] text-[#e6e3f2]">
       <div className="flex h-10 items-center gap-3 border-b border-[#3c3f41] px-3">
         <span className="flex gap-1.5" aria-hidden="true">
           <i className="h-3 w-3 rounded-full bg-[#ff5f57]" />
@@ -141,11 +141,16 @@ function InternalTerminal({ onClose }: { onClose: () => void }) {
             </p>
             <p className="font-semibold">{s.name}</p>
             <p className="text-[#a9a5bf]">{s.summary}</p>
+            {s.points?.map((p) => (
+              <p key={p} className="text-[#a9a5bf]">
+                <span className="text-[#d4f25b]">→</span> {p}
+              </p>
+            ))}
             <p className="text-[#a9a5bf]">stack: {s.stack.join(", ")}</p>
           </div>
         ))}
         <p className="ide-line text-[#f47a9a]" style={{ ["--i" as string]: 10 } as CSSProperties}>
-          🔒 Internal to Moglix — the code and details are private.
+          🔒 Built inside Moglix — the code is private; these notes are from my résumé.
         </p>
       </div>
     </div>
@@ -170,7 +175,7 @@ export default function SystemViewer({ slug, onClose }: { slug: string | null; o
                 <Ide key={s.slug} s={s} theme={theme} onClose={onClose} />
               </div>
               <div className={`viewer-device grid content-center ${s.platform === "android" ? "" : "lg:w-[min(560px,38vw)]"}`}>
-                {s.platform === "android" ? <Phone s={s} /> : s.platform === "web" ? <Browser s={s} /> : <DesktopWindow s={s} />}
+                {s.platform === "android" ? <Phone s={s} /> : s.platform === "web" ? <Browser s={s} /> : s.platform === "service" ? <ChatWindow s={s} /> : <DesktopWindow s={s} />}
               </div>
             </div>
           ) : (

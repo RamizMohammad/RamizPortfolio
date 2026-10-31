@@ -32,7 +32,9 @@ export type System = {
   stack: string[];
   shipsAs: string;
   /** Where it runs; picks the IDE and device a project opens in on the home page. */
-  platform: "web" | "android" | "desktop" | "internal";
+  platform: "web" | "android" | "desktop" | "service" | "internal";
+  /** Where it was built, when that is not my own independent work (e.g. "Moglix"). */
+  org?: string;
   /** Internal work has no public page or link. */
   internal?: boolean;
   links?: { label: string; href: string }[];

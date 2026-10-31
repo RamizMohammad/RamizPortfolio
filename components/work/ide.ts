@@ -17,12 +17,14 @@ export type IdeTheme = {
   number: string;
 };
 
-export const THEMES: Record<"android" | "web" | "desktop", IdeTheme> = {
+export const THEMES: Record<"android" | "web" | "desktop" | "service", IdeTheme> = {
   // Darcula-style dark with the Android green
   android: { bg: "#1e1f22", panel: "#2b2d30", bar: "#2b2d30", border: "#3c3f41", text: "#bcbec4", muted: "#6f737a", accent: "#3ddc84", status: "#2b2d30", statusText: "#9da0a8", heading: "#56a8f5", keyword: "#cf8e6d", string: "#6aab73", number: "#2aacb8" },
   // The familiar dark editor with a blue status bar
   web: { bg: "#1e1e1e", panel: "#252526", bar: "#323233", border: "#2d2d2d", text: "#d4d4d4", muted: "#858585", accent: "#3794ff", status: "#007acc", statusText: "#ffffff", heading: "#569cd6", keyword: "#c586c0", string: "#ce9178", number: "#b5cea8" },
   // JetBrains dark with a Python yellow
+  // Backend services open in the same editor as web work, with a violet accent
+  service: { bg: "#1e1e1e", panel: "#252526", bar: "#323233", border: "#2d2d2d", text: "#d4d4d4", muted: "#858585", accent: "#a78bfa", status: "#6d28d9", statusText: "#ffffff", heading: "#569cd6", keyword: "#c586c0", string: "#ce9178", number: "#b5cea8" },
   desktop: { bg: "#1e1f22", panel: "#27282c", bar: "#2b2d30", border: "#393b40", text: "#bcbec4", muted: "#6f737a", accent: "#f5c84b", status: "#27282c", statusText: "#9da0a8", heading: "#f5c84b", keyword: "#cf8e6d", string: "#6aab73", number: "#2aacb8" },
 };
 
