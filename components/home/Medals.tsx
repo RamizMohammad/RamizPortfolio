@@ -1,6 +1,3 @@
-"use client";
-
-import { useEffect, useRef } from "react";
 import type { Achievement } from "@/content/achievements";
 
 /** The medal face: the placing itself, shortened to fit (6th, F, SF, L1, ★). */
@@ -51,116 +48,11 @@ function Laurel({ color }: { color: string }) {
   );
 }
 
-type Body = { angle: number; vel: number; tilt: number; dragging: boolean; lastX: number };
-
 /**
- * Hackathon and competition results as real medals hanging on ribbons. Each is a damped spring
- * pendulum: brush the mouse across it to set it swinging, grab and fling it, and scrolling jostles
- * the whole wall. The light on the metal shifts with the swing. Reduced motion keeps them still.
+ * Hackathon and competition results as real medals hanging on ribbons, each rocking gently on its
+ * own rhythm while a glint slides across the metal. Reduced motion keeps them still.
  */
 export default function Medals({ results }: { results: Achievement[] }) {
-  const refs = useRef<(HTMLDivElement | null)[]>([]);
-
-  useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const bodies: Body[] = results.map(() => ({ angle: 0, vel: 0, tilt: 0, dragging: false, lastX: 0 }));
-    let raf = 0;
-    let last = performance.now();
-    let lastScroll = window.scrollY;
-    let visible = false;
-
-    const step = (now: number) => {
-      const dt = Math.min(0.033, (now - last) / 1000);
-      last = now;
-      // Scrolling gives every medal a small nudge, alternating directions so the wall feels loose.
-      const dy = window.scrollY - lastScroll;
-      lastScroll = window.scrollY;
-      bodies.forEach((b, i) => {
-        if (!b.dragging) {
-          b.vel += dy * 0.06 * (i % 2 ? 1 : -1);
-          // Pendulum: restoring force, damping.
-          b.vel += (-38 * b.angle - 2.4 * b.vel) * dt;
-          b.angle += b.vel * dt;
-          b.angle = Math.max(-1.2, Math.min(1.2, b.angle));
-        }
-        b.tilt += (b.vel * 0.25 - b.tilt) * 0.2;
-        const el = refs.current[i];
-        if (el) {
-          el.style.transform = `rotate(${b.angle}rad)`;
-          el.style.setProperty("--shine", `${50 + b.angle * 90}%`);
-          el.style.setProperty("--turn", `${b.tilt * 40}deg`);
-        }
-      });
-      raf = visible ? requestAnimationFrame(step) : 0;
-    };
-    const wake = () => {
-      if (!raf && visible) {
-        last = performance.now();
-        raf = requestAnimationFrame(step);
-      }
-    };
-
-    const io = new IntersectionObserver(([e]) => {
-      visible = e.isIntersecting;
-      wake();
-    });
-    const wall = refs.current[0]?.closest("ul");
-    if (wall) io.observe(wall);
-
-    const cleanups = refs.current.map((el, i) => {
-      if (!el) return () => {};
-      const b = bodies[i];
-      const pivot = () => {
-        const r = el.getBoundingClientRect();
-        return { x: r.left + r.width / 2, y: r.top };
-      };
-      // Brushing past pushes the medal along with the mouse.
-      const brush = (e: PointerEvent) => {
-        if (b.dragging || e.pointerType !== "mouse") return;
-        b.vel += e.movementX * 0.05;
-        wake();
-      };
-      // Grab and drag: the medal points at the pointer; releasing keeps the swing speed.
-      const grab = (e: PointerEvent) => {
-        b.dragging = true;
-        b.lastX = e.clientX;
-        el.setPointerCapture(e.pointerId);
-        wake();
-      };
-      const drag = (e: PointerEvent) => {
-        if (!b.dragging) return;
-        const p = pivot();
-        const next = Math.max(-1.2, Math.min(1.2, Math.atan2(-(e.clientX - p.x), Math.max(40, e.clientY - p.y))));
-        b.vel = (next - b.angle) * 30;
-        b.angle = next;
-      };
-      const drop = () => {
-        b.dragging = false;
-      };
-      el.addEventListener("pointerenter", brush);
-      el.addEventListener("pointermove", brush);
-      el.addEventListener("pointerdown", grab);
-      el.addEventListener("pointermove", drag);
-      el.addEventListener("pointerup", drop);
-      el.addEventListener("pointercancel", drop);
-      return () => {
-        el.removeEventListener("pointerenter", brush);
-        el.removeEventListener("pointermove", brush);
-        el.removeEventListener("pointerdown", grab);
-        el.removeEventListener("pointermove", drag);
-        el.removeEventListener("pointerup", drop);
-        el.removeEventListener("pointercancel", drop);
-      };
-    });
-    window.addEventListener("scroll", wake, { passive: true });
-    return () => {
-      cancelAnimationFrame(raf);
-      io.disconnect();
-      cleanups.forEach((c) => c());
-      window.removeEventListener("scroll", wake);
-    };
-  }, [results]);
-
   return (
     <ul className="grid grid-cols-2 gap-x-4 gap-y-12 md:grid-cols-3 lg:grid-cols-6" aria-label="Hackathon and competition results">
       {results.map((a, i) => {
@@ -170,14 +62,10 @@ export default function Medals({ results }: { results: Achievement[] }) {
         return (
           <li key={a.title} className="medal grid justify-items-center gap-4 text-center" data-reveal style={{ ["--rd" as string]: `${i * 110}ms` }}>
             <div className="medal-swing">
-              {/* The physics rotates this; the drop-in animation is on its parent. */}
+              {/* The sway runs on this; the drop-in animation is on its parent. Each medal gets its own pace. */}
               <div
-                ref={(el) => {
-                  refs.current[i] = el;
-                }}
-                data-cursor="swing me"
-                className="medal-body grid touch-none select-none justify-items-center"
-                style={{ transformOrigin: "50% 0" }}
+                className="medal-body grid select-none justify-items-center"
+                style={{ ["--sway-t" as string]: `${3.2 + (i % 3) * 0.45}s`, ["--sway-d" as string]: `${-i * 0.7}s` }}
                 aria-hidden="true"
               >
                 {/* Ribbon: a V of striped fabric */}
