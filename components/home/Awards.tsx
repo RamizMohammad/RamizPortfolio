@@ -1,21 +1,11 @@
 import Link from "next/link";
 import Words from "@/components/Words";
 import { achievements, type Achievement } from "@/content/achievements";
+import Medals from "./Medals";
 import SectionLabel from "./SectionLabel";
 
 const awards = achievements.filter((a) => a.kind === "Award");
 const results = achievements.filter((a) => a.kind === "Hackathon" || a.kind === "Competition");
-const RIBBONS = ["bg-pink", "bg-blue", "bg-lime", "bg-violet", "bg-mint", "bg-sun"];
-
-/** The medal face: the placing itself, shortened to fit (6th, F, SF, L1, ★). */
-function face(status: string) {
-  const place = status.match(/(\d+)(st|nd|rd|th)/i);
-  if (place) return { big: place[1], small: place[2].toLowerCase() };
-  if (/semi/i.test(status)) return { big: "SF", small: "" };
-  if (/finalist/i.test(status)) return { big: "F", small: "" };
-  if (/level (\d+)/i.test(status)) return { big: `L${status.match(/level (\d+)/i)![1]}`, small: "" };
-  return { big: "★", small: "" };
-}
 
 function Trophy() {
   return (
@@ -97,38 +87,7 @@ export default function Awards() {
           <Spotlight key={a.title} a={a} />
         ))}
 
-        <ul className="grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-3 lg:grid-cols-6" aria-label="Hackathon and competition results">
-          {results.map((a, i) => {
-            const f = face(a.status);
-            return (
-              <li key={a.title} className="medal grid justify-items-center gap-3 text-center" data-reveal style={{ ["--rd" as string]: `${i * 110}ms` }}>
-                <div className="medal-swing grid justify-items-center" aria-hidden="true">
-                  {/* Ribbon */}
-                  <div className="flex">
-                    <span className={`h-14 w-6 origin-bottom -skew-x-12 border-[1.5px] border-ink ${RIBBONS[i % RIBBONS.length]}`} />
-                    <span className={`h-14 w-6 origin-bottom skew-x-12 border-[1.5px] border-l-0 border-ink ${RIBBONS[(i + 2) % RIBBONS.length]}`} />
-                  </div>
-                  {/* Medal */}
-                  <span className="medal-face -mt-2 grid h-24 w-24 place-items-center rounded-full border-[2px] border-ink bg-sun shadow-[inset_0_-6px_0_rgb(0_0_0/0.12)]">
-                    <span className="grid h-[72px] w-[72px] place-items-center rounded-full border-[1.5px] border-dashed border-ink/50 font-display text-[30px] leading-none text-[#121016]">
-                      <span>
-                        {f.big}
-                        <sup className="text-[14px]">{f.small}</sup>
-                      </span>
-                    </span>
-                  </span>
-                </div>
-                <div className="grid gap-1">
-                  <p className="t-label">{a.status}</p>
-                  <h3 className="text-[15px] font-semibold leading-snug">{a.title}</h3>
-                  <p className="t-micro muted">
-                    {a.org} · {a.year}
-                  </p>
-                </div>
-              </li>
-            );
-          })}
-        </ul>
+        <Medals results={results} />
 
         <Link href="/achievements" className="btn-ghost w-fit">
           All achievements and certificates →

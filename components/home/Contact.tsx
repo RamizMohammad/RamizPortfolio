@@ -7,7 +7,7 @@ export default function Contact() {
   return (
     <section id="contact" aria-labelledby="contact-title" className="edge">
       <SectionLabel n={9}>Contact</SectionLabel>
-      <div className="grid min-h-[100svh] content-center gap-[41px] py-24 lg:grid-cols-2">
+      <div className="grid gap-[41px] pb-20 pt-24 lg:grid-cols-2 lg:pt-32">
         <h2 id="contact-title" className="t-display split" data-reveal>
           <Words text="Let’s build the system." />
         </h2>

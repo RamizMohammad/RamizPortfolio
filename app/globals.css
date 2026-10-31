@@ -70,6 +70,12 @@
 [data-theme="dark"] .theme-icon .core { r: 9px }
 [data-theme="dark"] .theme-icon .shadow { cx: 17px; cy: 7px }
 
+/* Scrollbar in the site's colours. */
+html { scrollbar-color: var(--color-pink-deep) var(--color-paper); scrollbar-width: thin }
+::-webkit-scrollbar { width: 10px; height: 10px }
+::-webkit-scrollbar-track { background: var(--color-paper) }
+::-webkit-scrollbar-thumb { background: var(--color-pink-deep); border-radius: 99px; border: 2px solid var(--color-paper) }
+
 @layer base {
   html { background: var(--color-paper); scroll-padding-top: calc(var(--nav-h) + 16px); scroll-behavior: smooth }
   html, body { overflow-x: clip }
@@ -238,8 +244,11 @@ html.js .medal[data-reveal] { opacity: 1; transform: none }
 .medal-swing { transform-origin: 50% 0; transform: rotate(var(--sw, 0deg)) translateY(-40px); opacity: 0 }
 .medal.in .medal-swing, html:not(.js) .medal-swing { animation: medal-drop 1400ms cubic-bezier(0.34, 1.56, 0.64, 1) both; animation-delay: var(--rd, 0ms) }
 @keyframes medal-drop { 0% { opacity: 0; transform: translateY(-40px) rotate(-30deg) } 35% { opacity: 1; transform: translateY(0) rotate(18deg) } 55% { transform: rotate(-10deg) } 72% { transform: rotate(6deg) } 86% { transform: rotate(-3deg) } 100% { opacity: 1; transform: rotate(0) } }
-.medal:hover .medal-face { animation: medal-spin 700ms ease-in-out }
-@keyframes medal-spin { 50% { transform: rotateY(180deg) } }
+/* Real medals: grab cursor; the metal turns slightly and a glint slides across as the medal swings. */
+.medal-body { cursor: grab }
+.medal-body:active { cursor: grabbing }
+.medal-disc { transform: perspective(300px) rotateY(var(--turn, 0deg)) }
+.medal-glint { background: linear-gradient(115deg, transparent calc(var(--shine, 50%) - 22%), rgb(255 255 255 / 0.75) var(--shine, 50%), transparent calc(var(--shine, 50%) + 22%)); mix-blend-mode: soft-light }
 /* A light rim so the trophy's ink outline reads on the dark spotlight card. */
 .trophy { filter: drop-shadow(0 0 1px #f2eefb) drop-shadow(0 0 1px #f2eefb) }
 .trophy-star { transform-box: fill-box; transform-origin: center }
@@ -291,7 +300,7 @@ html.custom-cursor :is(input, textarea, [contenteditable="true"]) { cursor: text
   html.js .split .w > span, html.js .section-label .section-label-text, html.js .section-label .section-label-line { transform: none; transition: none }
   .menu, .menu-item > * { animation: none }
   .medal-swing, .medal.in .medal-swing { animation: none; opacity: 1; transform: none }
-  .medal:hover .medal-face, .in .trophy-star, .sparkle, .award-rays, .in .otif-fill { animation: none }
+  .in .trophy-star, .sparkle, .award-rays, .in .otif-fill { animation: none }
   .otif-fill { transform: none }
   .paper:hover .paper-sheet { transform: none }
   .collage-tile:hover, .collage-tile:focus-visible { scale: none }

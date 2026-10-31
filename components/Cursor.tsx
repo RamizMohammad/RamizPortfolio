@@ -38,6 +38,7 @@ export default function Cursor() {
   useEffect(() => {
     if (!window.matchMedia("(pointer: fine) and (prefers-reduced-motion: no-preference)").matches) return;
     let started = false;
+    let lastMove: PointerEvent | null = null;
     const target = { x: -100, y: -100 };
     const pos = { x: -100, y: -100 };
     let raf = 0;
@@ -52,6 +53,7 @@ export default function Cursor() {
 
     const move = (e: PointerEvent) => {
       if (e.pointerType !== "mouse") return;
+      lastMove = e;
       // Switches on at the first real mouse movement, so touch-only devices never see it.
       if (!started) {
         started = true;
@@ -70,6 +72,13 @@ export default function Cursor() {
       setAction(!!hit);
       setSay(named ?? (hit ? (hit.matches("a[target=_blank]") ? "visit ↗" : "click") : (SAYS[where] ?? "hi!")));
     };
+    // Scrolling moves the page under a still mouse, so the tag is re-read for what is now beneath it.
+    const rescan = () => {
+      if (!lastMove) return;
+      const el = document.elementFromPoint(lastMove.clientX, lastMove.clientY);
+      if (el) move({ ...lastMove, pointerType: "mouse", clientX: lastMove.clientX, clientY: lastMove.clientY, target: el } as unknown as PointerEvent);
+    };
+    window.addEventListener("scroll", rescan, { passive: true });
     const leave = () => {
       target.x = target.y = -100;
     };
@@ -83,6 +92,7 @@ export default function Cursor() {
       cancelAnimationFrame(raf);
       document.documentElement.classList.remove("custom-cursor");
       window.removeEventListener("pointermove", move);
+      window.removeEventListener("scroll", rescan);
       document.removeEventListener("pointerleave", leave);
       window.removeEventListener("pointerdown", press);
       window.removeEventListener("pointerup", release);
