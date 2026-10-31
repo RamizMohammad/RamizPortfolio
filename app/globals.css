@@ -232,8 +232,33 @@ html.js .in .collage-bar { animation: bar-grow 1000ms cubic-bezier(0.65, 0, 0.35
 .paper-fold { background: linear-gradient(225deg, var(--color-paper) 50%, #d9d4e8 50%); border-bottom-left-radius: 6px; border-left: 1.5px solid var(--color-ink); border-bottom: 1.5px solid var(--color-ink); transition: width 300ms ease, height 300ms ease }
 .paper:hover .paper-fold { width: 44px; height: 44px }
 
+/* Awards: medals swing in on their ribbons and keep a slight sway; the trophy's star spins in, sparkles twinkle,
+   light rays turn slowly behind it, and the OTIF gauge fills from 50% to 70%. */
+html.js .medal[data-reveal] { opacity: 1; transform: none }
+.medal-swing { transform-origin: 50% 0; transform: rotate(var(--sw, 0deg)) translateY(-40px); opacity: 0 }
+.medal.in .medal-swing, html:not(.js) .medal-swing { animation: medal-drop 1400ms cubic-bezier(0.34, 1.56, 0.64, 1) both; animation-delay: var(--rd, 0ms) }
+@keyframes medal-drop { 0% { opacity: 0; transform: translateY(-40px) rotate(-30deg) } 35% { opacity: 1; transform: translateY(0) rotate(18deg) } 55% { transform: rotate(-10deg) } 72% { transform: rotate(6deg) } 86% { transform: rotate(-3deg) } 100% { opacity: 1; transform: rotate(0) } }
+.medal:hover .medal-face { animation: medal-spin 700ms ease-in-out }
+@keyframes medal-spin { 50% { transform: rotateY(180deg) } }
+/* A light rim so the trophy's ink outline reads on the dark spotlight card. */
+.trophy { filter: drop-shadow(0 0 1px #f2eefb) drop-shadow(0 0 1px #f2eefb) }
+.trophy-star { transform-box: fill-box; transform-origin: center }
+.in .trophy-star { animation: star-in 900ms cubic-bezier(0.34, 1.56, 0.64, 1) 400ms both }
+@keyframes star-in { from { transform: scale(0) rotate(-180deg) } }
+.sparkle { transform-box: fill-box; transform-origin: center; animation: twinkle 1.8s ease-in-out infinite }
+@keyframes twinkle { 0%, 100% { transform: scale(0.4); opacity: 0.3 } 50% { transform: scale(1.1); opacity: 1 } }
+.award-rays { background: repeating-conic-gradient(from 0deg, rgb(212 242 91 / 0.35) 0deg 10deg, transparent 10deg 24deg); mask-image: radial-gradient(circle, #000 0%, transparent 65%); animation: rays-turn 30s linear infinite }
+@keyframes rays-turn { to { transform: rotate(360deg) } }
+.otif-fill { transform-origin: left; transform: scaleX(0.714) }
+.in .otif-fill { animation: otif 1600ms cubic-bezier(0.65, 0, 0.35, 1) 600ms both }
+@keyframes otif { from { transform: scaleX(0.714) } to { transform: scaleX(1) } }
+html[data-paused] .sparkle, html[data-paused] .award-rays { animation-play-state: paused }
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto }
+  .medal-swing, .medal.in .medal-swing { animation: none; opacity: 1; transform: none }
+  .medal:hover .medal-face, .in .trophy-star, .sparkle, .award-rays, .in .otif-fill { animation: none }
+  .otif-fill { transform: none }
   .paper:hover .paper-sheet { transform: none }
   .collage-tile:hover, .collage-tile:focus-visible { scale: none }
   html.js .in .collage-bar, .viewer-overlay, .viewer-ide, .viewer-device, .ide-line { animation: none }
