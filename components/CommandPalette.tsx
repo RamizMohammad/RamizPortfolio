@@ -90,9 +90,9 @@ export default function CommandPalette() {
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-[80] bg-canvas/85" />
+        <Dialog.Overlay className="fixed inset-0 z-[80] bg-paper/85" />
         <Dialog.Content
-          className="fixed left-1/2 top-[12vh] z-[81] grid w-[min(600px,calc(100vw-32px))] -translate-x-1/2 gap-4 rounded-[12px] border border-cork bg-canvas p-6 outline-none"
+          className="fixed left-1/2 top-[12vh] z-[81] grid w-[min(600px,calc(100vw-32px))] -translate-x-1/2 gap-4 rounded-[12px] border border-line bg-paper p-6 outline-none"
           onKeyDown={onKeyDown}
         >
           <Dialog.Title className="t-label muted">Command menu</Dialog.Title>
@@ -108,7 +108,7 @@ export default function CommandPalette() {
             aria-label="Search sections, projects and links"
             aria-controls="palette-list"
             aria-activedescendant={shown[current] ? `palette-${current}` : undefined}
-            className="t-h2 nc w-full rounded-none border-b border-cream bg-transparent px-0.5 pb-2 text-cream placeholder:text-drift focus:outline-none"
+            className="t-h2 nc w-full rounded-none border-b border-ink bg-transparent px-0.5 pb-2 text-ink placeholder:text-muted focus:outline-none"
           />
           <ul id="palette-list" role="listbox" aria-label="Results" className="-mx-2 max-h-[52vh] overflow-y-auto">
             {shown.map((item, i) => (
@@ -119,7 +119,7 @@ export default function CommandPalette() {
                 aria-selected={i === current}
                 onPointerMove={() => setIndex(i)}
                 onClick={item.run}
-                className={`flex cursor-pointer items-baseline justify-between gap-4 rounded-[12px] px-3 py-2.5 ${i === current ? "bg-bark" : ""}`}
+                className={`flex cursor-pointer items-baseline justify-between gap-4 rounded-[12px] px-3 py-2.5 ${i === current ? "bg-card" : ""}`}
               >
                 <span className="t-label">
                   <span className="muted mr-3">{item.group}</span>

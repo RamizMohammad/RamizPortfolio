@@ -42,13 +42,15 @@ export default async function WorkPage({ params }: Props) {
             </p>
           </div>
           <div className="grid gap-8 lg:grid-cols-[7fr_3fr] lg:items-end lg:gap-[41px]">
-            {s.screen ? (
-              <Image src={s.screen.src} alt={`Screenshot of ${s.name}`} width={s.screen.width} height={s.screen.height} sizes="(min-width: 1024px) 66vw, 92vw" priority className="h-auto w-full" />
-            ) : (
-              <div className="grid aspect-[16/8] place-items-center rounded-[12px] bg-bark">
-                {s.logo && <Image src={s.logo} alt="" width={112} height={112} priority className="h-24 w-24 rounded-[12px] md:h-28 md:w-28" />}
-              </div>
-            )}
+            <div className={`grid place-items-center rounded-[28px] border-[1.5px] border-ink p-[6%] ${["bg-blue", "bg-pink", "bg-lime", "bg-sun", "bg-violet", "bg-mint"][i % 6]}`}>
+              {s.screen ? (
+                <Image src={s.screen.src} alt={`Screenshot of ${s.name}`} width={s.screen.width} height={s.screen.height} sizes="(min-width: 1024px) 60vw, 84vw" priority className="h-auto w-full rounded-[14px] border-[1.5px] border-ink" />
+              ) : (
+                <div className="grid aspect-[16/7] place-items-center">
+                  {s.logo && <Image src={s.logo} alt="" width={128} height={128} priority className="h-24 w-24 rounded-[24px] border-[1.5px] border-ink md:h-32 md:w-32" />}
+                </div>
+              )}
+            </div>
             <p className="voice">{s.summary}</p>
           </div>
         </header>

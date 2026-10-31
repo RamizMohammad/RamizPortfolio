@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Anton, Inter, JetBrains_Mono } from "next/font/google";
 import CommandPalette from "@/components/CommandPalette";
 import RevealObserver from "@/components/RevealObserver";
 import SiteFooter from "@/components/SiteFooter";
@@ -8,6 +8,7 @@ import { profile } from "@/content/profile";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
+const anton = Anton({ subsets: ["latin"], weight: "400", variable: "--font-anton", display: "swap" });
 const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jbm", display: "swap" });
 
 const description =
@@ -22,14 +23,14 @@ export const metadata: Metadata = {
   twitter: { card: "summary_large_image", creator: "@Mohammad__Ramiz" },
 };
 
-export const viewport: Viewport = { themeColor: "#100904", colorScheme: "dark", viewportFit: "cover" };
+export const viewport: Viewport = { themeColor: "#d4f25b", colorScheme: "light", viewportFit: "cover" };
 
 // Lets CSS hide content that reveals on scroll only when JavaScript will reveal it again.
 const jsFlag = `document.documentElement.classList.add('js')`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} ${mono.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${inter.variable} ${anton.variable} ${mono.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: jsFlag }} />
       </head>
@@ -38,9 +39,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           Skip to content
         </a>
         <SiteHeader />
-        <p className="edge-label t-micro hidden lg:block" aria-hidden="true">
-          {profile.name} — Software engineer / Backend · Automation · Infra
-        </p>
         {children}
         <SiteFooter />
         <CommandPalette />

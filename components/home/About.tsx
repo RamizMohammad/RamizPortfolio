@@ -19,8 +19,8 @@ export default function About() {
         <h2 id="about-title" className="t-h1" data-reveal>
           Behind the systems.
         </h2>
-        <div className="mx-auto w-full max-w-[420px]" data-reveal style={{ ["--rd" as string]: "80ms" }}>
-          <Image src={profile.portrait.src} alt={profile.portrait.alt} width={profile.portrait.width} height={profile.portrait.height} sizes="(min-width: 1024px) 420px, 90vw" className="h-auto w-full" />
+        <div className="mx-auto w-full max-w-[420px] overflow-hidden rounded-[28px] border-[1.5px] border-ink bg-sun" data-reveal style={{ ["--rd" as string]: "80ms" }}>
+          <Image src={profile.portrait.src} alt={profile.portrait.alt} width={profile.portrait.width} height={profile.portrait.height} sizes="(min-width: 1024px) 420px, 90vw" className="h-auto w-full mix-blend-multiply" />
         </div>
         <p className="voice" data-reveal style={{ ["--rd" as string]: "160ms" }}>
           I&rsquo;m a software engineer at {profile.company}. I like the scripts that remove manual work, the APIs that connect systems, and the servers they run on. I build the apps on top too, mostly Android and the web.

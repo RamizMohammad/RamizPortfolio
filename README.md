@@ -1,10 +1,10 @@
 # mohammadramiz.in
 
-Personal portfolio of Mohammad Ramiz, a backend software engineer. A darkroom-editorial site: a warm near-black canvas, cream uppercase type, and one artifact per screen — a terminal session, a project screenshot, a system architecture diagram.
+Personal portfolio of Mohammad Ramiz, a backend software engineer. A bold, playful site: a giant condensed wordmark over a waving pink ribbon, cartoon stickers of a backend engineer's tools floating around it, pill controls, and each project on its own flat colour block.
 
 ## Stack
 
-Next.js 16 (App Router, static) · React 19 · TypeScript · Tailwind CSS 4 · Radix UI. No 3D and no animation library.
+Next.js 16 (App Router, static) · React 19 · TypeScript · Tailwind CSS 4 · Radix UI. No 3D and no animation library: the ribbon is a 2D canvas, everything else is CSS.
 
 ## Run
 
@@ -27,10 +27,10 @@ npm run dev
 
 ## Design rules
 
-- **Colours:** canvas `#100904`, cream `#ffedd7`, bark `#382416` (the only raised surface), cork `#40372e` and driftwood `#6c5f51` for dashed hairlines, ember `#dc5000` only for status dots and credit lines — never on buttons.
-- **Type:** Inter with `ss01`. Everything is uppercase at weight 500; descriptions use `.voice` (mixed case, weight 400). Display and heading sizes use line-height 0.9.
-- **Shapes:** 12px cards, 36px filled pill (at most one per section), 22.5px outlined ghost buttons. No shadows.
-- **Layout:** full-bleed. Sections use `.void` (heading left, one object centred, description right) or a 3/7 split. Text never sits over an image.
+- **Colours:** lavender paper `#ebe8f6`, ink `#121016`, white cards, and candy accents used as flat blocks: pink `#f47a9a`, lime `#d4f25b`, blue `#2f5bea`, sun `#ffcf3a`, violet `#b9a6f5`, mint `#5fd3a4`.
+- **Type:** Anton for display (always uppercase, tight leading), Inter for everything else; `.voice` is the large sentence-case line, `.t-label` the small uppercase one.
+- **Controls:** pills only — `.btn-pill` (ink) for the main action, `.btn-ghost` (white, ink outline) for the rest.
+- **Hero:** the wordmark letters slide in as slices; stickers (`components/hero/Stickers.tsx`) pop in and bob; the ribbon (`components/hero/Ribbon.tsx`) waves behind. A pause button stops all looping motion, and reduced motion shows a still frame.
 
 ## Adding a project
 

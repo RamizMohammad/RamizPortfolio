@@ -1,3 +1,4 @@
+import Terminal from "@/components/Terminal";
 import { stack } from "@/content/stack";
 import { LAYERS } from "@/content/types";
 import SectionLabel from "./SectionLabel";
@@ -15,6 +16,9 @@ export default function Stack() {
           <p className="voice" data-reveal>
             Every tool sits in the layer it works in.
           </p>
+          <div data-reveal>
+            <Terminal />
+          </div>
         </div>
         <ol className="dash-b">
           {LAYERS.map((l, i) => (

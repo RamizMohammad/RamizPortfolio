@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const SESSION = [
   { cmd: "whoami", out: "mohammad-ramiz — software engineer @ moglix" },
@@ -16,11 +16,12 @@ const STARTS = SESSION.map((_, i) => SESSION.slice(0, i).reduce((n, s) => n + s.
 const part = (text: string, start: number, shown: number) => text.slice(0, Math.max(0, shown - start));
 
 /**
- * The hero artifact: a short shell session that types itself once. Decorative; every fact in it
+ * A short shell session that types itself once, when it comes into view. Decorative; every fact in it
  * is also on the page as real text, so it is hidden from assistive technology.
  */
 export default function Terminal() {
   const [shown, setShown] = useState(0);
+  const box = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -34,16 +35,25 @@ export default function Terminal() {
       setShown(count);
       if (step < STEPS.length) timer = window.setTimeout(tick, wasOutput ? 520 : 42 + Math.random() * 50);
     };
-    timer = reduced ? window.setTimeout(() => setShown(TOTAL), 0) : window.setTimeout(tick, 700);
-    return () => window.clearTimeout(timer);
+    // Starts typing the first time it scrolls into view.
+    const io = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return;
+      io.disconnect();
+      timer = reduced ? window.setTimeout(() => setShown(TOTAL), 0) : window.setTimeout(tick, 400);
+    }, { threshold: 0.4 });
+    if (box.current) io.observe(box.current);
+    return () => {
+      io.disconnect();
+      window.clearTimeout(timer);
+    };
   }, []);
 
   return (
-    <div aria-hidden="true" className="nc rounded-[12px] bg-bark p-6 font-mono text-[13px] leading-[1.7] font-normal md:text-[15px]">
+    <div ref={box} aria-hidden="true" className="nc rounded-[24px] border-[1.5px] border-ink bg-ink p-6 font-mono text-paper text-[13px] leading-[1.7] font-normal md:text-[15px]">
       <div className="mb-5 flex gap-2">
-        <span className="h-2.5 w-2.5 rounded-full bg-cork" />
-        <span className="h-2.5 w-2.5 rounded-full bg-cork" />
-        <span className="h-2.5 w-2.5 rounded-full bg-cork" />
+        <span className="h-2.5 w-2.5 rounded-full bg-pink" />
+        <span className="h-2.5 w-2.5 rounded-full bg-sun" />
+        <span className="h-2.5 w-2.5 rounded-full bg-mint" />
       </div>
       {/* The full session sits underneath, invisible, so the box never changes size while typing. */}
       <div className="grid">
@@ -64,14 +74,14 @@ export default function Terminal() {
             return (
               <div key={s.cmd} className="mb-3">
                 <div>
-                  <span className="text-muted">$ </span>
+                  <span className="text-[#a9a5bf]">$ </span>
                   {cmd}
                 </div>
-                {out && <div className="text-muted">{out}</div>}
+                {out && <div className="text-[#a9a5bf]">{out}</div>}
               </div>
             );
           })}
-          {shown >= TOTAL && <span className="text-muted">$ </span>}
+          {shown >= TOTAL && <span className="text-[#a9a5bf]">$ </span>}
           <span className="caret" />
         </div>
       </div>

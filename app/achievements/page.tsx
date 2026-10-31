@@ -35,7 +35,7 @@ export default function AchievementsPage() {
                     </p>
                     <h3 className="t-h2">{a.title}</h3>
                     <p className="t-label">
-                      {a.org} — <span className="text-ember">{a.status}</span>
+                      {a.org} — <span className="text-pink-deep">{a.status}</span>
                     </p>
                     {a.detail && <p className="voice-sm muted">{a.detail}</p>}
                   </div>

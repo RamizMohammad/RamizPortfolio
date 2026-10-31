@@ -25,7 +25,7 @@ export default function Architecture() {
             Five layers, one system.
           </h2>
           <p className="voice" data-reveal>
-            Everything I build sits on the same five layers. Choose a system to see its components and how data moves between them.
+            Every system I build sits on five layers. Pick one to see how data moves.
           </p>
           <div role="tablist" aria-label="Featured systems" className="flex flex-wrap gap-2">
             {featuredSystems.map((x) => (

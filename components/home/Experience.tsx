@@ -20,7 +20,7 @@ export default function Experience() {
             <li key={`${t.org}-${t.title}`} className="dash-t grid gap-4 py-8 md:grid-cols-[minmax(200px,2fr)_5fr] md:gap-6" data-reveal style={{ ["--rd" as string]: `${i * 60}ms` }}>
               <div className="t-label grid content-start gap-2">
                 {t.span && t.span[1] === null && (
-                  <span className="text-ember">
+                  <span className="text-pink-deep">
                     <span className="dot mr-2" />
                     Head
                   </span>

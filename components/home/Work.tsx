@@ -14,26 +14,28 @@ const label = (d: Domain) => DOMAINS.find((x) => x.id === d)?.label ?? d;
 const publicOnes = systems.filter((s) => !s.internal);
 const internal = systems.filter((s) => s.internal);
 
-/** The object of each project screen: a screenshot of the live product, or its mark on a bark plate. */
-function Artifact({ s }: { s: System }) {
-  if (s.screen) {
-    return (
-      <Image
-        src={s.screen.src}
-        alt={`Screenshot of ${s.name}`}
-        width={s.screen.width}
-        height={s.screen.height}
-        sizes="(min-width: 1024px) 40vw, 92vw"
-        className="h-auto w-full"
-      />
-    );
-  }
+/** Each project sits on its own flat colour block, like a sticker sheet. */
+const PANELS = ["bg-blue", "bg-pink", "bg-lime", "bg-sun", "bg-violet", "bg-mint"];
+
+/** The object of each project screen: a screenshot of the live product, or its logo, on a colour block. */
+function Artifact({ s, i }: { s: System; i: number }) {
   return (
-    <div className="grid aspect-[16/10] place-items-center rounded-[12px] bg-bark">
-      <div className="grid justify-items-center gap-4">
-        {s.logo && <Image src={s.logo} alt="" width={96} height={96} className="h-20 w-20 rounded-[12px] md:h-24 md:w-24" />}
-        <span className="t-label">{s.name}</span>
-      </div>
+    <div className={`grid aspect-[16/11] place-items-center rounded-[28px] border-[1.5px] border-ink p-[7%] ${PANELS[i % PANELS.length]}`}>
+      {s.screen ? (
+        <Image
+          src={s.screen.src}
+          alt={`Screenshot of ${s.name}`}
+          width={s.screen.width}
+          height={s.screen.height}
+          sizes="(min-width: 1024px) 36vw, 84vw"
+          className="h-auto w-full rounded-[14px] border-[1.5px] border-ink"
+        />
+      ) : (
+        <div className="grid justify-items-center gap-4">
+          {s.logo && <Image src={s.logo} alt="" width={120} height={120} className="h-24 w-24 rounded-[24px] border-[1.5px] border-ink md:h-28 md:w-28" />}
+          <span className="btn-ghost btn-sm pointer-events-none">{s.name}</span>
+        </div>
+      )}
     </div>
   );
 }
@@ -71,7 +73,7 @@ export default function Work() {
           </p>
           <div role="group" aria-label="Filter systems by domain" className="t-label flex flex-wrap gap-x-6 gap-y-3">
             {[{ id: "all" as const, label: "All" }, ...domains].map((d) => (
-              <button key={d.id} type="button" aria-pressed={filter === d.id} onClick={() => choose(d.id)} className={`uppercase ${filter === d.id ? "link" : "link-quiet muted hover:text-cream"}`}>
+              <button key={d.id} type="button" aria-pressed={filter === d.id} onClick={() => choose(d.id)} className={`uppercase ${filter === d.id ? "link" : "link-quiet muted hover:text-ink"}`}>
                 {d.label}
               </button>
             ))}
@@ -91,7 +93,7 @@ export default function Work() {
             </p>
           </div>
           <Link href={`/work/${s.slug}`} aria-label={`${s.name} case study`} tabIndex={-1} data-reveal style={{ ["--rd" as string]: "80ms" }}>
-            <Artifact s={s} />
+            <Artifact s={s} i={publicOnes.indexOf(s)} />
           </Link>
           <div className="grid content-start gap-6" data-reveal style={{ ["--rd" as string]: "160ms" }}>
             <p className="voice">{s.summary}</p>

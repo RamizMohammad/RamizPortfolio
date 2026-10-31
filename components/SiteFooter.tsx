@@ -17,7 +17,7 @@ export default function SiteFooter() {
             </li>
           ))}
         </ul>
-        <p className="text-ember">Built in Greater Noida</p>
+        <p className="text-pink-deep">Built in Greater Noida</p>
       </div>
       <p className="t-micro muted mt-4">Last build {built}</p>
     </footer>
