@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { BraceCoin, Gear, PaperPlane } from "@/components/hero/Stickers";
 import { achievements } from "@/content/achievements";
 import { profile } from "@/content/profile";
 import { systems } from "@/content/systems";
@@ -29,7 +28,13 @@ export default function About() {
         {/* Intro */}
         <div className={`${card} grid content-between gap-8 bg-card p-7 md:p-10 lg:col-span-7`} data-reveal>
           <div className="grid gap-5">
-            <p className="t-label muted">The person behind the systems</p>
+            <div className="flex items-center gap-4">
+              <Image src="/images/mascot-face.webp" alt="" width={512} height={512} sizes="112px" className="h-20 w-20 rounded-full border-[1.5px] border-ink bg-sun md:h-28 md:w-28" />
+              <div className="grid gap-1">
+                <p className="t-h2">{profile.name}</p>
+                <p className="t-label muted">The person behind the systems</p>
+              </div>
+            </div>
             <h2 id="about-title" className="t-display">
               Hi, I&rsquo;m Ramiz.
             </h2>
@@ -47,25 +52,12 @@ export default function About() {
           </ul>
         </div>
 
-        {/* Mascot */}
-        <div className={`${card} relative min-h-[440px] overflow-hidden bg-violet md:min-h-[560px] lg:col-span-5 lg:row-span-2`} data-reveal style={{ ["--rd" as string]: "80ms" }}>
-          <div aria-hidden="true" className="absolute inset-0 opacity-30" style={{ backgroundImage: "linear-gradient(#121016 1px, transparent 1px), linear-gradient(90deg, #121016 1px, transparent 1px)", backgroundSize: "44px 44px", maskImage: "radial-gradient(circle at 50% 40%, #000 0%, transparent 70%)" }} />
-          {/* Anchored to the right edge: the source render crops the raised hand there. */}
-          <div className="bob absolute -bottom-4 right-0 w-[86%] max-w-[480px]" style={{ ["--r0" as string]: "0deg", ["--r1" as string]: "1deg", ["--t" as string]: "6s" }}>
-            <Image src={profile.portrait.src} alt={profile.portrait.alt} width={profile.portrait.width} height={profile.portrait.height} sizes="(min-width: 1024px) 480px, 86vw" className="h-auto w-full" />
-          </div>
-          <p className="absolute left-6 top-6 rounded-[18px] rounded-bl-[4px] border-[1.5px] border-ink bg-card px-4 py-2.5 font-mono text-[14px]" aria-hidden="true">
+        {/* Mascot: the full-body render, big */}
+        <div className={`${card} relative min-h-[520px] overflow-hidden bg-blue md:min-h-[640px] lg:col-span-5 lg:row-span-2`} data-reveal style={{ ["--rd" as string]: "80ms" }}>
+          <Image src={profile.portrait.src} alt={profile.portrait.alt} fill sizes="(min-width: 1024px) 40vw, 92vw" className="object-cover object-[50%_35%]" />
+          <p className="absolute left-6 top-6 hidden rounded-[18px] rounded-bl-[4px] md:block border-[1.5px] border-ink bg-card px-4 py-2.5 font-mono text-[14px]" aria-hidden="true">
             print(&quot;hello, world&quot;)
           </p>
-          <span aria-hidden="true" className="bob absolute right-6 top-8 w-16" style={{ ["--r0" as string]: "0deg", ["--r1" as string]: "30deg", ["--t" as string]: "7s" }}>
-            <Gear />
-          </span>
-          <span aria-hidden="true" className="bob absolute right-[12%] top-[38%] w-20" style={{ ["--r0" as string]: "-8deg", ["--r1" as string]: "4deg", ["--t" as string]: "5s", ["--bd" as string]: "-1.5s" }}>
-            <BraceCoin />
-          </span>
-          <span aria-hidden="true" className="bob absolute left-[6%] top-[42%] w-24" style={{ ["--r0" as string]: "-6deg", ["--r1" as string]: "2deg", ["--t" as string]: "6.5s", ["--bd" as string]: "-3s" }}>
-            <PaperPlane />
-          </span>
         </div>
 
         {/* Numbers */}

@@ -17,7 +17,7 @@ export const profile = {
   ],
   education: "Computer Science",
   phone: { display: "+91 95170 28373", href: "tel:+919517028373" },
-  portrait: { src: "/images/mascot.webp", width: 900, height: 1138, alt: "3D cartoon of Mohammad Ramiz holding a stylus" },
+  portrait: { src: "/images/mascot-full.webp", width: 900, height: 1600, alt: "3D cartoon of Mohammad Ramiz holding a stylus beside a glowing Portfolio sign" },
   email: "ramizanas6@gmail.com",
   resume: "/resume.pdf",
   links: [
