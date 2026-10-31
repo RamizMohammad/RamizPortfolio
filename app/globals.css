@@ -296,6 +296,20 @@ html.custom-cursor :is(input, textarea, [contenteditable="true"]) { cursor: text
 .cursor-tag { animation: cursor-tag 300ms cubic-bezier(0.34, 1.56, 0.64, 1) }
 @keyframes cursor-tag { from { opacity: 0; transform: translateY(-50%) translateX(-6px) scale(0.6) } }
 
+/* Splash: only while html[data-splash="on"] (set before paint). The page underneath stays still
+   and unscrollable; the hero's entrance waits until the curtains have gone. */
+html:not([data-splash="on"]) .splash { display: none }
+html[data-splash="on"] { overflow: hidden }
+html[data-splash="on"] :is(.slice, .rise, .pop) { animation-play-state: paused }
+.splash-face { animation: splash-face 900ms cubic-bezier(0.34, 1.56, 0.64, 1) 100ms both }
+@keyframes splash-face { 0% { transform: scale(0) rotate(-25deg) } 60% { transform: scale(1.1) rotate(8deg) } 80% { transform: rotate(-4deg) } 100% { transform: none } }
+.splash-content { animation: rise 600ms cubic-bezier(0.16, 1, 0.3, 1) both }
+/* Leaving: the content drops away, then the paper curtain and the lime one behind it sweep up. */
+.splash-curtain { transition: transform 800ms cubic-bezier(0.76, 0, 0.24, 1), border-radius 800ms ease }
+.splash-leaving .splash-content { animation: none; transition: opacity 250ms ease, transform 400ms ease; opacity: 0; transform: translateY(-24px) }
+.splash-leaving .splash-ink { transform: translateY(-105%); border-radius: 0 0 50% 50% / 0 0 18% 18%; transition-delay: 150ms }
+.splash-leaving .splash-lime { transform: translateY(-105%); border-radius: 0 0 50% 50% / 0 0 18% 18%; transition-delay: 280ms }
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto }
   html.js .split .w > span, html.js .section-label .section-label-text, html.js .section-label .section-label-line { transform: none; transition: none }

@@ -5,6 +5,7 @@ import Cursor from "@/components/Cursor";
 import RevealObserver from "@/components/RevealObserver";
 import SiteFooter from "@/components/SiteFooter";
 import SiteHeader from "@/components/SiteHeader";
+import Splash, { splashScript } from "@/components/Splash";
 import { themeScript } from "@/components/ThemeToggle";
 import { profile } from "@/content/profile";
 import "./globals.css";
@@ -36,11 +37,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <script dangerouslySetInnerHTML={{ __html: jsFlag }} />
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <script dangerouslySetInnerHTML={{ __html: splashScript }} />
       </head>
       <body>
         <a href="#main" className="btn-pill sr-only fixed left-4 top-4 z-[200] focus:not-sr-only">
           Skip to content
         </a>
+        <Splash />
         <SiteHeader />
         {children}
         <SiteFooter />
