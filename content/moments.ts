@@ -25,7 +25,7 @@ export const moments: Moment[] = [
     place: "K.R. Mangalam University, Gurugram",
     title: "56-hour hackathon — finalist",
     caption: "Reached the final after four judging rounds.",
-    image: { src: "/images/achievements/krmu.webp", width: 1000, height: 729, alt: "K.R. Mangalam University hackathon certificate" },
+    image: { src: "/images/certificates/krmu.webp", width: 1000, height: 729, alt: "K.R. Mangalam University hackathon certificate" },
     fit: "contain",
   },
   {
@@ -33,7 +33,7 @@ export const moments: Moment[] = [
     date: "2024",
     place: "Sharda University, Greater Noida",
     title: "24-hour hackathon — 6th place",
-    image: { src: "/images/achievements/sharda.webp", width: 1000, height: 725, alt: "Sharda University hackathon certificate" },
+    image: { src: "/images/certificates/sharda.webp", width: 1000, height: 725, alt: "Sharda University hackathon certificate" },
     fit: "contain",
   },
   {
@@ -42,7 +42,7 @@ export const moments: Moment[] = [
     place: "NHAI & HOAI",
     title: "Infrastructure Innovation hackathon",
     caption: "Proposed AI-assisted highway monitoring for pothole detection and commuter safety.",
-    image: { src: "/images/achievements/nhai.webp", width: 1000, height: 684, alt: "NHAI and HOAI hackathon certificate" },
+    image: { src: "/images/certificates/nhai.webp", width: 1000, height: 684, alt: "NHAI and HOAI hackathon certificate" },
     fit: "contain",
   },
   {
@@ -50,7 +50,7 @@ export const moments: Moment[] = [
     date: "2025",
     place: "IIIT Delhi, New Delhi",
     title: "Hack For Impact, E-Summit 2025",
-    image: { src: "/images/achievements/iiitd.webp", width: 1000, height: 706, alt: "IIIT Delhi Hack For Impact certificate" },
+    image: { src: "/images/certificates/iiitd.webp", width: 1000, height: 706, alt: "IIIT Delhi Hack For Impact certificate" },
     fit: "contain",
   },
   {
@@ -58,7 +58,7 @@ export const moments: Moment[] = [
     date: "2025",
     place: "Google India, Gurugram",
     title: "Build With India",
-    image: { src: "/images/achievements/build-with-india.webp", width: 1000, height: 707, alt: "Build With India certificate" },
+    image: { src: "/images/certificates/build-with-india.webp", width: 1000, height: 707, alt: "Build With India certificate" },
     fit: "contain",
   },
   {
@@ -67,7 +67,7 @@ export const moments: Moment[] = [
     place: "Bluestock Fintech",
     title: "SDE internship, project lead",
     caption: "Built the complete admin panel and its frontend architecture.",
-    image: { src: "/images/achievements/bluestock.webp", width: 1000, height: 706, alt: "Bluestock Fintech internship certificate" },
+    image: { src: "/images/certificates/bluestock.webp", width: 1000, height: 707, alt: "Bluestock Fintech internship certificate" },
     fit: "contain",
   },
   {
@@ -76,7 +76,7 @@ export const moments: Moment[] = [
     place: "Indian Patent Office",
     title: "Patent published",
     caption: "Method and System for Real-Time User Safety During Vehicle Commutes.",
-    image: { src: "/images/achievements/patent.webp", width: 1000, height: 773, alt: "Patent publication document" },
+    image: { src: "/images/certificates/patent.webp", width: 1000, height: 773, alt: "Patent publication document" },
     fit: "contain",
   },
 ];

@@ -1,4 +1,6 @@
 import Image from "next/image";
+import CountUp from "@/components/CountUp";
+import Parallax from "@/components/Parallax";
 import { achievements } from "@/content/achievements";
 import { profile } from "@/content/profile";
 import { systems } from "@/content/systems";
@@ -26,10 +28,10 @@ export default function About() {
       <SectionLabel n={1}>About</SectionLabel>
       <div className="grid gap-4 pt-16 lg:grid-cols-12">
         {/* Intro */}
-        <div className={`${card} grid content-between gap-8 bg-card p-7 md:p-10 lg:col-span-7`} data-reveal>
+        <div className={`${card} pop-in grid content-between gap-8 bg-card p-7 md:p-10 lg:col-span-7`} data-reveal>
           <div className="grid gap-5">
             <div className="flex items-center gap-4">
-              <Image src="/images/mascot-face.webp" alt="" width={512} height={512} sizes="112px" className="h-20 w-20 rounded-full border-[1.5px] border-ink bg-sun md:h-28 md:w-28" />
+              <Image src="/images/mascot-face.webp" alt="" width={512} height={512} sizes="112px" className="wave h-20 w-20 rounded-full border-[1.5px] border-ink bg-sun md:h-28 md:w-28" />
               <div className="grid gap-1">
                 <p className="t-h2">{profile.name}</p>
                 <p className="t-label muted">The person behind the systems</p>
@@ -47,24 +49,31 @@ export default function About() {
             <li className="btn-ghost btn-sm pointer-events-none">{profile.education}</li>
             <li className="btn-ghost btn-sm pointer-events-none">Greater Noida, India</li>
             <li className="btn-pill btn-sm pointer-events-none">
-              <span className="dot !bg-lime" /> Open to work
+              <span className="dot pulse !bg-lime" /> Open to work
             </li>
           </ul>
         </div>
 
-        {/* Mascot: the full-body render, big */}
-        <div className={`${card} relative min-h-[520px] overflow-hidden bg-blue md:min-h-[640px] lg:col-span-5 lg:row-span-2`} data-reveal style={{ ["--rd" as string]: "80ms" }}>
-          <Image src={profile.portrait.src} alt={profile.portrait.alt} fill sizes="(min-width: 1024px) 40vw, 92vw" className="object-cover object-[50%_35%]" />
-          <p className="absolute left-6 top-6 hidden rounded-[18px] rounded-bl-[4px] md:block border-[1.5px] border-ink bg-card px-4 py-2.5 font-mono text-[14px]" aria-hidden="true">
-            print(&quot;hello, world&quot;)
-          </p>
+        {/* Mascot: the full-body render, big, with a little depth under the pointer */}
+        <div className={`${card} pop-in relative min-h-[520px] overflow-hidden bg-blue md:min-h-[640px] lg:col-span-5 lg:row-span-2`} data-reveal style={{ ["--rd" as string]: "80ms" }}>
+          <Parallax className="absolute inset-0">
+            <div data-depth="18" className="absolute -inset-5 transition-transform duration-300 ease-out">
+              <Image src={profile.portrait.src} alt={profile.portrait.alt} fill sizes="(min-width: 1024px) 42vw, 96vw" className="object-cover object-[50%_35%]" />
+            </div>
+            <p data-depth="-14" className="absolute left-6 top-6 hidden rounded-[18px] rounded-bl-[4px] border-[1.5px] border-ink bg-card px-4 py-2.5 font-mono text-[14px] transition-transform duration-300 ease-out md:block" aria-hidden="true">
+              <span className="typing" style={{ ["--chars" as string]: 21 }}>print(&quot;hello, world&quot;)</span>
+              <span className="caret ml-0.5 !w-[0.5em]" />
+            </p>
+          </Parallax>
         </div>
 
         {/* Numbers */}
         <ul className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:col-span-7" aria-label="In numbers">
           {STATS.map((s, i) => (
-            <li key={s.label} className={`${card} grid content-between gap-6 p-6 ${s.tone}`} data-reveal style={{ ["--rd" as string]: `${i * 60}ms` }}>
-              <span className="t-display !text-[clamp(56px,6vw,88px)]">{s.value}</span>
+            <li key={s.label} className={`${card} pop-in lift grid content-between gap-6 p-6 ${s.tone}`} data-reveal style={{ ["--rd" as string]: `${i * 60}ms` }}>
+              <span className="t-display !text-[clamp(56px,6vw,88px)]">
+                <CountUp value={Number(s.value)} from={Number(s.value) > 1000 ? Number(s.value) - 21 : 0} />
+              </span>
               <span className="t-label">{s.label}</span>
             </li>
           ))}
@@ -72,7 +81,7 @@ export default function About() {
 
         {/* Right now */}
         {now && (
-          <div className={`${card} grid content-start gap-5 bg-ink p-7 text-paper md:p-10 lg:col-span-5`} data-reveal>
+          <div className={`${card} pop-in grid content-start gap-5 bg-ink p-7 text-paper md:p-10 lg:col-span-5`} data-reveal>
             <p className="t-label flex items-center gap-2 text-lime">
               <span className="dot !bg-lime" /> Right now
             </p>
@@ -92,13 +101,14 @@ export default function About() {
         )}
 
         {/* Journey */}
-        <div className={`${card} grid content-start gap-8 bg-card p-7 md:p-10 lg:col-span-7`} data-reveal>
+        <div className={`${card} pop-in grid content-start gap-8 bg-card p-7 md:p-10 lg:col-span-7`} data-reveal>
           <h3 className="t-h2">The road so far</h3>
-          <ol className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+          <ol className="relative grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+            <span aria-hidden="true" className="road-line absolute left-5 right-10 top-5 hidden h-[2px] bg-ink xl:block" />
             {journey.map((t, i) => (
               <li key={t.org + t.title} className="relative grid content-start gap-2">
-                <span className="flex items-center gap-3">
-                  <span className={`grid h-10 w-10 shrink-0 place-items-center rounded-full border-[1.5px] border-ink font-display text-[17px] ${CHIP_TONES[i % CHIP_TONES.length]}`}>{i + 1}</span>
+                <span className="grid justify-items-start gap-3">
+                  <span style={{ ["--i" as string]: i }} className={`road-step relative z-[1] grid h-10 w-10 shrink-0 place-items-center rounded-full border-[1.5px] border-ink font-display text-[17px] ${CHIP_TONES[i % CHIP_TONES.length]}`}>{i + 1}</span>
                   <span className="t-h2">{Math.floor(t.span![0])}</span>
                 </span>
                 <span className="t-label">{t.title}</span>
@@ -111,7 +121,7 @@ export default function About() {
         </div>
 
         {/* Details */}
-        <div className={`${card} grid content-start gap-6 bg-sun p-7 md:p-10 lg:col-span-5`} data-reveal>
+        <div className={`${card} pop-in grid content-start gap-6 bg-sun p-7 md:p-10 lg:col-span-5`} data-reveal>
           <h3 className="t-h2">Reach me</h3>
           <dl className="grid">
             {[
@@ -141,14 +151,14 @@ export default function About() {
         </div>
 
         {/* Interests */}
-        <div className={`${card} grid content-start gap-6 bg-card p-7 md:p-10 lg:col-span-7`} data-reveal>
+        <div className={`${card} pop-in grid content-start gap-6 bg-card p-7 md:p-10 lg:col-span-7`} data-reveal>
           <h3 className="t-h2">What I work on</h3>
           <ul className="flex flex-wrap gap-3">
             {profile.interests.map((it, i) => (
               <li
                 key={it}
-                className={`rounded-full border-[1.5px] border-ink px-4 py-2 text-[15px] font-medium ${CHIP_TONES[i % CHIP_TONES.length]}`}
-                style={{ transform: `rotate(${[-2, 1.5, -1, 2, -1.5, 1][i % 6]}deg)` }}
+                className={`chip rounded-full border-[1.5px] border-ink px-4 py-2 text-[15px] font-medium ${CHIP_TONES[i % CHIP_TONES.length]}`}
+                style={{ ["--rot" as string]: `${[-2, 1.5, -1, 2, -1.5, 1][i % 6]}deg`, ["--i" as string]: i }}
               >
                 {it}
               </li>
