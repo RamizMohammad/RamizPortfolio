@@ -120,7 +120,7 @@ export default function Publications() {
         <h2 id="publications-title" className="t-h1 split" data-reveal>
           <Words text="Published." />
         </h2>
-        <p className="voice-sm muted max-w-[44ch]" data-reveal>
+        <p className="voice-sm muted ink-in max-w-[44ch]" data-reveal>
           {sorted.length} {sorted.length === 1 ? "publication" : "publications"} · {kinds.join(", ")}. Open one for its abstract and a ready-to-paste citation.
         </p>
       </div>

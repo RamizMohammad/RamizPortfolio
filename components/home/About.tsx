@@ -41,7 +41,7 @@ export default function About() {
             <h2 id="about-title" className="t-display split">
               <Words text="Hi, I’m Ramiz." />
             </h2>
-            <p className="voice-sm max-w-[58ch] text-[18px]">
+            <p className="voice-sm ink-in max-w-[58ch] text-[18px]">
               I&rsquo;m a software engineer at {profile.company}, based in {profile.location}, and I like building scalable applications that solve real problems. Day to day that means REST APIs, backend systems, LLM agents, OCR and forecasting models in Python. I&rsquo;ve been building since {STATS[0].value}: my own products first, then freelance Android apps, internships at Bluestock and {profile.company}, and now the AI and Analytics team at {profile.company}, where my demand-planning work for Tata Steel won the Jungle Torchbearer Award. I build the apps on top too, mostly Android and the web.
             </p>
           </div>
@@ -56,10 +56,10 @@ export default function About() {
         </div>
 
         {/* Mascot: the full-body render, big, with a little depth under the pointer */}
-        <div className={`${card} pop-in relative min-h-[520px] overflow-hidden bg-blue md:min-h-[640px] lg:col-span-5 lg:row-span-2`} data-reveal style={{ ["--rd" as string]: "80ms" }}>
+        <div className={`${card} pop-in relative min-h-[520px] overflow-clip bg-blue md:min-h-[640px] lg:col-span-5 lg:row-span-2`} data-reveal style={{ ["--rd" as string]: "80ms" }}>
           <Parallax className="absolute inset-0">
             <div data-depth="18" className="absolute -inset-5 transition-transform duration-300 ease-out">
-              <Image src={profile.portrait.src} alt={profile.portrait.alt} fill sizes="(min-width: 1024px) 42vw, 96vw" className="object-cover object-[50%_35%]" />
+              <Image src={profile.portrait.src} alt={profile.portrait.alt} fill sizes="(min-width: 1024px) 42vw, 96vw" className="scroll-parallax object-cover object-[50%_35%]" />
             </div>
             <p data-depth="-14" className="absolute left-6 top-6 hidden rounded-[18px] rounded-bl-[4px] border-[1.5px] border-ink bg-card px-4 py-2.5 font-mono text-[14px] transition-transform duration-300 ease-out md:block" aria-hidden="true">
               <span className="typing" style={{ ["--chars" as string]: 21 }}>print(&quot;hello, world&quot;)</span>

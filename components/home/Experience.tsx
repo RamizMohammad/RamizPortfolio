@@ -54,7 +54,7 @@ export default function Experience() {
         <h2 id="experience-title" className="t-h1 split" data-reveal>
           <Words text="Where I’ve worked." />
         </h2>
-        <p className="voice-sm muted max-w-[44ch]" data-reveal>
+        <p className="voice-sm muted ink-in max-w-[44ch]" data-reveal>
           Building since 2021: my own products first, then freelance Android, a B.Tech in AI and ML, internships at Bluestock and Moglix, and now software engineer at Moglix.
         </p>
       </div>

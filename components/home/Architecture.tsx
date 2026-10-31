@@ -25,7 +25,7 @@ export default function Architecture() {
           <h2 id="architecture-title" className="t-h1 split" data-reveal>
             <Words text="Five layers, one system." />
           </h2>
-          <p className="voice" data-reveal>
+          <p className="voice ink-in" data-reveal>
             Every system I build sits on five layers. Pick one to see how data moves.
           </p>
           <div role="tablist" aria-label="Featured systems" className="flex flex-wrap gap-2">

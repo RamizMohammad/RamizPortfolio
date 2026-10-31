@@ -42,7 +42,7 @@ const STICKERS = [
 
 export default function Hero() {
   return (
-    <section id="hero" aria-labelledby="hero-title" className="relative grid min-h-[100svh] overflow-hidden pt-[var(--nav-h)]">
+    <section id="hero" aria-labelledby="hero-title" className="relative grid min-h-[100svh] overflow-clip pt-[var(--nav-h)]">
       <Ribbon />
       <div className="edge relative grid content-center justify-items-center gap-8 pb-20 pt-10 text-center">
         <h1 id="hero-title" className="t-mega relative">

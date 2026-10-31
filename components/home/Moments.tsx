@@ -74,7 +74,7 @@ export default function Moments() {
           <h2 id="moments-title" className="t-h1 split" data-reveal>
             <Words text="Places I’ve been." />
           </h2>
-          <p className="voice-sm muted max-w-[44ch]" data-reveal>
+          <p className="voice-sm muted ink-in max-w-[44ch]" data-reveal>
             Hackathons, an internship, a patent — the moments behind the work, oldest first.
           </p>
         </div>

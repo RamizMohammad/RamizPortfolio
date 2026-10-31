@@ -50,7 +50,7 @@ export default function Stack() {
           <h2 id="stack-title" className="t-h1 split" data-reveal>
             <Words text="Tools, by layer." />
           </h2>
-          <p className="voice" data-reveal>
+          <p className="voice ink-in" data-reveal>
             {total} tools across five layers — from the servers at the bottom to the screens on top.
           </p>
           <div data-reveal>

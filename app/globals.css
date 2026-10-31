@@ -399,6 +399,35 @@ html.js .stack-pile.in .stack-key { animation: key-pop 450ms cubic-bezier(0.34, 
 @keyframes crt-off { 0% { opacity: 0 } 25%, 70% { opacity: 1 } 100% { opacity: 0 } }
 @keyframes crt-line { 0%, 20% { transform: scaleX(1); opacity: 0 } 30% { opacity: 1 } 60% { transform: scaleX(0); opacity: 1 } 100% { transform: scaleX(0); opacity: 0 } }
 
+/* Scroll-driven touches, tied to scroll position by the browser itself (no JavaScript). Browsers
+   without scroll timelines, and reduced motion, simply skip them. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    /* The hero wordmark drifts up and shrinks a touch as you scroll away from it, fading only at the end. */
+    #hero .t-mega { animation: hero-away linear both; animation-timeline: view(); animation-range: exit 0% exit 90% }
+    @keyframes hero-away { 60% { opacity: 1 } to { transform: translateY(-10%) scale(0.93); opacity: 0.55 } }
+
+    /* Intro sentences fill with ink, left to right, as they reach reading position. */
+    .ink-in {
+      background-image: linear-gradient(90deg, var(--color-ink) 50%, color-mix(in oklab, var(--color-ink) 22%, transparent) 50%);
+      background-size: 200% 100%; background-position: 100% 0;
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      animation: ink-in linear both; animation-timeline: view(); animation-range: entry 30% cover 42%;
+    }
+    .ink-in.muted { background-image: linear-gradient(90deg, var(--color-muted) 50%, color-mix(in oklab, var(--color-muted) 25%, transparent) 50%) }
+    @keyframes ink-in { to { background-position: 0 0 } }
+
+    /* Cards ease back and desaturate as they leave the top, so the page reads in layers. */
+    :is(#about .pop-in, .exp-card, .paper, #awards article, .stack-block) { animation-name: depth-away; animation-timing-function: linear; animation-fill-mode: both; animation-timeline: view(); animation-range: exit 15% exit 100% }
+    html.js .stack-pile.in .stack-block { animation: block-drop 750ms cubic-bezier(0.34, 1.45, 0.64, 1) both calc(var(--o) * 150ms), depth-away linear both; animation-timeline: auto, view(); animation-range: normal, exit 15% exit 100% }
+    @keyframes depth-away { to { scale: 0.94; filter: saturate(0.55) } }
+
+    /* The big mascot drifts gently inside its frame. */
+    .scroll-parallax { scale: 1.1; animation: drift linear both; animation-timeline: view() }
+    @keyframes drift { from { translate: 0 -4% } to { translate: 0 4% } }
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto }
   :root[data-ascii] body::before { animation: none }

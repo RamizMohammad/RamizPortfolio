@@ -77,7 +77,7 @@ export default function Awards() {
         <h2 id="awards-title" className="t-h1 split" data-reveal>
           <Words text="Awards & wins." />
         </h2>
-        <p className="voice-sm muted max-w-[44ch]" data-reveal>
+        <p className="voice-sm muted ink-in max-w-[44ch]" data-reveal>
           Recognised at work, placed at hackathons. Every result below comes with a certificate on the achievements page.
         </p>
       </div>

@@ -12,7 +12,7 @@ export default function Contact() {
           <Words text="Let’s build the system." />
         </h2>
         <div className="grid content-end gap-10" data-reveal style={{ ["--rd" as string]: "120ms" }}>
-          <p className="voice max-w-[30ch]">Open to engineering roles and freelance work in automation, backends and infrastructure. Email reaches me fastest.</p>
+          <p className="voice ink-in max-w-[30ch]">Open to engineering roles and freelance work in automation, backends and infrastructure. Email reaches me fastest.</p>
           <CopyEmail email={profile.email} />
           <ul className="t-label flex flex-wrap gap-x-6 gap-y-3">
             {profile.links.map((l) => (
