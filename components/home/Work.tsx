@@ -40,7 +40,7 @@ function Tile({ className, rot, i, children, onOpen, label }: { className: strin
   const style = { ["--rot" as string]: `${rot}deg`, ["--rd" as string]: `${i * 70}ms` };
   const cls = `collage-tile pop-in relative overflow-hidden rounded-[24px] border-[1.5px] border-ink ${className}`;
   return onOpen ? (
-    <button type="button" onClick={onOpen} aria-label={label} className={`${cls} cursor-pointer text-left`} style={style} data-reveal>
+    <button type="button" onClick={onOpen} aria-label={label} data-cursor="Open" className={`${cls} cursor-pointer text-left`} style={style} data-reveal>
       {children}
     </button>
   ) : (

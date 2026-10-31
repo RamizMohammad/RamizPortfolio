@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Anton, Inter, JetBrains_Mono } from "next/font/google";
 import CommandPalette from "@/components/CommandPalette";
+import Cursor from "@/components/Cursor";
 import RevealObserver from "@/components/RevealObserver";
 import SiteFooter from "@/components/SiteFooter";
 import SiteHeader from "@/components/SiteHeader";
@@ -45,6 +46,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <SiteFooter />
         <CommandPalette />
         <RevealObserver />
+        <Cursor />
       </body>
     </html>
   );

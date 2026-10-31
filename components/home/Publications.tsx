@@ -96,7 +96,7 @@ function Paper({ p, i }: { p: Publication; i: number }) {
           <button type="button" onClick={() => setOpen((o) => !o)} aria-expanded={open} className="btn-ghost btn-sm">
             {open ? "Hide abstract" : "Abstract"}
           </button>
-          <button type="button" onClick={copy} className="btn-ghost btn-sm">
+          <button type="button" onClick={copy} data-cursor="Copy" className="btn-ghost btn-sm">
             {copied ? "Citation copied" : "Cite"}
           </button>
           {p.href && (

@@ -277,6 +277,14 @@ html.js .section-label.in .section-label-text, html.js .section-label.in .sectio
 .menu-item > * { animation: menu-item 600ms cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: calc(var(--mi, 0) * 45ms + 200ms) }
 @keyframes menu-item { from { transform: translateY(100%); opacity: 0 } }
 
+/* Custom cursor: the native one is hidden only while the custom one is running (mouse, motion allowed);
+   text fields keep their I-beam. The shape eases between sizes and pops when it changes. */
+html.custom-cursor, html.custom-cursor * { cursor: none !important }
+html.custom-cursor :is(input, textarea, [contenteditable="true"]) { cursor: text !important }
+.cursor-shape { transition: width 300ms cubic-bezier(0.34, 1.56, 0.64, 1), height 300ms cubic-bezier(0.34, 1.56, 0.64, 1), transform 150ms ease }
+.cursor-morph { animation: cursor-morph 350ms cubic-bezier(0.34, 1.56, 0.64, 1) }
+@keyframes cursor-morph { from { transform: scale(0.3) rotate(-30deg); opacity: 0 } }
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto }
   html.js .split .w > span, html.js .section-label .section-label-text, html.js .section-label .section-label-line { transform: none; transition: none }
