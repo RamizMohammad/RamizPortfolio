@@ -85,7 +85,7 @@ export default function Moments() {
             <ol ref={list} className="grid gap-12 pb-16 lg:flex lg:h-full lg:items-end lg:gap-16 lg:pb-12 lg:pl-[8vw] lg:pr-[30vw]">
               {sorted.map((m, i) => (
                 <li key={m.title} className="moment grid justify-items-center gap-4 lg:shrink-0" style={{ ["--rot" as string]: `${i % 2 ? 2.5 : -2.5}deg`, ["--y" as string]: i % 2 ? "-36px" : "0px" }}>
-                  <figure data-cursor="View" className="moment-card relative w-[min(360px,86vw)] lg:w-[min(420px,30vw)] rounded-[20px] border-[1.5px] border-ink bg-card p-3 pb-5" data-reveal>
+                  <figure data-cursor="look" className="moment-card relative w-[min(360px,86vw)] lg:w-[min(420px,30vw)] rounded-[20px] border-[1.5px] border-ink bg-card p-3 pb-5" data-reveal>
                     <span aria-hidden="true" className={`absolute -top-3 left-1/2 h-6 w-24 -translate-x-1/2 rotate-[-3deg] border-[1.5px] border-ink/40 opacity-90 ${TAPES[i % TAPES.length]}`} />
                     <div className={`relative aspect-[4/3] overflow-hidden rounded-[12px] border-[1.5px] border-ink ${m.fit === "contain" ? "bg-card" : "bg-line"}`}>
                       <Image src={m.image.src} alt={m.image.alt} fill sizes="(min-width: 1024px) 420px, 86vw" className={m.fit === "contain" ? "object-contain p-1" : "object-cover"} />

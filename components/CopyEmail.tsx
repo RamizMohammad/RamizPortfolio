@@ -31,7 +31,7 @@ export default function CopyEmail({ email }: { email: string }) {
         <span ref={text}>{email}</span>
       </a>
       <div className="flex flex-wrap items-center gap-4">
-        <button type="button" onClick={copy} data-cursor="Copy" className="btn-pill">
+        <button type="button" onClick={copy} data-cursor="copy" className="btn-pill">
           {state === "copied" ? "Copied" : "Copy email"}
         </button>
         <span role="status" className="t-label muted">
