@@ -1,4 +1,5 @@
 import Image from "next/image";
+import LivePreview, { liveUrl } from "./LivePreview";
 import { profile } from "@/content/profile";
 import type { System } from "@/content/types";
 
@@ -64,6 +65,7 @@ export function Phone({ s }: { s: System }) {
 /** A browser window on the live site: address bar, then the screenshot (or the logo if there isn't one). */
 export function Browser({ s }: { s: System }) {
   const link = s.links?.[0];
+  const live = liveUrl(s);
   return (
     <div className="w-full overflow-hidden rounded-[14px] border border-black/40 bg-[#f6f6f7] shadow-[0_30px_60px_-20px_rgb(0_0_0/0.7)]">
       <div className="flex items-center gap-3 border-b border-black/10 bg-[#e9e9ec] px-3 py-2">
@@ -76,7 +78,10 @@ export function Browser({ s }: { s: System }) {
           🔒 {link ? host(link.href) : s.slug}
         </a>
       </div>
-      {s.screen ? (
+      {s.screen && live ? (
+        // The real site, live and usable; the screenshot covers until it loads.
+        <LivePreview url={live} title={s.name} poster={s.screen} interactive sizes="(min-width: 1024px) 38vw, 90vw" />
+      ) : s.screen ? (
         <Image src={s.screen.src} alt={`Screenshot of ${s.name}`} width={s.screen.width} height={s.screen.height} sizes="(min-width: 1024px) 34vw, 90vw" className="h-auto w-full" />
       ) : (
         <div className="grid aspect-[16/10] place-items-center bg-white">

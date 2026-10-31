@@ -3,6 +3,7 @@
 import Words from "@/components/Words";
 import Image from "next/image";
 import { useState, useSyncExternalStore, type ReactNode } from "react";
+import LivePreview, { liveUrl } from "@/components/work/LivePreview";
 import SystemViewer from "@/components/work/SystemViewer";
 import { systems } from "@/content/systems";
 import type { System } from "@/content/types";
@@ -56,7 +57,12 @@ function ProjectTile({ s, i, onOpen }: { s: System; i: number; onOpen: () => voi
   return (
     <Tile className={`${l.m} ${l.d} ${l.tone} flex flex-col`} rot={l.rot} i={i} onOpen={onOpen} label={`Open ${s.name} in its editor`}>
       <div className="relative min-h-0 flex-1">
-        {s.screen ? (
+        {s.screen && liveUrl(s) ? (
+          // The real landing page, live (view-only here); the screenshot shows until it loads.
+          <div className="absolute inset-3 overflow-hidden rounded-[14px] border-[1.5px] border-ink">
+            <LivePreview url={liveUrl(s)!} title={s.name} poster={s.screen} fill sizes="(min-width: 1024px) 40vw, 90vw" />
+          </div>
+        ) : s.screen ? (
           <Image src={s.screen.src} alt="" fill sizes="(min-width: 1024px) 40vw, 90vw" className={`rounded-[18px] object-cover p-3 ${s.screen.kind === "phone" ? "object-left" : "object-top"}`} />
         ) : (
           <div className="grid h-full place-items-center p-4">
