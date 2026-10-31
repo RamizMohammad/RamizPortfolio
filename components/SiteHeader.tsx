@@ -6,6 +6,7 @@ import { Dialog } from "radix-ui";
 import { useEffect, useState } from "react";
 import { profile } from "@/content/profile";
 import { NAV, openPalette } from "./nav";
+import ThemeToggle from "./ThemeToggle";
 
 export default function SiteHeader() {
   const pathname = usePathname();
@@ -53,12 +54,12 @@ export default function SiteHeader() {
           ))}
         </div>
       </div>
-      <div className={`edge flex h-[calc(var(--nav-h)-var(--strip-h))] items-center justify-between gap-6 transition-colors duration-300 ${scrolled || !onHome ? "dash-b bg-paper" : ""}`}>
+      <div className={`edge flex h-[calc(var(--nav-h)-var(--strip-h))] items-center gap-2 transition-colors duration-300 ${scrolled || !onHome ? "dash-b bg-paper" : ""}`}>
       <Link href="/" className="grid h-11 w-11 place-items-center rounded-full border-[2px] border-ink bg-card font-display text-[22px] leading-none" aria-label={`${profile.name}, home`}>
         R
       </Link>
 
-      <nav aria-label="Main" className="hidden md:block">
+      <nav aria-label="Main" className="ml-auto hidden md:block">
         <ul className="flex items-center gap-1.5">
           {NAV.map((n) => (
             <li key={n.id}>
@@ -77,6 +78,10 @@ export default function SiteHeader() {
           </li>
         </ul>
       </nav>
+
+      <div className="ml-auto md:ml-0">
+        <ThemeToggle />
+      </div>
 
       <Dialog.Root open={open} onOpenChange={setOpen}>
         <Dialog.Trigger className="btn-pill btn-sm md:hidden">Menu</Dialog.Trigger>

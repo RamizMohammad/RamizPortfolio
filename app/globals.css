@@ -32,6 +32,44 @@
   :root { --edge: 32px; --edge-r: 32px }
 }
 
+/* Night: a deep violet-black page, panels a step above it, the candy colours kept bright as neon blocks. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-paper: #0e0c13;
+  --color-card: #1a1622;
+  --color-ink: #f2eefb;
+  --color-line: #3a3447;
+  --color-muted: #aaa4c2;
+  --color-pink-deep: #ff7aa2;
+  --color-blue: #4f78ff;
+}
+/* "Ink" surfaces stay dark panels at night instead of flipping to white. */
+[data-theme="dark"] .bg-ink { background-color: #241f2e }
+[data-theme="dark"] .text-card, [data-theme="dark"] .text-paper { color: #f2eefb }
+/* Bright blocks always carry dark text; panels inside them reset to the theme's text colour. */
+[data-theme="dark"] :is(.bg-pink, .bg-lime, .bg-sun, .bg-mint, .bg-violet) { color: #121016 }
+[data-theme="dark"] :is(.bg-pink, .bg-lime, .bg-sun, .bg-mint, .bg-violet) .muted { color: #3d3950 }
+[data-theme="dark"] .bg-card { color: var(--color-ink) }
+/* Stickers get a soft light rim so their dark outlines read on the night page. */
+[data-theme="dark"] .hero-sticker svg { filter: drop-shadow(0 0 1px rgb(242 238 251 / 0.9)) drop-shadow(0 0 10px rgb(185 166 245 / 0.35)) }
+
+/* Theme switch: the new theme is revealed in a growing circle from the toggle (see ThemeToggle);
+   the old page sinks back and dims behind it. */
+::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal }
+::view-transition-new(root) { z-index: 2 }
+::view-transition-old(root) { z-index: 1 }
+.theme-burst { position: fixed; z-index: 300; pointer-events: none; width: 10px; height: 10px; margin: -5px 0 0 -5px }
+.theme-burst.star { clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%); background: #f2eefb }
+.theme-burst.ray { width: 4px; height: 16px; margin: -8px 0 0 -2px; border-radius: 4px; background: #ffcf3a }
+
+/* Toggle icon: the sun's rays fold away and a shadow slides over its core to make the moon. */
+.theme-icon .rays { transform-origin: 12px 12px; transition: transform 600ms cubic-bezier(0.34, 1.56, 0.64, 1), opacity 300ms ease }
+.theme-icon .core { transition: r 500ms cubic-bezier(0.34, 1.56, 0.64, 1) }
+.theme-icon .shadow { transition: cx 500ms cubic-bezier(0.34, 1.56, 0.64, 1), cy 500ms cubic-bezier(0.34, 1.56, 0.64, 1) }
+[data-theme="dark"] .theme-icon .rays { transform: rotate(90deg) scale(0); opacity: 0 }
+[data-theme="dark"] .theme-icon .core { r: 9px }
+[data-theme="dark"] .theme-icon .shadow { cx: 17px; cy: 7px }
+
 @layer base {
   html { background: var(--color-paper); scroll-padding-top: calc(var(--nav-h) + 16px); scroll-behavior: smooth }
   html, body { overflow-x: clip }
@@ -163,6 +201,7 @@ html.js .in .wave { animation-delay: 500ms }
 /* Experience: commit nodes light up as the spine fills; cards swing in from their own side. */
 .exp-node { transition: background-color 300ms ease, color 300ms ease, transform 400ms cubic-bezier(0.34, 1.56, 0.64, 1) }
 .exp-item[data-on] .exp-node { background: var(--color-ink); color: var(--color-lime); transform: scale(1.15) }
+[data-theme="dark"] .exp-item[data-on] .exp-node { background: var(--color-lime); color: #121016; border-color: var(--color-lime) }
 @media (min-width: 1024px) {
   html.js .exp-left .exp-card[data-reveal] { transform: translateX(-56px) rotate(-2deg) }
   html.js .exp-right .exp-card[data-reveal] { transform: translateX(56px) rotate(2deg) }

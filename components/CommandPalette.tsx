@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 import { profile } from "@/content/profile";
 import { publicSystems } from "@/content/systems";
 import { SECTIONS } from "./nav";
+import { switchTheme } from "./ThemeToggle";
 
 type Item = { group: string; label: string; hint?: string; run: () => void };
 
@@ -59,6 +60,15 @@ export default function CommandPalette() {
         },
       },
       { group: "Actions", label: "Download résumé PDF", run: visit(profile.resume) },
+      {
+        group: "Actions",
+        label: "Switch day / night mode",
+        run: () => {
+          setOpen(false);
+          // Let the dialog close first so the reveal plays over the page.
+          window.setTimeout(() => switchTheme(), 120);
+        },
+      },
       ...profile.links.map((l) => ({ group: "Links", label: l.label, hint: l.handle, run: visit(l.href) })),
     ];
   }, [router]);

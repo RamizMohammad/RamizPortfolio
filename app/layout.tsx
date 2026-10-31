@@ -4,6 +4,7 @@ import CommandPalette from "@/components/CommandPalette";
 import RevealObserver from "@/components/RevealObserver";
 import SiteFooter from "@/components/SiteFooter";
 import SiteHeader from "@/components/SiteHeader";
+import { themeScript } from "@/components/ThemeToggle";
 import { profile } from "@/content/profile";
 import "./globals.css";
 
@@ -33,6 +34,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${inter.variable} ${anton.variable} ${mono.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: jsFlag }} />
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body>
         <a href="#main" className="btn-pill sr-only fixed left-4 top-4 z-[200] focus:not-sr-only">

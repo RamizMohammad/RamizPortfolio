@@ -51,7 +51,7 @@ export default function Hero() {
               <SlicedLetter key={i} ch={ch} i={i} />
             ))}
             {STICKERS.map((s, i) => (
-              <span key={i} className="pop pointer-events-none absolute" style={{ ...s.style, ["--d" as string]: `${s.d}ms` }}>
+              <span key={i} className="hero-sticker pop pointer-events-none absolute" style={{ ...s.style, ["--d" as string]: `${s.d}ms` }}>
                 <span
                   className="bob block"
                   style={{ ["--r0" as string]: `${s.r[0]}deg`, ["--r1" as string]: `${s.r[1]}deg`, ["--t" as string]: `${s.t}s`, ["--bd" as string]: `${-i * 0.7}s`, aspectRatio: s.style.aspectRatio }}

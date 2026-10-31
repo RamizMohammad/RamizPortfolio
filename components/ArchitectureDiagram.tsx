@@ -9,10 +9,11 @@ const NODE_H = 66;
 const ROW = 100;
 const PAD = 20;
 
-const INK = "#121016"; // ink: lines, labels, outlines
-const MUTED = "#55516a";
-const NODE = "#ffffff"; // node fill
-const PACKET = "#c93a63";
+// Theme colours, set through style so they follow day and night mode.
+const INK = "var(--color-ink)"; // lines, labels, outlines
+const MUTED = "var(--color-muted)";
+const NODE = "var(--color-card)"; // node fill
+const PACKET = "var(--color-pink-deep)";
 
 const layerIndex = (l: Layer) => LAYERS.findIndex((x) => x.id === l) + 1;
 
@@ -48,7 +49,7 @@ export default function ArchitectureDiagram({ name, nodes, edges, caption, onHig
         <svg viewBox={`0 0 ${W} ${H}`} className="block w-full" style={{ minWidth: 640 }} role="img" aria-label={`Architecture of ${name}. The components are listed below.`}>
           <defs>
             <marker id={`arrow-${id}`} viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
-              <path d="M0,0 L8,4 L0,8 z" fill={INK} />
+              <path d="M0,0 L8,4 L0,8 z" style={{ fill: INK }} />
             </marker>
           </defs>
           {edges.map((e, i) => {
@@ -84,14 +85,14 @@ export default function ArchitectureDiagram({ name, nodes, edges, caption, onHig
             const on = related(e);
             return (
               <g key={i} opacity={hot && !on ? 0.22 : 1} style={{ transition: "opacity 200ms" }}>
-                <path id={`${id}-edge-${i}`} d={d} fill="none" stroke={INK} strokeWidth={on ? 1.5 : 1} strokeDasharray={e.dashed ? "4 5" : undefined} markerEnd={`url(#arrow-${id})`} />
-                <circle className="packet" r="3.5" fill={PACKET}>
+                <path id={`${id}-edge-${i}`} d={d} fill="none" style={{ stroke: INK }} strokeWidth={on ? 1.5 : 1} strokeDasharray={e.dashed ? "4 5" : undefined} markerEnd={`url(#arrow-${id})`} />
+                <circle className="packet" r="3.5" style={{ fill: PACKET }}>
                   <animateMotion dur={`${2.4 + (i % 3) * 0.5}s`} begin={`${i * 0.35}s`} repeatCount="indefinite">
                     <mpath href={`#${id}-edge-${i}`} />
                   </animateMotion>
                 </circle>
                 {e.label && (
-                  <text x={lx} y={ly} textAnchor={anchor} fontFamily="var(--font-sans)" fontWeight="500" fontSize="10" fill={MUTED} style={{ textTransform: "uppercase" }}>
+                  <text x={lx} y={ly} textAnchor={anchor} fontFamily="var(--font-sans)" fontWeight="500" fontSize="10" style={{ fill: MUTED, textTransform: "uppercase" }}>
                     {e.label}
                   </text>
                 )}
@@ -104,14 +105,14 @@ export default function ArchitectureDiagram({ name, nodes, edges, caption, onHig
             const near = on || edges.some((e) => related(e) && (e.from === n.id || e.to === n.id));
             return (
               <g key={n.id} transform={`translate(${p.x} ${p.y})`} opacity={hot && !near ? 0.3 : 1} style={{ transition: "opacity 200ms" }} onPointerEnter={() => highlight(n.id)} onPointerLeave={() => highlight(null)}>
-                <rect width={NODE_W} height={NODE_H} rx="12" fill={on ? INK : NODE} stroke={INK} strokeWidth="1.5" />
-                <text x="14" y="28" fontFamily="var(--font-sans)" fontSize="13" fontWeight="500" fill={on ? NODE : INK} style={{ textTransform: "uppercase" }}>
+                <rect width={NODE_W} height={NODE_H} rx="12" style={{ fill: on ? INK : NODE, stroke: INK }} strokeWidth="1.5" />
+                <text x="14" y="28" fontFamily="var(--font-sans)" fontSize="13" fontWeight="500" style={{ fill: on ? NODE : INK, textTransform: "uppercase" }}>
                   {n.label}
                 </text>
-                <text x="14" y="48" fontFamily="var(--font-sans)" fontSize="12" fill={on ? NODE : MUTED}>
+                <text x="14" y="48" fontFamily="var(--font-sans)" fontSize="12" style={{ fill: on ? NODE : MUTED }}>
                   {n.detail}
                 </text>
-                <text x={NODE_W - 12} y="18" textAnchor="end" fontFamily="var(--font-sans)" fontWeight="500" fontSize="9" fill={on ? NODE : MUTED}>
+                <text x={NODE_W - 12} y="18" textAnchor="end" fontFamily="var(--font-sans)" fontWeight="500" fontSize="9" style={{ fill: on ? NODE : MUTED }}>
                   L{layerIndex(n.layer)}
                 </text>
               </g>
