@@ -26,7 +26,6 @@ export default function Contact() {
               <a href={profile.resume} className="link">Résumé PDF</a>
             </li>
             <li>
-              <a href={profile.phone.href} className="link">{profile.phone.display}</a>
             </li>
           </ul>
         </div>
