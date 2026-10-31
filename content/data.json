@@ -627,7 +627,84 @@
         "A snapshot-and-restore engine that runs entirely over ADB, so it works on stock, unrooted phones.",
         "Wipe, reinstall and bring a phone back to its earlier state without a cloud account or rooting.",
         "Shipped as a Loopax Technologies product with a Python CLI and a PySide6 desktop app, prototyped in Google Stitch and rebuilt natively for Windows."
-      ]
+      ],
+      "architecture": {
+        "caption": "Simplified from the project description.",
+        "nodes": [
+          {
+            "id": "gui",
+            "label": "PySide6 app",
+            "detail": "Windows desktop",
+            "layer": "interface",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "cli",
+            "label": "Python CLI",
+            "detail": "Scriptable",
+            "layer": "interface",
+            "x": 0,
+            "y": 2
+          },
+          {
+            "id": "engine",
+            "label": "Snapshot engine",
+            "detail": "Backup and restore",
+            "layer": "automation",
+            "x": 1,
+            "y": 1
+          },
+          {
+            "id": "adb",
+            "label": "ADB",
+            "detail": "No root needed",
+            "layer": "api",
+            "x": 2,
+            "y": 1
+          },
+          {
+            "id": "phone",
+            "label": "Android phone",
+            "detail": "Stock, unrooted",
+            "layer": "infra",
+            "x": 3,
+            "y": 0
+          },
+          {
+            "id": "snap",
+            "label": "Snapshot on PC",
+            "detail": "Full phone state",
+            "layer": "data",
+            "x": 3,
+            "y": 2
+          }
+        ],
+        "edges": [
+          {
+            "from": "gui",
+            "to": "engine"
+          },
+          {
+            "from": "cli",
+            "to": "engine"
+          },
+          {
+            "from": "engine",
+            "to": "adb"
+          },
+          {
+            "from": "adb",
+            "to": "phone",
+            "label": "read / restore"
+          },
+          {
+            "from": "engine",
+            "to": "snap",
+            "label": "save"
+          }
+        ]
+      }
     },
     {
       "slug": "buddycode",
@@ -963,7 +1040,80 @@
         "Real-time Firebase listeners update the feed instantly.",
         "Cloud Functions handle content moderation.",
         "Push notifications through Firebase Cloud Messaging."
-      ]
+      ],
+      "architecture": {
+        "caption": "Simplified from the project description.",
+        "nodes": [
+          {
+            "id": "app",
+            "label": "Android app",
+            "detail": "Java · biometric lock",
+            "layer": "interface",
+            "x": 0,
+            "y": 1
+          },
+          {
+            "id": "auth",
+            "label": "Google Sign-In",
+            "detail": "Account login",
+            "layer": "api",
+            "x": 1,
+            "y": 0
+          },
+          {
+            "id": "db",
+            "label": "Firestore",
+            "detail": "Confessions, reactions",
+            "layer": "data",
+            "x": 1,
+            "y": 2
+          },
+          {
+            "id": "fn",
+            "label": "Cloud Functions",
+            "detail": "Content moderation",
+            "layer": "automation",
+            "x": 2,
+            "y": 2
+          },
+          {
+            "id": "fcm",
+            "label": "Cloud Messaging",
+            "detail": "Push notifications",
+            "layer": "infra",
+            "x": 3,
+            "y": 1
+          }
+        ],
+        "edges": [
+          {
+            "from": "app",
+            "to": "auth",
+            "label": "sign in"
+          },
+          {
+            "from": "app",
+            "to": "db",
+            "label": "post"
+          },
+          {
+            "from": "db",
+            "to": "fn",
+            "label": "on write"
+          },
+          {
+            "from": "fn",
+            "to": "fcm",
+            "label": "notify"
+          },
+          {
+            "from": "fcm",
+            "to": "app",
+            "label": "push",
+            "dashed": true
+          }
+        ]
+      }
     },
     {
       "slug": "confess-web",
@@ -1021,6 +1171,65 @@
         "kind": "web",
         "width": 1024,
         "height": 640
+      },
+      "architecture": {
+        "caption": "Simplified from the project description.",
+        "nodes": [
+          {
+            "id": "page",
+            "label": "Web page",
+            "detail": "Today's date",
+            "layer": "interface",
+            "x": 0,
+            "y": 1
+          },
+          {
+            "id": "api",
+            "label": "FastAPI service",
+            "detail": "Events by date",
+            "layer": "api",
+            "x": 1,
+            "y": 1
+          },
+          {
+            "id": "proc",
+            "label": "Data processing",
+            "detail": "Python",
+            "layer": "automation",
+            "x": 2,
+            "y": 1
+          },
+          {
+            "id": "src",
+            "label": "Wikipedia",
+            "detail": "Historical events",
+            "layer": "data",
+            "x": 3,
+            "y": 1
+          }
+        ],
+        "edges": [
+          {
+            "from": "page",
+            "to": "api",
+            "label": "today"
+          },
+          {
+            "from": "api",
+            "to": "proc"
+          },
+          {
+            "from": "proc",
+            "to": "src",
+            "label": "source"
+          },
+          {
+            "from": "api",
+            "to": "page",
+            "label": "events",
+            "dashed": true
+          }
+        ]
       }
     }
   ],

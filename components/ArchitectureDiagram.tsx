@@ -87,7 +87,7 @@ export default function ArchitectureDiagram({ name, nodes, edges, caption, onHig
               <g key={i} opacity={hot && !on ? 0.22 : 1} style={{ transition: "opacity 200ms" }}>
                 <path id={`${id}-edge-${i}`} d={d} fill="none" style={{ stroke: INK }} strokeWidth={on ? 1.5 : 1} strokeDasharray={e.dashed ? "4 5" : undefined} markerEnd={`url(#arrow-${id})`} />
                 <circle className="packet" r="3.5" style={{ fill: PACKET }}>
-                  <animateMotion dur={`${2.4 + (i % 3) * 0.5}s`} begin={`${i * 0.35}s`} repeatCount="indefinite">
+                  <animateMotion dur={`${2.4 + (i % 3) * 0.5}s`} begin={`-${i * 0.35}s`} repeatCount="indefinite">
                     <mpath href={`#${id}-edge-${i}`} />
                   </animateMotion>
                 </circle>
