@@ -160,8 +160,20 @@ html.js .in .wave { animation-delay: 500ms }
 .pulse { animation: pulse 1.8s ease-out infinite }
 @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgb(212 242 91 / 0.8) } 70%, 100% { box-shadow: 0 0 0 9px rgb(212 242 91 / 0) } }
 
+/* Experience: commit nodes light up as the spine fills; cards swing in from their own side. */
+.exp-node { transition: background-color 300ms ease, color 300ms ease, transform 400ms cubic-bezier(0.34, 1.56, 0.64, 1) }
+.exp-item[data-on] .exp-node { background: var(--color-ink); color: var(--color-lime); transform: scale(1.15) }
+@media (min-width: 1024px) {
+  html.js .exp-left .exp-card[data-reveal] { transform: translateX(-56px) rotate(-2deg) }
+  html.js .exp-right .exp-card[data-reveal] { transform: translateX(56px) rotate(2deg) }
+  html.js .exp-card[data-reveal] { transition: opacity 500ms ease-out, transform 800ms cubic-bezier(0.34, 1.56, 0.64, 1) }
+  html.js .exp-card[data-reveal].in { transform: none }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto }
+  html.js .exp-card[data-reveal] { transform: none }
+  .exp-item[data-on] .exp-node { transform: none }
   html.js .pop-in[data-reveal], .chip, .chip:hover { transform: rotate(var(--rot, 0deg)) }
   .lift:hover { translate: none; rotate: none }
   html.js [data-reveal] .chip, html.js .in .chip, html.js .in .road-step, .wave:hover, html.js .in .wave, .pulse { animation: none; opacity: 1 }
