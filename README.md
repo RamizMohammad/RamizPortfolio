@@ -36,3 +36,10 @@ npm run dev
 ## Adding a project
 
 Add an entry to `content/systems.ts`. Public entries get a case study at `/work/<slug>` automatically. Add an `architecture` block (nodes on a small grid, each tagged with a layer) to feature it in the Architecture section, and a `screen` to show a screenshot of the live product.
+
+## Deploying (Vercel)
+
+`vercel.json` sets the framework to Next.js, which overrides the project's old Vite preset (that
+preset looked for a `dist` folder and failed with `STATIC_BUILD_NO_OUT_DIR`). In the Vercel project
+settings, leave **Output Directory** empty / default. Optionally add `PORTFOLIO_DB_KEY` under
+Environment Variables so each deploy pulls the latest content from the database (see `db/README.md`).
