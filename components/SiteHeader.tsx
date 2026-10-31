@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Dialog } from "radix-ui";
@@ -114,11 +115,11 @@ export default function SiteHeader() {
             compact ? "h-14 max-w-[1180px] rounded-full border-[1.5px] border-ink bg-card/85 pl-1.5 pr-1.5 shadow-[0_12px_40px_-16px_rgb(0_0_0/0.35)] backdrop-blur-md" : "h-[calc(var(--nav-h)-var(--strip-h))] max-w-[2000px] border-[1.5px] border-transparent"
           }`}
         >
-          <Link href="/" className="relative grid h-11 w-11 shrink-0 place-items-center rounded-full border-[2px] border-ink bg-card font-display text-[22px] leading-none" aria-label={`${profile.name}, home`}>
+          <Link href="/" className="relative grid h-11 w-11 shrink-0 place-items-center rounded-full border-[2px] border-ink bg-sun" aria-label={`${profile.name}, home`}>
+            <Image src="/images/mascot-face.webp" alt="" width={88} height={88} priority className="h-full w-full rounded-full" />
             <svg viewBox="0 0 48 48" className="pointer-events-none absolute -inset-[4px] h-[calc(100%+8px)] w-[calc(100%+8px)] -rotate-90" aria-hidden="true">
               <circle ref={ring} cx="24" cy="24" r="21" fill="none" strokeWidth="3" strokeLinecap="round" style={{ stroke: "var(--color-pink-deep)", strokeDasharray: RING, strokeDashoffset: RING }} />
             </svg>
-            R
           </Link>
 
           <nav aria-label="Main" className="ml-auto hidden lg:block">
