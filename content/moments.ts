@@ -1,6 +1,8 @@
+import data from "./data.json";
+
 /**
  * The photo timeline after About. Add a moment by dropping an image in public/images/moments/
- * and adding an entry here; they are shown oldest first, sorted by `when`.
+ * and adding a row to portfolio.moments; they are shown oldest first, sorted by `when`.
  *
  * The first entries use the certificates already on the site, so every moment is real. Replace
  * them with your own photos from each place whenever you like.
@@ -18,65 +20,5 @@ export type Moment = {
   fit?: "cover" | "contain";
 };
 
-export const moments: Moment[] = [
-  {
-    when: 2024.1,
-    date: "2024",
-    place: "K.R. Mangalam University, Gurugram",
-    title: "Hack KRMU 4.0 — finalist",
-    caption: "Reached the final after four judging rounds.",
-    image: { src: "/images/certificates/krmu.webp", width: 1000, height: 729, alt: "K.R. Mangalam University hackathon certificate" },
-    fit: "contain",
-  },
-  {
-    when: 2024.2,
-    date: "2024",
-    place: "Sharda University, Greater Noida",
-    title: "6th Technovation Hackathon — 6th place",
-    image: { src: "/images/certificates/sharda.webp", width: 1000, height: 725, alt: "Sharda University hackathon certificate" },
-    fit: "contain",
-  },
-  {
-    when: 2024.3,
-    date: "2024",
-    place: "NHAI & HOAI, Delhi",
-    title: "Road Safety Hackathon — semi-finalist",
-    caption: "Proposed AI-assisted highway monitoring for pothole detection and commuter safety.",
-    image: { src: "/images/certificates/nhai.webp", width: 1000, height: 684, alt: "NHAI and HOAI hackathon certificate" },
-    fit: "contain",
-  },
-  {
-    when: 2025.1,
-    date: "2025",
-    place: "IIIT Delhi, New Delhi",
-    title: "Hack For Impact, E-Summit 2025",
-    image: { src: "/images/certificates/iiitd.webp", width: 1000, height: 706, alt: "IIIT Delhi Hack For Impact certificate" },
-    fit: "contain",
-  },
-  {
-    when: 2024.4,
-    date: "2024",
-    place: "Google Office, Gurugram",
-    title: "Build with India — 8th place",
-    image: { src: "/images/certificates/build-with-india.webp", width: 1000, height: 707, alt: "Build With India certificate" },
-    fit: "contain",
-  },
-  {
-    when: 2025.4,
-    date: "May – Jun 2025",
-    place: "Bluestock Fintech",
-    title: "SDE internship",
-    caption: "Developed the internal admin panel and its backend logic as project lead.",
-    image: { src: "/images/certificates/bluestock.webp", width: 1000, height: 707, alt: "Bluestock Fintech internship certificate" },
-    fit: "contain",
-  },
-  {
-    when: 2025.48,
-    date: "27 June 2025",
-    place: "Indian Patent Office",
-    title: "Patent published",
-    caption: "Method and System for Real-Time User Safety During Vehicle Commutes.",
-    image: { src: "/images/certificates/patent.webp", width: 1000, height: 773, alt: "Patent publication document" },
-    fit: "contain",
-  },
-];
+// Rows of portfolio.moments, pulled from the database at build time (see db/README.md).
+export const moments = data.moments as Moment[];

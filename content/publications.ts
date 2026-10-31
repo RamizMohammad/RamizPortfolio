@@ -1,5 +1,7 @@
+import data from "./data.json";
+
 /**
- * Publications: papers, patents and articles. Add a paper by adding an entry here; the
+ * Publications: papers, patents and articles. Add a paper by adding a row to portfolio.publications; the
  * Publications section, its counts and its citations all come from this list (newest first).
  */
 export type Publication = {
@@ -22,17 +24,5 @@ export type Publication = {
   tags?: string[];
 };
 
-export const publications: Publication[] = [
-  {
-    kind: "Patent",
-    title: "Method and System for Real-Time User Safety During Vehicle Commutes",
-    venue: "Indian Patent Office · Published patent application",
-    date: "27 June 2025",
-    year: 2025,
-    id: { label: "Application No.", value: "202511053637" },
-    abstract:
-      "A system for enhancing passenger safety during vehicle commutes, focusing on real-time safety monitoring, risk identification, and proactive intervention to address potential threats.",
-    image: { src: "/images/certificates/patent.webp", width: 1000, height: 773, alt: "First page of the published patent application" },
-    tags: ["Safety", "Real-time monitoring", "Risk detection"],
-  },
-];
+// Rows of portfolio.publications, pulled from the database at build time (see db/README.md).
+export const publications = data.publications as Publication[];

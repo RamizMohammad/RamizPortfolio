@@ -1,0 +1,1299 @@
+{
+  "profile": {
+    "name": "Mohammad Ramiz",
+    "firstName": "Mohammad",
+    "lastName": "Ramiz",
+    "role": "Software Engineer",
+    "company": "Moglix",
+    "location": "Greater Noida, Uttar Pradesh, India",
+    "headline": "Python AI / LLM, backend and Android developer",
+    "summary": "I build AI systems, backends and the infrastructure they run on: LLM agents, REST APIs and data pipelines in Python, Dockerised services, and the Android and web apps on top.",
+    "interests": [
+      "LLM agents, RAG and conversational analytics",
+      "Python automation and process optimisation",
+      "AI/ML, computer vision, OCR and predictive modelling",
+      "Demand forecasting and time-series models",
+      "Backend engineering, REST APIs and system integrations",
+      "Docker, Linux, Nginx, networking and self-hosted infrastructure",
+      "React, TypeScript, Next.js and experimental products",
+      "Android, AR/VR and interactive experiences"
+    ],
+    "education": "B.Tech CSE (AI & ML), Sharda University",
+    "schooling": [
+      {
+        "degree": "B.Tech CSE, AI & ML",
+        "school": "Sharda University",
+        "score": "CGPA 8.3",
+        "period": "2022 – 2026"
+      },
+      {
+        "degree": "Intermediate (PCM)",
+        "school": "Springdale's Children's School",
+        "score": "70%",
+        "period": "2021"
+      },
+      {
+        "degree": "High School",
+        "school": "St Paul's Inter College",
+        "score": "80%",
+        "period": "2019"
+      }
+    ],
+    "phone": {
+      "display": "+91 95170 28373",
+      "href": "tel:+919517028373"
+    },
+    "portrait": {
+      "alt": "3D cartoon of Mohammad Ramiz holding a stylus beside a glowing Portfolio sign",
+      "src": "/images/mascot-full.webp",
+      "width": 900,
+      "height": 1600
+    },
+    "email": "ramizanas6@gmail.com",
+    "resume": "/resume.pdf",
+    "links": [
+      {
+        "label": "GitHub",
+        "href": "https://github.com/RamizMohammad",
+        "handle": "RamizMohammad"
+      },
+      {
+        "label": "LinkedIn",
+        "href": "https://www.linkedin.com/in/ramizmohammad/",
+        "handle": "ramizmohammad"
+      },
+      {
+        "label": "X",
+        "href": "https://x.com/Mohammad__Ramiz",
+        "handle": "@Mohammad__Ramiz"
+      }
+    ],
+    "siteUrl": "https://www.mohammadramiz.in"
+  },
+  "timeline": [
+    {
+      "period": "Jul 2026 – Present",
+      "kind": "Work",
+      "title": "Software Engineer",
+      "org": "Moglix",
+      "points": [
+        "REST APIs and backend systems, with VLLMs, OCR techniques and predictive LLM models.",
+        "Working with the AI and Analytics team to deliver solutions for major clients and for Moglix itself."
+      ],
+      "tags": [
+        "Python",
+        "REST APIs",
+        "Kafka",
+        "Docker",
+        "AI models"
+      ],
+      "span": [
+        2026.5,
+        null
+      ]
+    },
+    {
+      "period": "Jan – Jul 2026",
+      "kind": "Internship",
+      "title": "Python Engineering Intern",
+      "org": "Moglix",
+      "points": [
+        "Designed and built analytical solutions involving data processing, analysis and programming.",
+        "Worked with teams to deliver insights and automate workflows across ongoing projects."
+      ],
+      "tags": [
+        "Python",
+        "REST APIs",
+        "MySQL",
+        "PostgreSQL",
+        "MongoDB",
+        "Kafka"
+      ],
+      "span": [
+        2026,
+        2026.5
+      ]
+    },
+    {
+      "period": "May – Jun 2025",
+      "kind": "Internship",
+      "title": "Software Development Engineer Intern",
+      "org": "Bluestock Fintech",
+      "points": [
+        "Developed the internal admin panel as project lead.",
+        "Designed the backend logic with the team and built the core features."
+      ],
+      "tags": [
+        "Python",
+        "REST APIs",
+        "Flask"
+      ],
+      "span": [
+        2025.33,
+        2025.5
+      ]
+    },
+    {
+      "period": "2022 – Present",
+      "kind": "Freelance",
+      "title": "Android Developer",
+      "org": "Freelance",
+      "points": [
+        "Published Confess on Google Play.",
+        "Firebase integration and real-time features.",
+        "Confess, Share Wheels, BuddyCode."
+      ],
+      "tags": [
+        "Java",
+        "Kotlin",
+        "Jetpack Compose",
+        "Firebase"
+      ],
+      "span": [
+        2022,
+        null
+      ]
+    },
+    {
+      "period": "2022 – 2026",
+      "kind": "Education",
+      "title": "B.Tech CSE, AI & ML",
+      "org": "Sharda University",
+      "points": [
+        "Computer science with a specialisation in AI and machine learning. CGPA 8.3."
+      ],
+      "span": [
+        2022.1,
+        2026
+      ]
+    },
+    {
+      "period": "2021 – Present",
+      "kind": "Independent",
+      "title": "Backend and product development",
+      "org": "Independent",
+      "points": [
+        "Backend systems in Python, Flask and FastAPI for web and mobile apps.",
+        "Bakup, Snapy, Linkium, Time Fold, Confess Web."
+      ],
+      "tags": [
+        "Python",
+        "Flask",
+        "FastAPI",
+        "Docker"
+      ],
+      "span": [
+        2021,
+        null
+      ]
+    }
+  ],
+  "stack": {
+    "interface": [
+      "Android (Java, Kotlin)",
+      "Jetpack Compose",
+      "MVVM",
+      "XML",
+      "React",
+      "TypeScript",
+      "HTML · CSS · JS",
+      "Django templating",
+      "PySide6 / Qt",
+      "PyQt",
+      "Tkinter",
+      "Dash"
+    ],
+    "api": [
+      "Python",
+      "FastAPI",
+      "Flask",
+      "Django",
+      "Spring Boot",
+      "Hibernate",
+      "REST APIs",
+      "WebSocket",
+      "Kafka",
+      "WhatsApp Business API",
+      "Microsoft Graph API"
+    ],
+    "automation": [
+      "Gemini",
+      "Vertex AI",
+      "Agentic AI (ReAct)",
+      "RAG",
+      "LLMs and VLLMs",
+      "OCR",
+      "AWS Textract",
+      "Prophet",
+      "LightGBM",
+      "Pandas",
+      "Sentence-Transformers",
+      "scikit-learn"
+    ],
+    "data": [
+      "MySQL",
+      "PostgreSQL",
+      "MongoDB",
+      "SQLite",
+      "BigQuery",
+      "Qdrant",
+      "Firebase",
+      "Room DB",
+      "Power BI"
+    ],
+    "infra": [
+      "Docker",
+      "Docker Compose",
+      "AWS",
+      "Git and GitHub",
+      "CI/CD pipelines",
+      "Linux",
+      "Nginx",
+      "Self-hosting"
+    ]
+  },
+  "systems": [
+    {
+      "slug": "ramanujan",
+      "name": "Ramanujan",
+      "summary": "An AI analytics copilot: business teams ask questions in plain English inside Microsoft Teams and get answers from enterprise data in seconds, with no SQL and no dashboards.",
+      "domains": [
+        "ai",
+        "api"
+      ],
+      "stack": [
+        "Python",
+        "FastAPI",
+        "Gemini",
+        "Vertex AI",
+        "BigQuery",
+        "Qdrant",
+        "Sentence-Transformers",
+        "Microsoft Graph API",
+        "Docker"
+      ],
+      "shipsAs": "Agentic assistant · Microsoft Teams",
+      "platform": "service",
+      "points": [
+        "A Gemini ReAct agent turns natural-language questions into governed BigQuery SQL.",
+        "RAG over a Qdrant-backed KPI glossary with sentence-transformer embeddings, so answers match the business definition of each metric.",
+        "A production FastAPI service on Vertex AI with hexagonal architecture.",
+        "Safety layers: a SQL policy engine with row-level access control, and grounding guardrails against hallucinated answers."
+      ],
+      "architecture": {
+        "edges": [
+          {
+            "to": "api",
+            "from": "teams",
+            "label": "ask"
+          },
+          {
+            "to": "agent",
+            "from": "api"
+          },
+          {
+            "to": "agent",
+            "from": "rag",
+            "label": "KPI definitions"
+          },
+          {
+            "to": "policy",
+            "from": "agent",
+            "label": "SQL"
+          },
+          {
+            "to": "bq",
+            "from": "policy",
+            "label": "governed query"
+          },
+          {
+            "to": "teams",
+            "from": "api",
+            "label": "grounded answer",
+            "dashed": true
+          }
+        ],
+        "nodes": [
+          {
+            "x": 0,
+            "y": 1,
+            "id": "teams",
+            "label": "Microsoft Teams",
+            "layer": "interface",
+            "detail": "Questions in plain English"
+          },
+          {
+            "x": 1,
+            "y": 1,
+            "id": "api",
+            "label": "FastAPI service",
+            "layer": "api",
+            "detail": "Vertex AI, hexagonal"
+          },
+          {
+            "x": 2,
+            "y": 1,
+            "id": "agent",
+            "label": "Gemini ReAct agent",
+            "layer": "automation",
+            "detail": "Question to SQL"
+          },
+          {
+            "x": 2,
+            "y": 2,
+            "id": "rag",
+            "label": "KPI glossary (RAG)",
+            "layer": "data",
+            "detail": "Qdrant + embeddings"
+          },
+          {
+            "x": 3,
+            "y": 1,
+            "id": "policy",
+            "label": "SQL policy engine",
+            "layer": "automation",
+            "detail": "Row-level access"
+          },
+          {
+            "x": 4,
+            "y": 1,
+            "id": "bq",
+            "label": "BigQuery",
+            "layer": "data",
+            "detail": "Enterprise data"
+          }
+        ],
+        "caption": "Simplified from the project description."
+      }
+    },
+    {
+      "slug": "safety-stock",
+      "name": "Safety-Stock Intelligence",
+      "summary": "An ML-driven demand planning and inventory optimisation platform for Tata Steel and Hindustan Zinc: MRP tagging, demand classification and safety-stock computation for intermittent, lumpy industrial demand.",
+      "domains": [
+        "ai",
+        "automation"
+      ],
+      "stack": [
+        "Python",
+        "FastAPI",
+        "Dash",
+        "Prophet",
+        "LightGBM",
+        "Pandas",
+        "MySQL",
+        "Docker"
+      ],
+      "shipsAs": "Internal · Moglix",
+      "platform": "internal",
+      "org": "Moglix",
+      "internal": true,
+      "points": [
+        "One pipeline for MRP tagging, vendor lead time and ML-based MRP levels, replacing separate batch workflows.",
+        "Demand classified with the Syntetos-Boylan framework (ADI, CV²); safety stock from Prophet, statistical models and compound Poisson modelling with newsvendor cost asymmetry.",
+        "Raised Tata Steel's OTIF from below 50% to over 70%, earning Moglix's Jungle Torchbearer Award.",
+        "A Dockerised FastAPI platform with a Dash dashboard: model comparison, live recomputation, filters and Excel export."
+      ]
+    },
+    {
+      "slug": "supplierinv",
+      "name": "SupplierInv",
+      "summary": "An invoice intelligence pipeline that extracts, validates and reconciles supplier invoices at scale with generative AI.",
+      "domains": [
+        "ai",
+        "automation"
+      ],
+      "stack": [
+        "Python",
+        "Gemini",
+        "AWS Textract",
+        "Pydantic",
+        "Kafka",
+        "MongoDB",
+        "BigQuery",
+        "Power BI"
+      ],
+      "shipsAs": "Internal · Moglix",
+      "platform": "internal",
+      "org": "Moglix",
+      "internal": true,
+      "points": [
+        "Gemini and AWS Textract turn unstructured invoices into schema-validated data.",
+        "A real-time Kafka → MongoDB → BigQuery backbone streams it at enterprise scale.",
+        "Automated reconciliation (fuzzy item matching, tolerance bands, HSN and GSTIN checks) replaces hours of manual review.",
+        "Results feed live Power BI dashboards for procurement analytics."
+      ]
+    },
+    {
+      "slug": "procurement-agent",
+      "name": "Conversational Procurement",
+      "summary": "An AI procurement assistant on WhatsApp: people work through sourcing workflows in natural-language conversations.",
+      "domains": [
+        "ai",
+        "api"
+      ],
+      "stack": [
+        "Python",
+        "FastAPI",
+        "WhatsApp Business API",
+        "Agentic AI",
+        "REST APIs"
+      ],
+      "shipsAs": "Internal · Moglix",
+      "platform": "internal",
+      "org": "Moglix",
+      "internal": true,
+      "points": [
+        "A WhatsApp-integrated AI agent for conversational procurement workflows.",
+        "Backend services and agent orchestration that process requests, run sourcing workflows and reply with context."
+      ]
+    },
+    {
+      "slug": "ocr-accuracy-report-pipeline",
+      "name": "OCR Accuracy Report Pipeline",
+      "summary": "A reporting pipeline that measures OCR accuracy at Moglix.",
+      "domains": [
+        "ai",
+        "automation"
+      ],
+      "stack": [
+        "Python",
+        "OCR"
+      ],
+      "shipsAs": "Internal · Moglix",
+      "platform": "internal",
+      "org": "Moglix",
+      "internal": true
+    },
+    {
+      "slug": "bakup",
+      "name": "Bakup",
+      "summary": "A self-hosted, Git-like backup system: take local snapshots, push them to your own server when you are online, and restore any earlier version. Offline-first and deduplicated.",
+      "domains": [
+        "automation",
+        "tools",
+        "infra"
+      ],
+      "stack": [
+        "Python",
+        "FastAPI",
+        "SQLite",
+        "Docker",
+        "Docker Compose",
+        "SHA-256",
+        "HTML · CSS · JS"
+      ],
+      "shipsAs": "CLI + server · Windows, Linux, Python",
+      "platform": "web",
+      "links": [
+        {
+          "href": "https://bakup.mohammadramiz.in/",
+          "label": "bakup.mohammadramiz.in"
+        },
+        {
+          "href": "https://github.com/RamizMohammad/Bakup-Release/releases",
+          "label": "Releases on GitHub"
+        }
+      ],
+      "screen": {
+        "src": "/images/screens/bakup.webp",
+        "kind": "web",
+        "width": 1024,
+        "height": 640
+      },
+      "points": [
+        "Versioned snapshots and secure server sync, with SHA-256 content-addressable storage for deduplication.",
+        "CLI tools for init, commit, push, clone and restore, packaged for Windows, Linux and Python.",
+        "A FastAPI backend, a web dashboard and token-based authentication, deployed with Docker."
+      ],
+      "architecture": {
+        "edges": [
+          {
+            "to": "snap",
+            "from": "cli",
+            "label": "commit"
+          },
+          {
+            "to": "api",
+            "from": "snap",
+            "label": "push"
+          },
+          {
+            "to": "api",
+            "from": "web"
+          },
+          {
+            "to": "store",
+            "from": "api",
+            "label": "objects"
+          },
+          {
+            "to": "db",
+            "from": "api",
+            "label": "metadata"
+          },
+          {
+            "to": "docker",
+            "from": "api",
+            "label": "runs in",
+            "dashed": true
+          }
+        ],
+        "nodes": [
+          {
+            "x": 0,
+            "y": 0,
+            "id": "cli",
+            "label": "Bakup CLI",
+            "layer": "interface",
+            "detail": "init, commit, push…"
+          },
+          {
+            "x": 0,
+            "y": 2,
+            "id": "web",
+            "label": "Web dashboard",
+            "layer": "interface",
+            "detail": "Browse and restore"
+          },
+          {
+            "x": 1,
+            "y": 0,
+            "id": "snap",
+            "label": "Local snapshots",
+            "layer": "automation",
+            "detail": "Offline-first"
+          },
+          {
+            "x": 2,
+            "y": 1,
+            "id": "api",
+            "label": "FastAPI server",
+            "layer": "api",
+            "detail": "Token auth"
+          },
+          {
+            "x": 3,
+            "y": 0,
+            "id": "store",
+            "label": "Content store",
+            "layer": "data",
+            "detail": "SHA-256, deduplicated"
+          },
+          {
+            "x": 3,
+            "y": 2,
+            "id": "db",
+            "label": "SQLite",
+            "layer": "data",
+            "detail": "Snapshot metadata"
+          },
+          {
+            "x": 4,
+            "y": 1,
+            "id": "docker",
+            "label": "Docker",
+            "layer": "infra",
+            "detail": "Self-hosted"
+          }
+        ],
+        "caption": "Simplified from the project description."
+      }
+    },
+    {
+      "slug": "snapy",
+      "name": "Snapy",
+      "summary": "A one-click tool that captures an Android phone's full state to a PC and restores it after a wipe or OS reinstall, with no root access.",
+      "domains": [
+        "tools",
+        "apps"
+      ],
+      "stack": [
+        "Python",
+        "ADB",
+        "PySide6",
+        "Qt",
+        "CLI tooling"
+      ],
+      "shipsAs": "Desktop app + CLI · Loopax Technologies",
+      "platform": "desktop",
+      "links": [
+        {
+          "href": "https://github.com/RamizMohammad/snapy/releases",
+          "label": "Releases on GitHub"
+        }
+      ],
+      "points": [
+        "A snapshot-and-restore engine that runs entirely over ADB, so it works on stock, unrooted phones.",
+        "Wipe, reinstall and bring a phone back to its earlier state without a cloud account or rooting.",
+        "Shipped as a Loopax Technologies product with a Python CLI and a PySide6 desktop app, prototyped in Google Stitch and rebuilt natively for Windows."
+      ]
+    },
+    {
+      "slug": "buddycode",
+      "name": "BuddyCode",
+      "summary": "A real-time collaborative code editor with syntax highlighting, multiple languages and live cursor sharing.",
+      "domains": [
+        "tools"
+      ],
+      "stack": [
+        "Python",
+        "Flask",
+        "WebSocket",
+        "CodeMirror"
+      ],
+      "shipsAs": "Web app",
+      "platform": "web",
+      "links": [
+        {
+          "href": "https://www.buddycode.online",
+          "label": "buddycode.online"
+        }
+      ],
+      "logo": "/images/logos/buddycode.webp",
+      "points": [
+        "Several people edit the same file at once and see each other's cursors.",
+        "Edits travel over WebSocket between the browser editor and a Flask server.",
+        "CodeMirror provides the editor and syntax highlighting for multiple languages.",
+        "An Android companion app runs Python code as an online compiler."
+      ],
+      "architecture": {
+        "edges": [
+          {
+            "to": "socket",
+            "from": "editor",
+            "label": "edits"
+          },
+          {
+            "to": "socket",
+            "from": "peer",
+            "label": "edits"
+          },
+          {
+            "to": "server",
+            "from": "socket"
+          },
+          {
+            "to": "runner",
+            "from": "server",
+            "label": "run"
+          },
+          {
+            "to": "peer",
+            "from": "server",
+            "label": "broadcast",
+            "dashed": true
+          }
+        ],
+        "nodes": [
+          {
+            "x": 0,
+            "y": 0,
+            "id": "editor",
+            "label": "Browser editor",
+            "layer": "interface",
+            "detail": "CodeMirror editor"
+          },
+          {
+            "x": 0,
+            "y": 2,
+            "id": "peer",
+            "label": "Peer editor",
+            "layer": "interface",
+            "detail": "Second collaborator"
+          },
+          {
+            "x": 1,
+            "y": 1,
+            "id": "socket",
+            "label": "WebSocket channel",
+            "layer": "api",
+            "detail": "Edits and cursors"
+          },
+          {
+            "x": 2,
+            "y": 1,
+            "id": "server",
+            "label": "Flask server",
+            "layer": "api",
+            "detail": "Sessions and broadcast"
+          },
+          {
+            "x": 3,
+            "y": 1,
+            "id": "runner",
+            "label": "Python runner",
+            "layer": "automation",
+            "detail": "Executes code"
+          }
+        ],
+        "caption": "Simplified from the project description."
+      }
+    },
+    {
+      "slug": "linkium",
+      "name": "Linkium",
+      "summary": "A cross-platform tool that connects devices for file sharing and communication.",
+      "domains": [
+        "tools"
+      ],
+      "stack": [
+        "Python",
+        "Tkinter",
+        "WebSocket",
+        "Networking"
+      ],
+      "shipsAs": "Desktop app",
+      "platform": "desktop",
+      "links": [
+        {
+          "href": "https://www.linkium.space",
+          "label": "linkium.space"
+        }
+      ],
+      "logo": "/images/logos/linkium.webp",
+      "points": [
+        "Pairs two devices and keeps a live connection between them.",
+        "Moves files and messages over a WebSocket link.",
+        "Desktop interface built with Tkinter."
+      ],
+      "architecture": {
+        "edges": [
+          {
+            "to": "link",
+            "from": "a"
+          },
+          {
+            "to": "transfer",
+            "from": "link"
+          },
+          {
+            "to": "msg",
+            "from": "link"
+          },
+          {
+            "to": "b",
+            "from": "transfer"
+          },
+          {
+            "to": "b",
+            "from": "msg"
+          }
+        ],
+        "nodes": [
+          {
+            "x": 0,
+            "y": 1,
+            "id": "a",
+            "label": "Device A",
+            "layer": "interface",
+            "detail": "Tkinter desktop app"
+          },
+          {
+            "x": 1,
+            "y": 1,
+            "id": "link",
+            "label": "WebSocket link",
+            "layer": "api",
+            "detail": "Two-way channel"
+          },
+          {
+            "x": 2,
+            "y": 0,
+            "id": "transfer",
+            "label": "File transfer",
+            "layer": "automation",
+            "detail": "Sends files"
+          },
+          {
+            "x": 2,
+            "y": 2,
+            "id": "msg",
+            "label": "Messages",
+            "layer": "automation",
+            "detail": "Device messages"
+          },
+          {
+            "x": 3,
+            "y": 1,
+            "id": "b",
+            "label": "Device B",
+            "layer": "interface",
+            "detail": "Tkinter desktop app"
+          }
+        ],
+        "caption": "Simplified from the project description."
+      }
+    },
+    {
+      "slug": "backup-engine",
+      "name": "Backup Engine",
+      "summary": "A backup automation tool that takes compressed snapshots of important folders and tracks file changes by hashing.",
+      "domains": [
+        "automation",
+        "tools"
+      ],
+      "stack": [
+        "Python",
+        "PyQt",
+        "Multithreading",
+        "File hashing"
+      ],
+      "shipsAs": "Desktop release v1.0",
+      "platform": "desktop",
+      "links": [
+        {
+          "href": "https://github.com/RamizMohammad/Backup_Engine/releases/tag/v1.0",
+          "label": "Release v1.0 on GitHub"
+        }
+      ],
+      "logo": "/images/logos/backup-engine.webp",
+      "points": [
+        "Hashes files to detect what changed since the last run.",
+        "Writes compressed snapshots of the folders you choose.",
+        "Runs work on background threads so the PyQt interface stays responsive."
+      ],
+      "architecture": {
+        "edges": [
+          {
+            "to": "workers",
+            "from": "ui",
+            "label": "start"
+          },
+          {
+            "to": "hash",
+            "from": "workers"
+          },
+          {
+            "to": "snap",
+            "from": "hash",
+            "label": "changed files"
+          },
+          {
+            "to": "store",
+            "from": "snap"
+          },
+          {
+            "to": "ui",
+            "from": "workers",
+            "label": "progress",
+            "dashed": true
+          }
+        ],
+        "nodes": [
+          {
+            "x": 0,
+            "y": 1,
+            "id": "ui",
+            "label": "PyQt interface",
+            "layer": "interface",
+            "detail": "Folders and progress"
+          },
+          {
+            "x": 1,
+            "y": 1,
+            "id": "workers",
+            "label": "Worker threads",
+            "layer": "automation",
+            "detail": "Background jobs"
+          },
+          {
+            "x": 2,
+            "y": 0,
+            "id": "hash",
+            "label": "Change detection",
+            "layer": "automation",
+            "detail": "File hashing"
+          },
+          {
+            "x": 2,
+            "y": 2,
+            "id": "snap",
+            "label": "Snapshot writer",
+            "layer": "data",
+            "detail": "Compressed archives"
+          },
+          {
+            "x": 3,
+            "y": 1,
+            "id": "store",
+            "label": "Backup location",
+            "layer": "infra",
+            "detail": "Disk or drive"
+          }
+        ],
+        "caption": "Simplified from the project description."
+      }
+    },
+    {
+      "slug": "confess",
+      "name": "Confess",
+      "summary": "A privacy-focused anonymous social platform for sharing confessions, thoughts and experiences, with real-time feeds and reactions. Published on Google Play.",
+      "domains": [
+        "apps",
+        "api"
+      ],
+      "stack": [
+        "Android",
+        "Java",
+        "Firebase",
+        "Firestore",
+        "Cloud Functions",
+        "FCM",
+        "AWS",
+        "Cloudinary"
+      ],
+      "shipsAs": "Android · Google Play",
+      "platform": "android",
+      "links": [
+        {
+          "href": "https://play.google.com/store/apps/details?id=in.mohammad.ramiz.confess",
+          "label": "Google Play"
+        }
+      ],
+      "logo": "/images/logos/confess-app.webp",
+      "screen": {
+        "src": "/images/screens/confess-app.webp",
+        "kind": "phone",
+        "width": 1024,
+        "height": 512
+      },
+      "points": [
+        "Google Sign-In, end-to-end encryption and biometric authentication keep users private.",
+        "Real-time Firebase listeners update the feed instantly.",
+        "Cloud Functions handle content moderation.",
+        "Push notifications through Firebase Cloud Messaging."
+      ]
+    },
+    {
+      "slug": "confess-web",
+      "name": "Confess Web",
+      "summary": "The promotional website for the Confess Android app: platform highlights and a direct way to download the app.",
+      "domains": [
+        "apps"
+      ],
+      "stack": [
+        "React",
+        "Vite",
+        "TypeScript",
+        "Framer Motion",
+        "Tailwind CSS"
+      ],
+      "shipsAs": "Web",
+      "platform": "web",
+      "links": [
+        {
+          "href": "https://confess.mohammadramiz.in/",
+          "label": "confess.mohammadramiz.in"
+        }
+      ],
+      "logo": "/images/logos/confess-web.webp",
+      "screen": {
+        "src": "/images/screens/confess-web.webp",
+        "kind": "web",
+        "width": 1024,
+        "height": 640
+      }
+    },
+    {
+      "slug": "timefold",
+      "name": "Time Fold",
+      "summary": "A timeline website showing historical events that happened on today's date.",
+      "domains": [
+        "api"
+      ],
+      "stack": [
+        "Python",
+        "FastAPI",
+        "Data processing"
+      ],
+      "shipsAs": "Web app",
+      "platform": "web",
+      "links": [
+        {
+          "href": "https://www.timefold.space/",
+          "label": "timefold.space"
+        }
+      ],
+      "logo": "/images/logos/timefold.webp",
+      "screen": {
+        "src": "/images/screens/timefold.webp",
+        "kind": "web",
+        "width": 1024,
+        "height": 640
+      }
+    }
+  ],
+  "achievements": [
+    {
+      "kind": "Award",
+      "title": "Jungle Torchbearer Award",
+      "org": "Moglix",
+      "year": "2026",
+      "status": "Won",
+      "detail": "For excellence in demand planning for Tata Steel (TSL): independent research and ownership that lifted OTIF (On-Time, In-Full) from below 50% to over 70%."
+    },
+    {
+      "kind": "Patent",
+      "title": "Method and System for Real-Time User Safety During Vehicle Commutes",
+      "org": "Indian Patent Office",
+      "year": "2025",
+      "status": "Published",
+      "detail": "Application No. 202511053637 · Published 27 June 2025. A system for passenger safety during vehicle commutes: real-time safety monitoring, risk identification and proactive intervention against potential threats.",
+      "image": {
+        "alt": "Patent publication document",
+        "src": "/images/certificates/patent.webp",
+        "width": 1000,
+        "height": 773
+      }
+    },
+    {
+      "kind": "Hackathon",
+      "title": "Hack KRMU 4.0",
+      "org": "K.R. Mangalam University, Gurugram",
+      "year": "2024",
+      "status": "Finalist",
+      "detail": "Reached the final after four judging rounds.",
+      "image": {
+        "alt": "K.R. Mangalam University hackathon certificate",
+        "src": "/images/certificates/krmu.webp",
+        "width": 1000,
+        "height": 729
+      }
+    },
+    {
+      "kind": "Hackathon",
+      "title": "6th Technovation Hackathon",
+      "org": "Sharda University, Greater Noida",
+      "year": "2024",
+      "status": "6th place",
+      "image": {
+        "alt": "Sharda University hackathon certificate",
+        "src": "/images/certificates/sharda.webp",
+        "width": 1000,
+        "height": 725
+      }
+    },
+    {
+      "kind": "Hackathon",
+      "title": "Hack For Impact, E-Summit 2025",
+      "org": "IIIT Delhi",
+      "year": "2025",
+      "status": "Participant",
+      "image": {
+        "alt": "IIIT Delhi Hack For Impact certificate",
+        "src": "/images/certificates/iiitd.webp",
+        "width": 1000,
+        "height": 706
+      }
+    },
+    {
+      "kind": "Hackathon",
+      "title": "Road Safety Hackathon",
+      "org": "NHAI & HOAI, Delhi",
+      "year": "2024",
+      "status": "Semi-finalist",
+      "detail": "Proposed AI-assisted highway monitoring for pothole detection and commuter safety.",
+      "image": {
+        "alt": "NHAI and HOAI hackathon certificate",
+        "src": "/images/certificates/nhai.webp",
+        "width": 1000,
+        "height": 684
+      }
+    },
+    {
+      "kind": "Hackathon",
+      "title": "Build with India Hackathon",
+      "org": "Google Office, Gurugram",
+      "year": "2024",
+      "status": "8th place",
+      "image": {
+        "alt": "Build With India certificate",
+        "src": "/images/certificates/build-with-india.webp",
+        "width": 1000,
+        "height": 707
+      }
+    },
+    {
+      "kind": "Competition",
+      "title": "Flipkart GRiD 6.0, Software Development track",
+      "org": "Flipkart",
+      "year": "2024",
+      "status": "Level 1 cleared",
+      "image": {
+        "alt": "Flipkart GRiD 6.0 certificate",
+        "src": "/images/certificates/flipkart.webp",
+        "width": 1000,
+        "height": 684
+      }
+    },
+    {
+      "kind": "Internship",
+      "title": "Software Development Engineer intern",
+      "org": "Bluestock Fintech",
+      "year": "2025",
+      "status": "Completed",
+      "image": {
+        "alt": "Bluestock Fintech internship certificate",
+        "src": "/images/certificates/bluestock.webp",
+        "width": 1000,
+        "height": 707
+      }
+    },
+    {
+      "kind": "Certification",
+      "title": "Machine Learning A-Z: AI, Python & R",
+      "org": "Udemy",
+      "year": "2023",
+      "status": "Certified",
+      "image": {
+        "alt": "Udemy Machine Learning A-Z certificate",
+        "src": "/images/certificates/udemy.webp",
+        "width": 1000,
+        "height": 744
+      }
+    },
+    {
+      "kind": "Certification",
+      "title": "AWS Deep Dive",
+      "org": "Amazon Web Services",
+      "year": "2023",
+      "status": "Certified",
+      "image": {
+        "alt": "AWS certificate",
+        "src": "/images/certificates/aws.webp",
+        "width": 1000,
+        "height": 551
+      }
+    },
+    {
+      "kind": "Certification",
+      "title": "Android Application Development",
+      "org": "Udemy",
+      "year": "2023",
+      "status": "Certified"
+    }
+  ],
+  "moments": [
+    {
+      "when": 2024.1,
+      "date": "2024",
+      "place": "K.R. Mangalam University, Gurugram",
+      "title": "Hack KRMU 4.0 — finalist",
+      "caption": "Reached the final after four judging rounds.",
+      "image": {
+        "alt": "K.R. Mangalam University hackathon certificate",
+        "src": "/images/certificates/krmu.webp",
+        "width": 1000,
+        "height": 729
+      },
+      "fit": "contain"
+    },
+    {
+      "when": 2024.2,
+      "date": "2024",
+      "place": "Sharda University, Greater Noida",
+      "title": "6th Technovation Hackathon — 6th place",
+      "image": {
+        "alt": "Sharda University hackathon certificate",
+        "src": "/images/certificates/sharda.webp",
+        "width": 1000,
+        "height": 725
+      },
+      "fit": "contain"
+    },
+    {
+      "when": 2024.3,
+      "date": "2024",
+      "place": "NHAI & HOAI, Delhi",
+      "title": "Road Safety Hackathon — semi-finalist",
+      "caption": "Proposed AI-assisted highway monitoring for pothole detection and commuter safety.",
+      "image": {
+        "alt": "NHAI and HOAI hackathon certificate",
+        "src": "/images/certificates/nhai.webp",
+        "width": 1000,
+        "height": 684
+      },
+      "fit": "contain"
+    },
+    {
+      "when": 2024.4,
+      "date": "2024",
+      "place": "Google Office, Gurugram",
+      "title": "Build with India — 8th place",
+      "image": {
+        "alt": "Build With India certificate",
+        "src": "/images/certificates/build-with-india.webp",
+        "width": 1000,
+        "height": 707
+      },
+      "fit": "contain"
+    },
+    {
+      "when": 2025.1,
+      "date": "2025",
+      "place": "IIIT Delhi, New Delhi",
+      "title": "Hack For Impact, E-Summit 2025",
+      "image": {
+        "alt": "IIIT Delhi Hack For Impact certificate",
+        "src": "/images/certificates/iiitd.webp",
+        "width": 1000,
+        "height": 706
+      },
+      "fit": "contain"
+    },
+    {
+      "when": 2025.4,
+      "date": "May – Jun 2025",
+      "place": "Bluestock Fintech",
+      "title": "SDE internship",
+      "caption": "Developed the internal admin panel and its backend logic as project lead.",
+      "image": {
+        "alt": "Bluestock Fintech internship certificate",
+        "src": "/images/certificates/bluestock.webp",
+        "width": 1000,
+        "height": 707
+      },
+      "fit": "contain"
+    },
+    {
+      "when": 2025.48,
+      "date": "27 June 2025",
+      "place": "Indian Patent Office",
+      "title": "Patent published",
+      "caption": "Method and System for Real-Time User Safety During Vehicle Commutes.",
+      "image": {
+        "alt": "Patent publication document",
+        "src": "/images/certificates/patent.webp",
+        "width": 1000,
+        "height": 773
+      },
+      "fit": "contain"
+    }
+  ],
+  "publications": [
+    {
+      "kind": "Patent",
+      "title": "Method and System for Real-Time User Safety During Vehicle Commutes",
+      "venue": "Indian Patent Office · Published patent application",
+      "date": "27 June 2025",
+      "year": 2025,
+      "id": {
+        "label": "Application No.",
+        "value": "202511053637"
+      },
+      "abstract": "A system for enhancing passenger safety during vehicle commutes, focusing on real-time safety monitoring, risk identification, and proactive intervention to address potential threats.",
+      "image": {
+        "alt": "First page of the published patent application",
+        "src": "/images/certificates/patent.webp",
+        "width": 1000,
+        "height": 773
+      },
+      "tags": [
+        "Safety",
+        "Real-time monitoring",
+        "Risk detection"
+      ]
+    }
+  ]
+}

@@ -9,7 +9,10 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "check": "npm run lint && npm run typecheck && npm run build"
+    "check": "npm run lint && npm run typecheck && npm run build",
+    "content:pull": "node scripts/pull-content.mjs",
+    "content:seed": "node scripts/make-seed.mjs",
+    "prebuild": "node scripts/pull-content.mjs"
   },
   "dependencies": {
     "next": "16.4.3",

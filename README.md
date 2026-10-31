@@ -19,7 +19,8 @@ npm run dev
 
 | Path | What |
 | --- | --- |
-| `content/` | All facts on the site: profile, systems, timeline, stack, achievements. Edit here, not in components. |
+| `db/` | The Postgres schema and seed for all site content, and how to update it (see `db/README.md`). |
+| `content/` | Typed access to the content; `data.json` is the snapshot pulled from the database before each build. |
 | `components/home/` | The home page sections, in page order in `app/page.tsx`. |
 | `components/` | Shared pieces: header, command palette (⌘K), terminal, architecture diagram, footer. |
 | `app/globals.css` | The design tokens and the few classes the whole site is built from. |
