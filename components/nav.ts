@@ -8,6 +8,7 @@ export const SECTIONS = [
   { id: "moments", label: "Moments" },
   { id: "stack", label: "Stack" },
   { id: "recognition", label: "Recognition" },
+  { id: "publications", label: "Publications" },
 ] as const;
 
 export const NAV = SECTIONS.slice(0, 4);

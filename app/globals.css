@@ -226,8 +226,15 @@ html.js .in .collage-bar { animation: bar-grow 1000ms cubic-bezier(0.65, 0, 0.35
 @keyframes device-in { from { opacity: 0; transform: translateX(48px) rotate(3deg) } }
 @keyframes ide-line { from { opacity: 0; transform: translateX(-6px) } }
 
+/* Publications: each first page is a sheet with a folded corner that lifts and tilts on hover. */
+.paper-sheet { transition: transform 400ms cubic-bezier(0.34, 1.56, 0.64, 1) }
+.paper:hover .paper-sheet { transform: rotate(-2.5deg) translateY(-6px) }
+.paper-fold { background: linear-gradient(225deg, var(--color-paper) 50%, #d9d4e8 50%); border-bottom-left-radius: 6px; border-left: 1.5px solid var(--color-ink); border-bottom: 1.5px solid var(--color-ink); transition: width 300ms ease, height 300ms ease }
+.paper:hover .paper-fold { width: 44px; height: 44px }
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto }
+  .paper:hover .paper-sheet { transform: none }
   .collage-tile:hover, .collage-tile:focus-visible { scale: none }
   html.js .in .collage-bar, .viewer-overlay, .viewer-ide, .viewer-device, .ide-line { animation: none }
   html.js .exp-card[data-reveal] { transform: none }
