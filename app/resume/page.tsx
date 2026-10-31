@@ -1,9 +1,9 @@
-import type { Metadata } from "next";
 import { achievements } from "@/content/achievements";
 import { profile } from "@/content/profile";
 import { stack } from "@/content/stack";
 import { timeline } from "@/content/timeline";
 import { LAYERS } from "@/content/types";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Résumé",
@@ -107,7 +107,6 @@ export default function ResumePage() {
             <a href={`mailto:${profile.email}`} className="link nc">{profile.email}</a>
           </li>
           <li>
-            <a href={profile.phone.href} className="link">{profile.phone.display}</a>
           </li>
           {profile.links.map((l) => (
             <li key={l.label}>

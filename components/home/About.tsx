@@ -1,4 +1,3 @@
-import Image from "next/image";
 import CountUp from "@/components/CountUp";
 import Parallax from "@/components/Parallax";
 import Words from "@/components/Words";
@@ -6,6 +5,7 @@ import { achievements } from "@/content/achievements";
 import { profile } from "@/content/profile";
 import { systems } from "@/content/systems";
 import { timeline } from "@/content/timeline";
+import Image from "next/image";
 import SectionLabel from "./SectionLabel";
 
 // Every number here is counted from the content files, so it stays true as they change.
@@ -128,7 +128,6 @@ export default function About() {
           <dl className="grid">
             {[
               { term: "Email", value: profile.email, href: `mailto:${profile.email}` },
-              { term: "Phone", value: profile.phone.display, href: profile.phone.href },
               { term: "Based in", value: profile.location },
               { term: "Education", value: profile.education },
             ].map((d) => (

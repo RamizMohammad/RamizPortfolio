@@ -15,7 +15,6 @@ export type Profile = {
   education: string;
   /** Newest first, as on the résumé. */
   schooling: { degree: string; school: string; score: string; period: string }[];
-  phone: { display: string; href: string };
   portrait: { src: string; width: number; height: number; alt: string };
   email: string;
   resume: string;
