@@ -1,52 +1,167 @@
 import Image from "next/image";
+import { BraceCoin, Gear, PaperPlane } from "@/components/hero/Stickers";
+import { achievements } from "@/content/achievements";
 import { profile } from "@/content/profile";
+import { systems } from "@/content/systems";
+import { timeline } from "@/content/timeline";
 import SectionLabel from "./SectionLabel";
 
-const details = [
-  { term: "Name", value: profile.name },
-  { term: "Role", value: `${profile.role}, ${profile.company}` },
-  { term: "Based in", value: profile.location },
-  { term: "Education", value: profile.education },
-  { term: "Email", value: profile.email, href: `mailto:${profile.email}`, nc: true },
-  { term: "Phone", value: profile.phone.display, href: profile.phone.href },
+// Every number here is counted from the content files, so it stays true as they change.
+const journey = timeline.filter((t) => t.span).sort((a, b) => a.span![0] - b.span![0]);
+const now = timeline.find((t) => t.span && t.span[1] === null && t.kind === "Work");
+const STATS = [
+  { value: String(Math.floor(journey[0].span![0])), label: "Building software since", tone: "bg-lime" },
+  { value: String(systems.filter((s) => !s.internal).length), label: "Public systems shipped", tone: "bg-pink" },
+  { value: String(systems.filter((s) => s.internal).length), label: "Internal systems at Moglix", tone: "bg-sun" },
+  { value: String(achievements.filter((a) => a.kind === "Patent").length), label: "Patent filed", tone: "bg-blue text-card" },
+  { value: String(achievements.filter((a) => a.kind === "Hackathon" || a.kind === "Competition").length), label: "Hackathons and competitions", tone: "bg-mint" },
+  { value: String(systems.filter((s) => s.shipsAs.includes("Google Play")).length), label: "App live on Google Play", tone: "bg-card" },
 ];
+const CHIP_TONES = ["bg-pink", "bg-lime", "bg-sun", "bg-violet", "bg-mint", "bg-card"];
+
+const card = "rounded-[28px] border-[1.5px] border-ink";
 
 export default function About() {
   return (
-    <section id="about" aria-labelledby="about-title" className="edge">
+    <section id="about" aria-labelledby="about-title" className="edge pb-24">
       <SectionLabel n={1}>About</SectionLabel>
-      <div className="void">
-        <h2 id="about-title" className="t-h1" data-reveal>
-          Behind the systems.
-        </h2>
-        <div className="mx-auto w-full max-w-[420px] overflow-hidden rounded-[28px] border-[1.5px] border-ink bg-sun" data-reveal style={{ ["--rd" as string]: "80ms" }}>
-          <Image src={profile.portrait.src} alt={profile.portrait.alt} width={profile.portrait.width} height={profile.portrait.height} sizes="(min-width: 1024px) 420px, 90vw" className="h-auto w-full mix-blend-multiply" />
+      <div className="grid gap-4 pt-16 lg:grid-cols-12">
+        {/* Intro */}
+        <div className={`${card} grid content-between gap-8 bg-card p-7 md:p-10 lg:col-span-7`} data-reveal>
+          <div className="grid gap-5">
+            <p className="t-label muted">The person behind the systems</p>
+            <h2 id="about-title" className="t-display">
+              Hi, I&rsquo;m Ramiz.
+            </h2>
+            <p className="voice-sm max-w-[58ch] text-[18px]">
+              I&rsquo;m a software engineer at {profile.company}, based in {profile.location}. I like the parts of software most people never see: the scripts that remove manual work, the APIs that connect systems, and the servers they run on. I&rsquo;ve been building since {STATS[0].value}, first my own products, then freelance Android apps, an internship as project lead, and now backend and agentic AI work at {profile.company}. I build the apps on top too, mostly Android and the web.
+            </p>
+          </div>
+          <ul className="flex flex-wrap gap-2" aria-label="At a glance">
+            <li className="btn-ghost btn-sm pointer-events-none">{profile.role}</li>
+            <li className="btn-ghost btn-sm pointer-events-none">{profile.education}</li>
+            <li className="btn-ghost btn-sm pointer-events-none">Greater Noida, India</li>
+            <li className="btn-pill btn-sm pointer-events-none">
+              <span className="dot !bg-lime" /> Open to work
+            </li>
+          </ul>
         </div>
-        <p className="voice" data-reveal style={{ ["--rd" as string]: "160ms" }}>
-          I&rsquo;m a software engineer at {profile.company}. I like the scripts that remove manual work, the APIs that connect systems, and the servers they run on. I build the apps on top too, mostly Android and the web.
-        </p>
-      </div>
-      <div className="grid gap-[41px] pb-24 lg:grid-cols-2">
-        <dl className="grid">
-          {details.map((d) => (
-            <div key={d.term} className="dash-t grid grid-cols-[120px_1fr] gap-4 py-3.5" data-reveal>
-              <dt className="t-label muted">{d.term}</dt>
-              <dd className={`t-sub break-words ${d.nc ? "nc" : ""}`}>
-                {d.href ? <a href={d.href} className="link">{d.value}</a> : d.value}
-              </dd>
-            </div>
+
+        {/* Mascot */}
+        <div className={`${card} relative min-h-[440px] overflow-hidden bg-violet md:min-h-[560px] lg:col-span-5 lg:row-span-2`} data-reveal style={{ ["--rd" as string]: "80ms" }}>
+          <div aria-hidden="true" className="absolute inset-0 opacity-30" style={{ backgroundImage: "linear-gradient(#121016 1px, transparent 1px), linear-gradient(90deg, #121016 1px, transparent 1px)", backgroundSize: "44px 44px", maskImage: "radial-gradient(circle at 50% 40%, #000 0%, transparent 70%)" }} />
+          {/* Anchored to the right edge: the source render crops the raised hand there. */}
+          <div className="bob absolute -bottom-4 right-0 w-[86%] max-w-[480px]" style={{ ["--r0" as string]: "0deg", ["--r1" as string]: "1deg", ["--t" as string]: "6s" }}>
+            <Image src={profile.portrait.src} alt={profile.portrait.alt} width={profile.portrait.width} height={profile.portrait.height} sizes="(min-width: 1024px) 480px, 86vw" className="h-auto w-full" />
+          </div>
+          <p className="absolute left-6 top-6 rounded-[18px] rounded-bl-[4px] border-[1.5px] border-ink bg-card px-4 py-2.5 font-mono text-[14px]" aria-hidden="true">
+            print(&quot;hello, world&quot;)
+          </p>
+          <span aria-hidden="true" className="bob absolute right-6 top-8 w-16" style={{ ["--r0" as string]: "0deg", ["--r1" as string]: "30deg", ["--t" as string]: "7s" }}>
+            <Gear />
+          </span>
+          <span aria-hidden="true" className="bob absolute right-[12%] top-[38%] w-20" style={{ ["--r0" as string]: "-8deg", ["--r1" as string]: "4deg", ["--t" as string]: "5s", ["--bd" as string]: "-1.5s" }}>
+            <BraceCoin />
+          </span>
+          <span aria-hidden="true" className="bob absolute left-[6%] top-[42%] w-24" style={{ ["--r0" as string]: "-6deg", ["--r1" as string]: "2deg", ["--t" as string]: "6.5s", ["--bd" as string]: "-3s" }}>
+            <PaperPlane />
+          </span>
+        </div>
+
+        {/* Numbers */}
+        <ul className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:col-span-7" aria-label="In numbers">
+          {STATS.map((s, i) => (
+            <li key={s.label} className={`${card} grid content-between gap-6 p-6 ${s.tone}`} data-reveal style={{ ["--rd" as string]: `${i * 60}ms` }}>
+              <span className="t-display !text-[clamp(56px,6vw,88px)]">{s.value}</span>
+              <span className="t-label">{s.label}</span>
+            </li>
           ))}
-        </dl>
-        <div className="grid content-start">
-          <h3 className="t-label muted dash-t py-3.5">What I work on</h3>
-          <ol className="grid">
-            {profile.interests.map((it, i) => (
-              <li key={it} className="dash-t t-sub grid grid-cols-[48px_1fr] py-3.5" data-reveal>
-                <span className="muted">{String(i + 1).padStart(2, "0")}</span>
-                {it}
+        </ul>
+
+        {/* Right now */}
+        {now && (
+          <div className={`${card} grid content-start gap-5 bg-ink p-7 text-paper md:p-10 lg:col-span-5`} data-reveal>
+            <p className="t-label flex items-center gap-2 text-lime">
+              <span className="dot !bg-lime" /> Right now
+            </p>
+            <h3 className="t-h1 !text-[clamp(36px,3.6vw,56px)]">
+              {now.title} at {now.org}
+            </h3>
+            <p className="t-label text-[#a9a5bf]">Since {now.period.split("–")[0].trim()}</p>
+            <ul className="voice-sm grid gap-2">
+              {now.points.slice(0, 3).map((p) => (
+                <li key={p} className="grid grid-cols-[20px_1fr]">
+                  <span aria-hidden="true" className="text-lime">→</span>
+                  {p}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {/* Journey */}
+        <div className={`${card} grid content-start gap-8 bg-card p-7 md:p-10 lg:col-span-7`} data-reveal>
+          <h3 className="t-h2">The road so far</h3>
+          <ol className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+            {journey.map((t, i) => (
+              <li key={t.org + t.title} className="relative grid content-start gap-2">
+                <span className="flex items-center gap-3">
+                  <span className={`grid h-10 w-10 shrink-0 place-items-center rounded-full border-[1.5px] border-ink font-display text-[17px] ${CHIP_TONES[i % CHIP_TONES.length]}`}>{i + 1}</span>
+                  <span className="t-h2">{Math.floor(t.span![0])}</span>
+                </span>
+                <span className="t-label">{t.title}</span>
+                <span className="voice-sm muted !text-[15px]">
+                  {t.org === t.kind ? t.org : `${t.org} · ${t.kind}`}
+                </span>
               </li>
             ))}
           </ol>
+        </div>
+
+        {/* Details */}
+        <div className={`${card} grid content-start gap-6 bg-sun p-7 md:p-10 lg:col-span-5`} data-reveal>
+          <h3 className="t-h2">Reach me</h3>
+          <dl className="grid">
+            {[
+              { term: "Email", value: profile.email, href: `mailto:${profile.email}` },
+              { term: "Phone", value: profile.phone.display, href: profile.phone.href },
+              { term: "Based in", value: profile.location },
+              { term: "Education", value: profile.education },
+            ].map((d) => (
+              <div key={d.term} className="grid grid-cols-[84px_1fr] gap-3 border-t-[1.5px] border-ink/20 py-3 md:grid-cols-[100px_1fr]">
+                <dt className="t-label">{d.term}</dt>
+                <dd className="break-words text-[15px] font-medium md:text-[16px]">{d.href ? <a href={d.href} className="link">{d.value}</a> : d.value}</dd>
+              </div>
+            ))}
+          </dl>
+          <ul className="flex flex-wrap gap-2">
+            {profile.links.map((l) => (
+              <li key={l.label}>
+                <a href={l.href} target="_blank" rel="noopener noreferrer" className="btn-ghost btn-sm">
+                  {l.label} ↗
+                </a>
+              </li>
+            ))}
+            <li>
+              <a href={profile.resume} className="btn-pill btn-sm">Résumé PDF</a>
+            </li>
+          </ul>
+        </div>
+
+        {/* Interests */}
+        <div className={`${card} grid content-start gap-6 bg-card p-7 md:p-10 lg:col-span-7`} data-reveal>
+          <h3 className="t-h2">What I work on</h3>
+          <ul className="flex flex-wrap gap-3">
+            {profile.interests.map((it, i) => (
+              <li
+                key={it}
+                className={`rounded-full border-[1.5px] border-ink px-4 py-2 text-[15px] font-medium ${CHIP_TONES[i % CHIP_TONES.length]}`}
+                style={{ transform: `rotate(${[-2, 1.5, -1, 2, -1.5, 1][i % 6]}deg)` }}
+              >
+                {it}
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </section>
