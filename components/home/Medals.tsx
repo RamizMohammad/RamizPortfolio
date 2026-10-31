@@ -40,8 +40,9 @@ function Laurel({ color }: { color: string }) {
             // From the bottom of the face up its left side; leaves lie along the curve.
             const deg = 250 - i * 19;
             const a = (deg * Math.PI) / 180;
-            const x = 50 + Math.cos(a) * 36;
-            const y = 50 - Math.sin(a) * 36;
+            // Rounded so server and browser produce the same numbers (their trig can differ in the last digit).
+            const x = Math.round((50 + Math.cos(a) * 36) * 100) / 100;
+            const y = Math.round((50 - Math.sin(a) * 36) * 100) / 100;
             return <ellipse key={i} cx={x} cy={y} rx="2.4" ry="5.5" transform={`rotate(${-deg + 180 + 25} ${x} ${y})`} fill={color} opacity="0.5" />;
           })}
         </g>
