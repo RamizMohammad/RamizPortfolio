@@ -15,8 +15,6 @@ export const profile = {
     "React, TypeScript, Next.js and experimental products",
     "Android, AR/VR and interactive experiences",
   ],
-  /** Short labels for the interests, used where space is tight (3D labels). */
-  interestTags: ["Automation", "AI / ML · OCR", "Backends · APIs", "Infrastructure", "Web products", "Android · AR/VR"],
   education: "Computer Science",
   phone: { display: "+91 95170 28373", href: "tel:+919517028373" },
   portrait: { src: "/images/portrait.webp", width: 640, height: 640, alt: "3D avatar portrait of Mohammad Ramiz" },

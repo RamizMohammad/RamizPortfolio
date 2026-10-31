@@ -1,136 +1,103 @@
 "use client";
 
-import { Drawer } from "@animate-ui/react/primitives/radix-ui";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Dialog } from "radix-ui";
 import { useEffect, useState } from "react";
 import { profile } from "@/content/profile";
-
-const NAV = [
-  { id: "about", label: "About" },
-  { id: "systems", label: "Systems" },
-  { id: "architecture", label: "Architecture" },
-  { id: "timeline", label: "Timeline" },
-  { id: "stack", label: "Stack" },
-  { id: "contact", label: "Contact" },
-];
+import { NAV, openPalette } from "./nav";
 
 export default function SiteHeader() {
   const pathname = usePathname();
   const onHome = pathname === "/";
   const [active, setActive] = useState<string | null>(null);
+  const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
-  // Marks the section currently in view, on the home page only.
+  // The bar is transparent over the hero, and solid once text could scroll under it.
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Marks the section in view, on the home page only.
   useEffect(() => {
     if (!onHome) return;
-    const sections = NAV.map((n) => document.getElementById(n.id)).filter((el): el is HTMLElement => !!el);
     const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) setActive(e.target.id);
-        });
-      },
+      (entries) => entries.forEach((e) => e.isIntersecting && setActive(e.target.id)),
       { rootMargin: "-45% 0px -50% 0px" },
     );
-    sections.forEach((s) => io.observe(s));
+    NAV.forEach((n) => {
+      const el = document.getElementById(n.id);
+      if (el) io.observe(el);
+    });
     return () => io.disconnect();
   }, [onHome]);
 
   const href = (id: string) => (onHome ? `#${id}` : `/#${id}`);
-  const current = onHome ? active : null;
 
   return (
     <header
-      className="sticky z-50 border-b border-rule bg-ink/80 backdrop-blur-md"
-      style={{ top: "env(safe-area-inset-top, 0px)" }}
+      className={`edge fixed inset-x-0 top-0 z-50 flex h-[var(--nav-h)] items-center justify-between gap-6 transition-colors duration-300 ${scrolled || !onHome ? "dash-b bg-canvas" : "border-b border-transparent"}`}
+      style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
     >
-      <div className="wrap flex h-16 items-center justify-between gap-6">
-        <Link href="/" className="display text-[19px] tracking-[-0.02em] no-underline" aria-label={`${profile.name}, home`}>
-          RAMIZ
-        </Link>
+      <Link href="/" className="t-label" aria-label={`${profile.name}, home`}>
+        Ramiz
+      </Link>
 
-        <nav aria-label="Main" className="hidden lg:block">
-          <ul className="flex items-center gap-7 text-[14px]">
-            {NAV.map((n) => (
-              <li key={n.id}>
-                <a
-                  href={href(n.id)}
-                  aria-current={current === n.id ? "true" : undefined}
-                  className="relative py-2 text-fg-2 no-underline transition-colors hover:text-fg aria-[current=true]:text-cyan"
-                >
-                  {n.label}
-                  <span
-                    aria-hidden="true"
-                    className={`absolute inset-x-0 -bottom-px h-px bg-gradient-to-r from-cyan to-violet transition-transform duration-200 ${current === n.id ? "scale-x-100" : "scale-x-0"}`}
-                  />
-                </a>
-              </li>
-            ))}
-            <li>
-              <Link href="/achievements" aria-current={pathname === "/achievements" ? "page" : undefined} className="py-2 text-fg-2 no-underline hover:text-fg aria-[current=page]:text-fg">
-                Achievements
-              </Link>
+      <nav aria-label="Main" className="hidden md:block">
+        <ul className="t-label flex items-center gap-7">
+          {NAV.map((n) => (
+            <li key={n.id}>
+              <a href={href(n.id)} aria-current={onHome && active === n.id ? "true" : undefined} className="link-quiet">
+                {n.label}
+              </a>
             </li>
-            <li>
-              <Link href="/resume" className="btn h-10 min-h-0 px-4 text-[13px]">
-                Résumé
-              </Link>
-            </li>
-          </ul>
-        </nav>
+          ))}
+          <li>
+            <button type="button" onClick={openPalette} className="btn-ghost" aria-label="Open command menu" aria-keyshortcuts="Control+K Meta+K">
+              ⌘K
+            </button>
+          </li>
+        </ul>
+      </nav>
 
-        <button
-          type="button"
-          className="flex h-11 w-11 items-center justify-center border border-rule lg:hidden"
-          aria-label="Open menu"
-          aria-expanded={open}
-          onClick={() => setOpen(true)}
-        >
-          <span aria-hidden="true" className="grid w-5 gap-[5px]">
-            <i className="block h-[1.5px] bg-fg" />
-            <i className="block h-[1.5px] bg-fg" />
-          </span>
-        </button>
-      </div>
-
-      <Drawer.Root open={open} onOpenChange={setOpen} direction="right">
-        <Drawer.Portal>
-          <Drawer.Overlay className="fixed inset-0 z-[60] bg-black/70" />
-          <Drawer.Content
-            className="fixed inset-y-0 right-0 z-[61] flex w-[min(88vw,380px)] flex-col border-l border-rule bg-ink outline-none"
-            style={{ paddingTop: "env(safe-area-inset-top, 0px)", paddingBottom: "env(safe-area-inset-bottom, 0px)", paddingRight: "env(safe-area-inset-right, 0px)" }}
-          >
-            <div className="flex h-16 items-center justify-between border-b border-rule px-5">
-              <Dialog.Title className="label">Menu</Dialog.Title>
+      <Dialog.Root open={open} onOpenChange={setOpen}>
+        <Dialog.Trigger className="t-label link md:hidden">Menu</Dialog.Trigger>
+        <Dialog.Portal>
+          <Dialog.Content className="edge fixed inset-0 z-[70] flex flex-col bg-canvas outline-none" style={{ paddingTop: "env(safe-area-inset-top, 0px)", paddingBottom: "max(24px, env(safe-area-inset-bottom, 0px))" }}>
+            <div className="dash-b flex h-[var(--nav-h)] items-center justify-between">
+              <Dialog.Title className="t-label">Ramiz</Dialog.Title>
               <Dialog.Description className="sr-only">Site sections and links</Dialog.Description>
-              <button type="button" onClick={() => setOpen(false)} className="flex h-11 w-11 items-center justify-center border border-rule text-xl leading-none" aria-label="Close menu">
-                ×
-              </button>
+              <Dialog.Close className="t-label link">Close</Dialog.Close>
             </div>
-            <nav aria-label="Mobile" className="flex-1 overflow-y-auto px-5 py-6">
+            <nav aria-label="Mobile" className="flex-1 overflow-y-auto py-8">
               <ul className="grid">
                 {NAV.map((n) => (
-                  <li key={n.id} className="border-b border-rule">
-                    <a href={href(n.id)} onClick={() => setOpen(false)} className="heading block py-4 text-[28px] no-underline">
+                  <li key={n.id} className="dash-b">
+                    <a href={href(n.id)} onClick={() => setOpen(false)} className="t-h1 block py-5">
                       {n.label}
                     </a>
                   </li>
                 ))}
-                <li className="border-b border-rule">
-                  <Link href="/achievements" onClick={() => setOpen(false)} className="heading block py-4 text-[28px] no-underline">
-                    Achievements
+                <li className="dash-b">
+                  <Link href="/achievements" onClick={() => setOpen(false)} className="t-h1 block py-5">
+                    Recognition
                   </Link>
                 </li>
               </ul>
-              <Link href="/resume" onClick={() => setOpen(false)} className="btn btn-solid mt-8 w-full justify-center">
-                Résumé
-              </Link>
             </nav>
-          </Drawer.Content>
-        </Drawer.Portal>
-      </Drawer.Root>
+            <div className="flex flex-wrap gap-3">
+              <a href={profile.resume} className="btn-pill">Résumé PDF</a>
+              <button type="button" className="btn-ghost" onClick={() => { setOpen(false); openPalette(); }}>
+                Search
+              </button>
+            </div>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
     </header>
   );
 }

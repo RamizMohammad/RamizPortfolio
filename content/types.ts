@@ -1,13 +1,13 @@
-/** The five layers of the system core. Every system, node and stack item maps onto one of them. */
+/** The five layers every system is built from. Every system, node and stack item maps onto one of them. */
 export type Layer = "interface" | "api" | "automation" | "data" | "infra";
 
-/** Each layer has the colour of its crate in the 3D scene (blue, green, orange, grey, black); shared by the page. */
-export const LAYERS: { id: Layer; label: string; short: string; color: string }[] = [
-  { id: "interface", label: "Interface", short: "UI", color: "#2b34c4" },
-  { id: "api", label: "API", short: "API", color: "#0b6e4b" },
-  { id: "automation", label: "Automation & AI", short: "AUTO", color: "#a63f09" },
-  { id: "data", label: "Data", short: "DATA", color: "#5a5e88" },
-  { id: "infra", label: "Infrastructure", short: "INFRA", color: "#1f2370" },
+/** Top to bottom: L1 is what people touch, L5 what everything runs on. */
+export const LAYERS: { id: Layer; label: string }[] = [
+  { id: "interface", label: "Interface" },
+  { id: "api", label: "API" },
+  { id: "automation", label: "Automation & AI" },
+  { id: "data", label: "Data" },
+  { id: "infra", label: "Infrastructure" },
 ];
 
 export type Domain = "ai" | "automation" | "api" | "tools" | "apps" | "infra";
@@ -35,8 +35,8 @@ export type System = {
   internal?: boolean;
   links?: { label: string; href: string }[];
   logo?: string;
-  /** Square logo sticker shown on this system's box in the 3D crate */
-  sticker?: string;
+  /** Screenshot of the live product; "phone" screenshots are wide strips of app screens. */
+  screen?: { src: string; width: number; height: number; kind: "web" | "phone" };
   points?: string[];
   architecture?: { caption: string; nodes: ArchNode[]; edges: ArchEdge[] };
 };

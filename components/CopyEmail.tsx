@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 
+/** The one filled button of the contact screen, plus the address itself as a plain link. */
 export default function CopyEmail({ email }: { email: string }) {
   const [state, setState] = useState<"idle" | "copied" | "select">("idle");
   const text = useRef<HTMLSpanElement>(null);
@@ -25,19 +26,16 @@ export default function CopyEmail({ email }: { email: string }) {
   };
 
   return (
-    <div className="grid justify-items-center gap-4">
-      <a href={`mailto:${email}`} className="heading block break-all text-[clamp(28px,5vw,64px)] no-underline hover:underline">
+    <div className="grid justify-items-start gap-5">
+      <a href={`mailto:${email}`} className="t-h2 nc link break-all">
         <span ref={text}>{email}</span>
       </a>
-      <div className="flex flex-wrap items-center justify-center gap-3">
-        <a href={`mailto:${email}`} className="btn btn-solid">
-          Write an email
-        </a>
-        <button type="button" onClick={copy} className="btn">
-          {state === "copied" ? "Copied" : "Copy address"}
+      <div className="flex flex-wrap items-center gap-4">
+        <button type="button" onClick={copy} className="btn-pill">
+          {state === "copied" ? "Copied" : "Copy email"}
         </button>
-        <span role="status" className="label normal-case tracking-normal">
-          {state === "copied" ? "Address copied to clipboard." : state === "select" ? "Copying is blocked here. The address is selected, press Ctrl+C or ⌘C." : ""}
+        <span role="status" className="t-label muted">
+          {state === "copied" ? "Address copied" : state === "select" ? "Copying is blocked here — the address is selected" : ""}
         </span>
       </div>
     </div>

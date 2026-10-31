@@ -1,10 +1,10 @@
 # mohammadramiz.in
 
-Personal portfolio of Mohammad Ramiz. A monochrome site built around one 3D object, the system core: five layers (interface, API, automation, data, infrastructure) that separate as you scroll and map onto the architecture of real projects.
+Personal portfolio of Mohammad Ramiz, a backend software engineer. A darkroom-editorial site: a warm near-black canvas, cream uppercase type, and one artifact per screen — a terminal session, a project screenshot, a system architecture diagram.
 
 ## Stack
 
-Next.js 16 (App Router, static) · React 19 · TypeScript · Tailwind CSS 4 · React Three Fiber + Drei · GSAP ScrollTrigger · Animate UI (Radix) · Motion
+Next.js 16 (App Router, static) · React 19 · TypeScript · Tailwind CSS 4 · Radix UI. No 3D and no animation library.
 
 ## Run
 
@@ -20,34 +20,18 @@ npm run dev
 | Path | What |
 | --- | --- |
 | `content/` | All facts on the site: profile, systems, timeline, stack, achievements. Edit here, not in components. |
-| `components/sections/` | The home page sections, server-rendered HTML. |
-| `scene/` | The 3D layer. Client-only, loaded after the page is interactive. `world/` is the town: `kit.tsx` holds the building parts, `places.tsx` one place per section, `CameraRig.tsx` flies the camera between them. |
-| `motion/ScrollDirector.tsx` | GSAP ScrollTrigger: moves the camera from place to place as sections scroll in. Loads with the scene. |
-| `public/images/` | Optimised WebP images and the fallback poster of the town. |
+| `components/home/` | The home page sections, in page order in `app/page.tsx`. |
+| `components/` | Shared pieces: header, command palette (⌘K), terminal, architecture diagram, footer. |
+| `app/globals.css` | The design tokens and the few classes the whole site is built from. |
+| `public/images/` | Optimised WebP images: portrait, logos, product screenshots, certificates. |
 
-## The 3D world
+## Design rules
 
-The home page is a small paper-and-cardboard town. Each section of the page is a place in it, and scrolling flies the camera from one place to the next. All text lives in the panel on the left (or below the town on phones), never on top of the 3D.
-
-| Section | Place |
-| --- | --- |
-| Hero | The square, with the name board |
-| About | A room with my desk |
-| Systems Lab | A street with one kiosk per public system, showing a screenshot of the live product, plus the Moglix building for internal work |
-| Architecture | A five-floor tower, one floor per layer |
-| Timeline | A road with a lane per role, stretched to scale |
-| Stack | A warehouse with a shelf per layer |
-| Contact | A post office |
-
-Everything is built from the parts in `scene/world/kit.tsx` (rounded blocks, tape, painted signs, pictures), so the town has one consistent look and no external models. Screenshots of the live products are in `public/images/screens/`.
-
-## How the 3D degrades
-
-- **High tier** (desktop): soft shadows, full resolution.
-- **Low tier** (phones, touch, 4 cores or fewer): lower resolution, hard shadows.
-- **Off** (no WebGL or Save-Data): a still poster of the town. Every section works without 3D.
-- **Reduced motion**: no boot sequence, no scroll scrubbing; the camera cuts straight to each place.
+- **Colours:** canvas `#100904`, cream `#ffedd7`, bark `#382416` (the only raised surface), cork `#40372e` and driftwood `#6c5f51` for dashed hairlines, ember `#dc5000` only for status dots and credit lines — never on buttons.
+- **Type:** Inter with `ss01`. Everything is uppercase at weight 500; descriptions use `.voice` (mixed case, weight 400). Display and heading sizes use line-height 0.9.
+- **Shapes:** 12px cards, 36px filled pill (at most one per section), 22.5px outlined ghost buttons. No shadows.
+- **Layout:** full-bleed. Sections use `.void` (heading left, one object centred, description right) or a 3/7 split. Text never sits over an image.
 
 ## Adding a project
 
-Add an entry to `content/systems.ts`. Public entries get a case study at `/work/<slug>` automatically. Add an `architecture` block (nodes on a small grid, each tagged with a layer) to feature it in the Architecture section.
+Add an entry to `content/systems.ts`. Public entries get a case study at `/work/<slug>` automatically. Add an `architecture` block (nodes on a small grid, each tagged with a layer) to feature it in the Architecture section, and a `screen` to show a screenshot of the live product.

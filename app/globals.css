@@ -1,212 +1,121 @@
 @import "tailwindcss";
 
-/* Cream graph paper, navy ink, royal blue and red accents, highlighter tape.
-   Token names are roles: "ink" is the page ground, "fg" the text, "cyan" the primary accent,
-   "violet" the secondary accent. Contrast on paper / panel:
-   fg 12.4 / 11.1 · fg-2 7.2 / 6.4 · fg-3 5.4 / 4.8 · cyan 8.0 / 7.1 · violet 5.4 / 4.8 */
+/* Darkroom editorial. A warm near-black canvas, cream type, one artifact per screen.
+   Two type voices only: UPPERCASE 500 for everything, mixed-case 400 (.voice) for description.
+   Contrast on canvas: cream 17.6 · muted 7.9 · ember 4.6. Driftwood (3.1) is for lines only. */
 @theme {
-  --color-ink: #fbf3e6;
-  --color-panel: #f2e6d2;
-  --color-rule: #ddcfb6;
-  --color-fg: #1f2370;
-  --color-fg-2: #474c86;
-  --color-fg-3: #5a5e88;
-  --color-cyan: #2b34c4;
-  --color-violet: #c4262f;
-  --color-violet-soft: #b5252f;
-  --color-kraft: #d9a066;
-  /* Highlighter tape: ink on it is 14.9:1 */
-  --color-tape: #ffd84a;
-  --font-led: var(--font-doto), var(--font-geist-mono), monospace;
+  --color-cream: #ffedd7;
+  --color-canvas: #100904;
+  --color-bark: #382416;
+  --color-cork: #40372e;
+  --color-drift: #6c5f51;
+  --color-muted: #b3a491;
+  --color-ember: #dc5000;
 
-  --font-display: var(--font-archivo), "Helvetica Neue", Arial, sans-serif;
-  --font-sans: var(--font-geist), "Helvetica Neue", Arial, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, Menlo, monospace;
+  --font-sans: var(--font-inter), "Söhne", "Neue Haas Grotesk", system-ui, sans-serif;
+  --font-mono: var(--font-jbm), ui-monospace, Menlo, monospace;
 
-  --breakpoint-xs: 30rem;
+  --radius-card: 12px;
+  --radius-pill: 36px;
+  --radius-ghost: 22.5px;
 }
 
 :root {
-  color-scheme: light;
-  --gutter: max(16px, env(safe-area-inset-left, 0px));
-  --gutter-r: max(16px, env(safe-area-inset-right, 0px));
-  --header-h: 64px;
+  color-scheme: dark;
+  --edge: max(20px, env(safe-area-inset-left, 0px));
+  --edge-r: max(20px, env(safe-area-inset-right, 0px));
+  --nav-h: 56px;
 }
-
-html { background: var(--color-ink); scroll-padding-top: calc(var(--header-h) + 16px) }
-/* clip, not hidden: no scroll container, so the sticky header keeps working */
-html, body { overflow-x: clip }
-body {
-  background: var(--color-ink);
-  color: var(--color-fg);
-  font-family: var(--font-sans);
-  font-size: 16px;
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-}
-::selection { background: var(--color-cyan); color: var(--color-ink) }
-:focus-visible { outline: 2px solid var(--color-cyan); outline-offset: 3px }
-a { text-underline-offset: 4px; text-decoration-thickness: 1px }
-
-/* Type roles. Archivo's width axis carries hierarchy, so it is set explicitly. */
-.display { font-family: var(--font-display); font-weight: 900; font-variation-settings: "wdth" 125; letter-spacing: -0.04em; line-height: 0.9; text-wrap: balance }
-.heading { font-family: var(--font-display); font-weight: 800; font-variation-settings: "wdth" 112; letter-spacing: -0.025em; line-height: 1; text-wrap: balance }
-.title { font-family: var(--font-display); font-weight: 700; font-variation-settings: "wdth" 108; letter-spacing: -0.01em; line-height: 1.15 }
-.label { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-fg-3); line-height: 1.4 }
-/* Section eyebrows carry the accent */
-.eyebrow { color: var(--color-cyan) }
-.eyebrow::before { content: ""; display: inline-block; width: 18px; height: 1px; margin-right: 10px; vertical-align: middle; background: linear-gradient(90deg, var(--color-cyan), var(--color-violet)) }
-/* Accent words: cyan into violet */
-.accent-text { background: linear-gradient(100deg, var(--color-cyan) 0%, #7a2fb0 55%, var(--color-violet) 100%); -webkit-background-clip: text; background-clip: text; color: transparent }
-.data { font-family: var(--font-mono); font-size: 13px; font-variant-numeric: tabular-nums }
-
-.wrap { width: 100%; max-width: 1360px; margin-inline: auto; padding-left: max(var(--gutter), 24px); padding-right: max(var(--gutter-r), 24px) }
-@media (max-width: 640px) { .wrap { padding-left: var(--gutter); padding-right: var(--gutter-r) } }
-
-/* Buttons: square, 1px, inversion for the primary action. */
-.btn {
-  display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 20px;
-  border: 1px solid var(--color-fg); color: var(--color-fg); background: transparent;
-  font: 600 14px/1 var(--font-sans); text-decoration: none; cursor: pointer;
-  transition: background-color 160ms ease, color 160ms ease;
-}
-.btn { border-color: var(--color-fg); border-width: 1.5px; transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease, box-shadow 300ms ease }
-.btn:hover { background: transparent; color: var(--color-cyan); border-color: var(--color-cyan); box-shadow: 0 0 0 1px var(--color-cyan), 0 0 28px -6px color-mix(in oklab, var(--color-cyan) 70%, transparent) }
-.btn-solid { background: var(--color-cyan); color: var(--color-ink); border-color: var(--color-cyan) }
-.btn-solid:hover { background: var(--color-cyan); color: var(--color-ink); box-shadow: 0 10px 40px -8px color-mix(in oklab, var(--color-cyan) 75%, transparent), 0 0 0 1px var(--color-cyan) }
-.btn:active { transform: scale(0.97) }
-
-/* The world and the panel. The 3D town fills the screen behind; all text lives in an opaque paper
-   panel on the left (desktop) or below a fixed band of the world (phones and tablets), so text is
-   never drawn over the 3D. */
-:root { --panel-w: min(46vw, 640px); --band-h: 40svh }
-.world { position: fixed; inset: 0; z-index: 0 }
-.world-poster { position: absolute; inset: 0; background: var(--color-ink) url("/images/world-poster.webp") center / cover no-repeat; transition: opacity 600ms ease-out }
-html[data-scene="on"] .world-poster { opacity: 0 }
-.scene-layer { position: absolute; inset: 0 }
-.panel { position: relative; z-index: 1; background-color: var(--color-ink) }
-.stop { padding: 88px 40px; border-top: 1.5px solid var(--color-fg) }
 @media (min-width: 1024px) {
-  .world-poster { left: var(--panel-w); background-position: left center }
-  .panel { width: var(--panel-w); border-right: 1.5px solid var(--color-fg); box-shadow: 6px 0 0 var(--color-fg) }
-  /* Each section is a stop on the tour: tall enough that the camera rests at its place while you read. */
-  .stop { min-height: 100svh; display: grid; align-content: center; padding: 96px clamp(28px, 3.4vw, 56px) }
-  .panel ~ footer { width: var(--panel-w); position: relative; z-index: 1; background: var(--color-ink); border-right: 1.5px solid var(--color-fg); box-shadow: 6px 0 0 var(--color-fg) }
-}
-@media (max-width: 1023px) {
-  .world { top: var(--header-h); bottom: auto; height: var(--band-h); z-index: 2; border-bottom: 1.5px solid var(--color-fg) }
-  .panel { margin-top: var(--band-h) }
-  html:has(.panel) { scroll-padding-top: calc(var(--header-h) + var(--band-h) + 16px) }
-  .panel ~ footer { position: relative; z-index: 1; background: var(--color-ink) }
-  .stop { padding: 64px max(var(--gutter), 20px) }
+  :root { --edge: 41px; --edge-r: 56px }
 }
 
-/* Boot sequence: hides itself with CSS so it never blocks the page, even without JavaScript. */
-.boot {
-  position: fixed; inset: 0; z-index: 100; background: var(--color-ink);
-  display: grid; place-items: center; padding: 24px;
-  animation: boot-out 280ms ease-out 1500ms forwards;
+@layer base {
+  html { background: var(--color-canvas); scroll-padding-top: calc(var(--nav-h) + 24px); scroll-behavior: smooth }
+  html, body { overflow-x: clip }
+  body {
+    background: var(--color-canvas);
+    color: var(--color-cream);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01" on;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 1.2;
+    text-transform: uppercase;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection { background: var(--color-cream); color: var(--color-canvas) }
+  :focus-visible { outline: 1px dashed var(--color-cream); outline-offset: 3px }
+  a { color: inherit; text-decoration: none }
+  button { text-transform: inherit }
 }
-.boot-line { opacity: 0; animation: boot-line 1ms linear forwards }
-html[data-boot="skip"] .boot { display: none }
-@keyframes boot-line { to { opacity: 1 } }
-@keyframes boot-out { to { opacity: 0; visibility: hidden; pointer-events: none } }
 
-@media (prefers-reduced-motion: reduce) {
-  .boot { display: none }
-  .btn, .btn:active { transition: none; transform: none }
+/* Type scale. Display and heading lines stack tight (0.9) so uppercase reads as a solid block. */
+.t-display { font-size: clamp(51px, 8.6vw, 136px); line-height: 0.9; font-weight: 500 }
+.t-h1 { font-size: clamp(41px, 4.6vw, 72px); line-height: 0.9; font-weight: 500 }
+.t-h2 { font-size: 24px; line-height: 1.09; font-weight: 500 }
+.t-sub { font-size: 18px; line-height: 1 }
+.t-label { font-size: 12px; line-height: 1.2 }
+.t-micro { font-size: 10px; line-height: 1.2 }
+.muted { color: var(--color-muted) }
+/* The one conversational voice: mixed case, regular weight. */
+.voice { text-transform: none; font-weight: 400; font-size: clamp(20px, 2vw, 29px); line-height: 1.26 }
+.voice-sm { text-transform: none; font-weight: 400; font-size: 17px; line-height: 1.45 }
+.nc { text-transform: none }
+
+.edge { padding-left: var(--edge); padding-right: var(--edge-r) }
+
+/* Controls. One filled pill per section at most; everything else is a ghost or a link. */
+.btn-pill {
+  display: inline-flex; align-items: center; gap: 10px; padding: 14px 24px; border-radius: var(--radius-pill);
+  background: var(--color-bark); color: var(--color-cream); font-size: 13px; cursor: pointer;
+  transition: background-color 180ms ease;
+}
+.btn-pill:hover { background: #4a3020 }
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: 8px; padding: 7.5px 16px; border-radius: var(--radius-ghost);
+  border: 1px solid var(--color-cream); color: var(--color-cream); background: transparent; font-size: 12px; cursor: pointer;
+  transition: background-color 180ms ease, color 180ms ease;
+}
+.btn-ghost:hover, .btn-ghost[aria-pressed="true"], .btn-ghost[aria-selected="true"] { background: var(--color-cream); color: var(--color-canvas) }
+.link { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; transition: opacity 160ms ease }
+.link:hover { opacity: 0.7 }
+.link[aria-pressed="true"], .link[aria-current="true"] { text-decoration-style: dashed }
+.link-quiet { text-decoration: underline transparent; text-decoration-thickness: 1px; text-underline-offset: 4px; transition: text-decoration-color 160ms ease }
+.link-quiet:hover, .link-quiet[aria-current="true"] { text-decoration-color: currentColor; text-decoration-style: dashed }
+
+/* Dashed hairlines: the only separators. */
+.dash-t { border-top: 1px dashed var(--color-cork) }
+.dash-b { border-bottom: 1px dashed var(--color-cork) }
+.dot { display: inline-block; width: 7px; height: 7px; border-radius: 9999px; background: var(--color-ember); vertical-align: 0.1em }
+
+/* Void mode: heading on the left, one artifact centred, description on the right. */
+.void { display: grid; align-content: center; gap: 32px; padding-top: 64px; padding-bottom: 64px }
+@media (min-width: 1024px) {
+  .void { min-height: 100svh; grid-template-columns: 3fr 4fr 3fr; column-gap: 41px; align-items: center; padding-top: 96px; padding-bottom: 96px }
 }
 
-/* Grid children may shrink below their content, so wide tables and diagrams scroll inside their own box. */
+/* Vertical edge label, like a serial number down the right margin. */
+.edge-label { position: fixed; right: 18px; top: 50%; z-index: 40; transform: translateY(-50%) rotate(180deg); writing-mode: vertical-rl; white-space: nowrap; opacity: 0.6; pointer-events: none }
+
+/* Entrance: content fades up once as it scrolls into view. */
+html.js [data-reveal] { opacity: 0; transform: translateY(12px); transition: opacity 300ms ease-out, transform 300ms ease-out; transition-delay: var(--rd, 0ms) }
+html.js [data-reveal].in { opacity: 1; transform: none }
+.rise { animation: rise 700ms cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: var(--d, 0ms) }
+@keyframes rise { from { opacity: 0; transform: translateY(16px) } to { opacity: 1; transform: none } }
+
+/* Terminal caret and diagram packets. */
+.caret { display: inline-block; width: 0.6em; height: 1.1em; vertical-align: -0.2em; background: var(--color-cream); animation: blink 1s steps(1) infinite }
+@keyframes blink { 50% { opacity: 0 } }
+
+/* Grid children may shrink below their content, so wide diagrams scroll inside their own box. */
 .grid > * { min-width: 0 }
 
-/* Hero entrance. Pure CSS so the text never waits for JavaScript; it starts after the boot
-   sequence on a first visit and almost immediately afterwards. */
-:root { --boot-delay: 1500ms }
-html[data-boot-initial="skip"] { --boot-delay: 120ms }
-.reveal { display: block; overflow-x: visible; overflow-y: clip; padding-bottom: 0.08em; margin-bottom: -0.08em }
-.reveal > span { display: block; animation: rise 1100ms cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: calc(var(--d, 0ms) + var(--boot-delay)) }
-.fade-up { animation: fade-up 900ms cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: calc(var(--d, 0ms) + var(--boot-delay)) }
-@keyframes rise { from { transform: translateY(108%) } to { transform: none } }
-@keyframes fade-up { from { opacity: 0; transform: translateY(14px) } to { opacity: 1; transform: none } }
-
-/* Film grain: a fine moving texture over everything, for the printed-ink feel. */
-body::after {
-  content: ""; position: fixed; inset: -50%; z-index: 90; pointer-events: none; opacity: 0.04;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  animation: grain 900ms steps(6) infinite;
-}
-@keyframes grain {
-  0% { transform: translate(0, 0) } 20% { transform: translate(-3%, 2%) } 40% { transform: translate(2%, -3%) }
-  60% { transform: translate(-2%, -1%) } 80% { transform: translate(3%, 3%) } 100% { transform: translate(0, 0) }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .reveal > span, .fade-up { animation: none }
-  body::after { animation: none }
+  html { scroll-behavior: auto }
+  html.js [data-reveal], html.js [data-reveal]:not(.in) { opacity: 1; transform: none; transition: none }
+  .rise { animation: none }
+  .caret { animation: none }
+  .packet { display: none }
 }
-
-/* Ambient colour: two slow-drifting glows behind everything, cyan and violet. */
-body::before {
-  content: ""; position: fixed; inset: -20%; z-index: 1; pointer-events: none; mix-blend-mode: multiply;
-  background:
-    radial-gradient(40% 35% at 18% 12%, rgb(255 216 74 / 0.18), transparent 70%),
-    radial-gradient(38% 40% at 85% 70%, rgb(217 160 102 / 0.16), transparent 70%),
-    radial-gradient(30% 30% at 60% 30%, rgb(43 52 196 / 0.05), transparent 70%);
-  animation: aurora 26s ease-in-out infinite alternate;
-}
-@keyframes aurora {
-  0% { transform: translate3d(0, 0, 0) rotate(0deg) scale(1) }
-  50% { transform: translate3d(4%, 3%, 0) rotate(6deg) scale(1.08) }
-  100% { transform: translate3d(-3%, -2%, 0) rotate(-4deg) scale(1.03) }
-}
-
-/* Scroll reveals. Hidden only when JavaScript runs and motion is welcome; RevealObserver adds .in. */
-html.js [data-reveal] { transition: opacity 900ms cubic-bezier(0.16, 1, 0.3, 1), transform 900ms cubic-bezier(0.16, 1, 0.3, 1), clip-path 1100ms cubic-bezier(0.16, 1, 0.3, 1); transition-delay: var(--rd, 0ms) }
-html.js [data-reveal]:not(.in) { opacity: 0; transform: translateY(28px) }
-/* The mask only clips vertically; it reaches far sideways so wide display type never gets cut. */
-html.js [data-reveal="mask"]:not(.in) { opacity: 1; transform: translateY(40%); clip-path: inset(0 -100vw 100% -100vw) }
-html.js [data-reveal="mask"].in { clip-path: inset(-20% -100vw -20% -100vw) }
-html.js [data-reveal="line"] { transform-origin: left; transition: transform 1200ms cubic-bezier(0.16, 1, 0.3, 1) }
-html.js [data-reveal="line"]:not(.in) { opacity: 1; transform: scaleX(0) }
-
-/* Marquee */
-.marquee { display: flex; width: max-content; animation: marquee 38s linear infinite }
-.marquee:hover { animation-play-state: paused }
-@keyframes marquee { to { transform: translateX(-50%) } }
-
-/* Custom cursor (fine pointers only) */
-.cursor-ring { position: fixed; left: 0; top: 0; z-index: 120; pointer-events: none; width: 36px; height: 36px; margin: -18px 0 0 -18px; border: 1.5px solid var(--color-fg); border-radius: 999px; display: grid; place-items: center; transition: width 220ms ease, height 220ms ease, margin 220ms ease, background-color 220ms ease, border-color 220ms ease, opacity 200ms ease; opacity: 0 }
-.cursor-ring span { font: 600 10px/1 var(--font-mono); letter-spacing: 0.1em; color: var(--color-fg); opacity: 0; transition: opacity 150ms ease }
-.cursor-ring[data-state="link"] { width: 64px; height: 64px; margin: -32px 0 0 -32px; background: color-mix(in oklab, var(--color-cyan) 18%, transparent) }
-.cursor-ring[data-state="drag"] { width: 84px; height: 84px; margin: -42px 0 0 -42px; background: var(--color-tape); border-color: var(--color-fg) }
-.cursor-ring[data-state="drag"] span { opacity: 1 }
-.cursor-dot { position: fixed; left: 0; top: 0; z-index: 121; pointer-events: none; width: 6px; height: 6px; margin: -3px 0 0 -3px; border-radius: 999px; background: var(--color-violet); opacity: 0 }
-@media (hover: none), (pointer: coarse) { .cursor-ring, .cursor-dot { display: none } }
-
-@media (prefers-reduced-motion: reduce) {
-  body::before, .marquee { animation: none }
-  html.js [data-reveal], html.js [data-reveal]:not(.in) { opacity: 1; transform: none; clip-path: none; transition: none }
-  .cursor-ring, .cursor-dot { display: none }
-}
-
-/* Blueprint grid under everything: engineering paper, faint enough to never compete with text. */
-.page { background-image: linear-gradient(to right, color-mix(in oklab, var(--color-cyan) 13%, transparent) 1px, transparent 1px), linear-gradient(to bottom, color-mix(in oklab, var(--color-cyan) 13%, transparent) 1px, transparent 1px); background-size: 56px 56px; background-position: -1px -1px }
-
-/* LED dot-matrix display type */
-.led { font-family: var(--font-led); font-weight: 900; font-variation-settings: "ROND" 100; letter-spacing: 0.02em; line-height: 0.95; text-transform: uppercase }
-.led-glow { color: var(--color-cyan) }
-
-/* Highlighter tape: a yellow strip, slightly crooked, with a sheen like real tape */
-.tape { display: inline-block; padding: 0.18em 0.55em; background: linear-gradient(180deg, color-mix(in oklab, var(--color-tape) 92%, white) 0%, var(--color-tape) 55%, color-mix(in oklab, var(--color-tape) 88%, #c79a00) 100%); color: var(--color-fg); font-weight: 600; transform: rotate(var(--tilt, -1.5deg)); box-shadow: 0 6px 14px -8px rgb(60 40 10 / 0.35); clip-path: polygon(0.6% 6%, 4% 0, 30% 4%, 62% 0, 96% 3%, 100% 10%, 99.4% 92%, 97% 100%, 70% 96%, 35% 100%, 3% 97%, 0 88%) }
-.tape-line { display: block; width: fit-content }
-
-/* Die-cut sticker look: thick light outline and a soft drop shadow */
-.sticker { filter: drop-shadow(0 6px 10px rgb(0 0 0 / 0.45)); cursor: grab; touch-action: none; user-select: none }
-.sticker:active { cursor: grabbing }
-
-
-/* Résumé sheet: pill headers and highlighter marks */
-.pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 999px; background: var(--color-fg); color: var(--color-ink); font: 800 12px/1 var(--font-display); font-variation-settings: "wdth" 115; letter-spacing: 0.08em; text-transform: uppercase; box-shadow: 0 0 0 3px var(--color-ink), 0 0 0 4px color-mix(in oklab, var(--color-fg) 40%, transparent) }
-mark, .mark { background: linear-gradient(transparent 12%, var(--color-tape) 12%, var(--color-tape) 88%, transparent 88%); color: var(--color-fg); padding: 0 0.2em; border-radius: 2px; -webkit-box-decoration-break: clone; box-decoration-break: clone }
