@@ -324,8 +324,84 @@ html.js .stack-pile.in .stack-key { animation: key-pop 450ms cubic-bezier(0.34, 
 .stack-key { transition: translate 150ms ease, box-shadow 150ms ease }
 .stack-key:hover { translate: 0 2px; box-shadow: 0 1px 0 #121016 }
 
+/* ---------------------------------------------------------------- Text mode (html[data-ascii])
+   The whole site as a green-phosphor terminal: monospace, flat panels with phosphor borders,
+   [ bracketed ] buttons, scanlines, and images tinted like an old monitor. Wins over both themes. */
+.ascii-only { display: none }
+:root[data-ascii] .ascii-only { display: block }
+:root[data-ascii] .ascii-hide { display: none }
+:root[data-ascii] {
+  color-scheme: dark;
+  --color-paper: #040a05;
+  --color-card: #040a05;
+  --color-ink: #39ff6e;
+  --color-line: #145c2a;
+  --color-muted: #22b34d;
+  --color-pink: #39ff6e;
+  --color-pink-deep: #39ff6e;
+  --color-lime: #39ff6e;
+  --color-blue: #39ff6e;
+  --color-mint: #39ff6e;
+  --color-sun: #39ff6e;
+  --color-violet: #39ff6e;
+  --font-display: var(--font-jbm), ui-monospace, monospace;
+  --font-sans: var(--font-jbm), ui-monospace, monospace;
+}
+:root[data-ascii] body { background: #040a05; color: #39ff6e }
+:root[data-ascii] body * {
+  font-family: var(--font-jbm), ui-monospace, monospace !important;
+  letter-spacing: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  color: #39ff6e !important;
+  border-color: #1f8f3f !important;
+  text-shadow: 0 0 6px rgb(57 255 110 / 0.45);
+}
+:root[data-ascii] body *:not(svg):not(svg *) { background-color: transparent !important; background-image: none !important }
+:root[data-ascii] :is(.muted, .t-micro) { color: #22b34d !important }
+/* The boot screen keeps its black tube while the site flips to text mode behind it. */
+:root[data-ascii] body .ascii-boot { background-color: #000 !important }
+/* Medals stay round. */
+:root[data-ascii] body :is(.medal-disc, .medal-disc > div) { border-radius: 9999px !important }
+/* Bars and gauges keep their fill, as solid phosphor. */
+:root[data-ascii] body :is(.collage-bar, .otif-fill, .bg-pink-deep) { background-color: #39ff6e !important }
+:root[data-ascii] :is(img, video) { filter: grayscale(1) contrast(1.35) brightness(0.8) sepia(1) hue-rotate(70deg) saturate(3.5) }
+:root[data-ascii] svg { filter: grayscale(1) sepia(1) hue-rotate(70deg) saturate(4) brightness(1.05) }
+:root[data-ascii] #hero canvas, :root[data-ascii] .award-rays, :root[data-ascii] .medal-glint { display: none }
+:root[data-ascii] :is(.t-mega, .t-display) { font-size: clamp(34px, 6vw, 96px) !important; line-height: 1 !important; font-weight: 800 }
+:root[data-ascii] .t-h1 { font-size: clamp(28px, 4vw, 60px) !important; line-height: 1.05 !important; font-weight: 800 }
+:root[data-ascii] .t-h2 { font-weight: 800 }
+:root[data-ascii] :is(.btn-pill, .btn-ghost) { border: 0 !important; padding-left: 4px; padding-right: 4px }
+:root[data-ascii] :is(.btn-pill, .btn-ghost)::before { content: "[ " }
+:root[data-ascii] :is(.btn-pill, .btn-ghost)::after { content: " ]" }
+:root[data-ascii] :is(.btn-pill, .btn-ghost):hover, :root[data-ascii] .btn-pill { background-color: #39ff6e !important; color: #040a05 !important; text-shadow: none }
+:root[data-ascii] .btn-ghost:not(:hover) { background-color: transparent !important; color: #39ff6e !important }
+:root[data-ascii] ::selection { background: #39ff6e; color: #040a05 }
+/* Scanlines and a faint flicker over everything. */
+:root[data-ascii] body::before {
+  content: ""; position: fixed; inset: 0; z-index: 450; pointer-events: none;
+  background: repeating-linear-gradient(to bottom, rgb(0 0 0 / 0.28) 0 1px, transparent 1px 3px), radial-gradient(ellipse at center, transparent 55%, rgb(0 0 0 / 0.55) 100%);
+  animation: crt-flicker 4s steps(1) infinite;
+}
+@keyframes crt-flicker { 0%, 100% { opacity: 1 } 47% { opacity: 0.92 } 48% { opacity: 1 } 77% { opacity: 0.96 } }
+.ascii-glow { white-space: pre; color: #39ff6e; text-shadow: 0 0 8px rgb(57 255 110 / 0.6) }
+.ascii-exit { font-family: var(--font-jbm), monospace; font-size: 12px; padding: 8px 12px; border: 1px solid #39ff6e; background: #040a05; color: #39ff6e; text-shadow: 0 0 6px rgb(57 255 110 / 0.5) }
+.ascii-exit:hover { background: #39ff6e !important; color: #040a05 !important }
+.terminal-boot:hover .text-lime { text-decoration: underline }
+/* Boot: the tube warms up from a bright line; shutdown collapses the picture back to one. */
+.ascii-crt-on { animation: crt-on 700ms cubic-bezier(0.2, 0.8, 0.2, 1) both; transform-origin: center }
+@keyframes crt-on { 0% { transform: scale(1, 0.004); filter: brightness(6) } 45% { transform: scale(1, 0.004); filter: brightness(6) } 100% { transform: none; filter: none } }
+.ascii-boot { text-shadow: 0 0 6px rgb(57 255 110 / 0.5) }
+.ascii-boot::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(to bottom, rgb(0 0 0 / 0.3) 0 1px, transparent 1px 3px) }
+.ascii-reveal { animation: fade-in 400ms ease-out both }
+.ascii-crt-off { animation: crt-off 900ms ease-in both }
+.ascii-crt-off::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 2px; background: #eaffef; box-shadow: 0 0 20px #39ff6e; animation: crt-line 900ms ease-in both }
+@keyframes crt-off { 0% { opacity: 0 } 25%, 70% { opacity: 1 } 100% { opacity: 0 } }
+@keyframes crt-line { 0%, 20% { transform: scaleX(1); opacity: 0 } 30% { opacity: 1 } 60% { transform: scaleX(0); opacity: 1 } 100% { transform: scaleX(0); opacity: 0 } }
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto }
+  :root[data-ascii] body::before { animation: none }
   html.js .stack-pile .stack-block, html.js .stack-pile .stack-key { opacity: 1; transform: none; animation: none }
   .stack-block:hover { translate: none }
   html.js .split .w > span, html.js .section-label .section-label-text, html.js .section-label .section-label-line { transform: none; transition: none }

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { publicSystems } from "@/content/systems";
+import { bootAscii } from "./ascii/AsciiMode";
 
 const SESSION = [
   { cmd: "whoami", out: "mohammad-ramiz — software engineer @ moglix" },
@@ -50,7 +51,15 @@ export default function Terminal() {
   }, []);
 
   return (
-    <div ref={box} aria-hidden="true" className="nc rounded-[24px] border-[1.5px] border-ink bg-ink p-6 font-mono text-paper text-[13px] leading-[1.7] font-normal md:text-[15px]">
+    // Clicking the terminal boots the whole site into text mode.
+    <button
+      type="button"
+      onClick={bootAscii}
+      aria-label="Boot the site into text mode"
+      data-cursor="boot it"
+      className="terminal-boot group block w-full cursor-pointer rounded-[24px] text-left focus-visible:outline-offset-4"
+    >
+    <div ref={box} aria-hidden="true" className="nc rounded-[24px] border-[1.5px] border-ink bg-ink p-6 font-mono text-paper text-[13px] leading-[1.7] font-normal transition-transform duration-300 group-hover:-translate-y-1 md:text-[15px]">
       <div className="mb-5 flex gap-2">
         <span className="h-2.5 w-2.5 rounded-full bg-pink" />
         <span className="h-2.5 w-2.5 rounded-full bg-sun" />
@@ -86,6 +95,10 @@ export default function Terminal() {
           <span className="caret" />
         </div>
       </div>
+      <p className="mt-4 border-t border-dashed border-[#a9a5bf]/40 pt-3 text-[12px] text-lime">
+        ▸ click to boot this site in text mode
+      </p>
     </div>
+    </button>
   );
 }

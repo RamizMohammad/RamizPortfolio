@@ -1,6 +1,7 @@
 import MotionToggle from "@/components/hero/MotionToggle";
 import Ribbon from "@/components/hero/Ribbon";
 import { Ball, BraceCoin, Database, Gear, PaperPlane, TerminalCard } from "@/components/hero/Stickers";
+import { BANNER } from "@/components/ascii/art";
 import { profile } from "@/content/profile";
 
 const WORD = "RAMIZ";
@@ -46,7 +47,11 @@ export default function Hero() {
       <div className="edge relative grid content-center justify-items-center gap-8 pb-20 pt-10 text-center">
         <h1 id="hero-title" className="t-mega relative">
           <span className="sr-only">{profile.name}, software engineer</span>
-          <span aria-hidden="true" className="relative inline-block">
+          {/* In text mode the wordmark becomes an ASCII banner. */}
+          <pre aria-hidden="true" className="ascii-only ascii-glow text-[clamp(7px,1.5vw,18px)] !leading-none">
+            {BANNER}
+          </pre>
+          <span aria-hidden="true" className="ascii-hide relative inline-block">
             {[...WORD].map((ch, i) => (
               <SlicedLetter key={i} ch={ch} i={i} />
             ))}

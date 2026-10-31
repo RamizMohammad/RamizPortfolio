@@ -7,6 +7,7 @@ import { profile } from "@/content/profile";
 import { publicSystems } from "@/content/systems";
 import { SECTIONS } from "./nav";
 import { switchTheme } from "./ThemeToggle";
+import { bootAscii } from "./ascii/AsciiMode";
 
 type Item = { group: string; label: string; hint?: string; run: () => void };
 
@@ -60,6 +61,14 @@ export default function CommandPalette() {
         },
       },
       { group: "Actions", label: "Download résumé PDF", run: visit(profile.resume) },
+      {
+        group: "Actions",
+        label: "Boot text mode (ASCII)",
+        run: () => {
+          setOpen(false);
+          window.setTimeout(() => (document.documentElement.dataset.ascii !== undefined ? window.dispatchEvent(new Event("exit-ascii")) : bootAscii()), 120);
+        },
+      },
       {
         group: "Actions",
         label: "Switch day / night mode",
