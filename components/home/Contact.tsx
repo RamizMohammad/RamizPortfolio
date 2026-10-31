@@ -5,7 +5,7 @@ import SectionLabel from "./SectionLabel";
 export default function Contact() {
   return (
     <section id="contact" aria-labelledby="contact-title" className="edge">
-      <SectionLabel n={7}>Contact</SectionLabel>
+      <SectionLabel n={8}>Contact</SectionLabel>
       <div className="grid min-h-[100svh] content-center gap-[41px] py-24 lg:grid-cols-2">
         <h2 id="contact-title" className="t-display" data-reveal>
           Let&rsquo;s build the system.

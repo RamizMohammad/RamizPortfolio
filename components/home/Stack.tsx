@@ -7,7 +7,7 @@ import SectionLabel from "./SectionLabel";
 export default function Stack() {
   return (
     <section id="stack" aria-labelledby="stack-title" className="edge">
-      <SectionLabel n={4}>Stack</SectionLabel>
+      <SectionLabel n={5}>Stack</SectionLabel>
       <div className="grid gap-[41px] py-24 lg:grid-cols-[3fr_7fr]">
         <div className="grid content-start gap-8">
           <h2 id="stack-title" className="t-h1" data-reveal>

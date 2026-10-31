@@ -8,7 +8,7 @@ export default function Recognition() {
   const picks = achievements.filter((a) => a.kind === "Patent" || HIGHLIGHTS.includes(a.title));
   return (
     <section id="recognition" aria-labelledby="recognition-title" className="edge">
-      <SectionLabel n={6}>Recognition</SectionLabel>
+      <SectionLabel n={7}>Recognition</SectionLabel>
       <div className="grid gap-[41px] py-24 lg:grid-cols-[3fr_7fr]">
         <div className="grid content-start justify-items-start gap-8">
           <h2 id="recognition-title" className="t-h1" data-reveal>

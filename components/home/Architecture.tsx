@@ -18,7 +18,7 @@ export default function Architecture() {
 
   return (
     <section id="architecture" aria-labelledby="architecture-title" className="edge">
-      <SectionLabel n={3}>Architecture</SectionLabel>
+      <SectionLabel n={4}>Architecture</SectionLabel>
       <div className="grid min-h-[100svh] content-center gap-[41px] py-24 lg:grid-cols-[3fr_7fr]">
         <div className="grid content-start gap-8">
           <h2 id="architecture-title" className="t-h1" data-reveal>

@@ -62,7 +62,7 @@ export default function Work() {
 
   return (
     <section id="work" aria-labelledby="work-title" className="edge">
-      <SectionLabel n={2}>Systems</SectionLabel>
+      <SectionLabel n={3}>Systems</SectionLabel>
       <div className="grid gap-8 pb-12 pt-24 lg:grid-cols-[3fr_7fr] lg:gap-[41px]">
         <h2 id="work-title" className="t-h1" data-reveal>
           Built and shipped.

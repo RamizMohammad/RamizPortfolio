@@ -5,7 +5,7 @@ import SectionLabel from "./SectionLabel";
 export default function Experience() {
   return (
     <section id="experience" aria-labelledby="experience-title" className="edge">
-      <SectionLabel n={5}>Experience</SectionLabel>
+      <SectionLabel n={6}>Experience</SectionLabel>
       <div className="grid gap-[41px] py-24 lg:grid-cols-[3fr_7fr]">
         <div className="grid content-start gap-8">
           <h2 id="experience-title" className="t-h1" data-reveal>
