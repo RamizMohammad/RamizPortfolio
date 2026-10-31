@@ -1,73 +1,38 @@
-# Welcome to your Lovable project
+# mohammadramiz.in
 
-## Project info
+Personal portfolio of Mohammad Ramiz, a backend software engineer. A bold, playful site: a giant condensed wordmark over a waving pink ribbon, cartoon stickers of a backend engineer's tools floating around it, pill controls, and each project on its own flat colour block.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## Stack
 
-## How can I edit this code?
+Next.js 16 (App Router, static) · React 19 · TypeScript · Tailwind CSS 4 · Radix UI. No 3D and no animation library: the ribbon is a 2D canvas, everything else is CSS.
 
-There are several ways of editing your application.
+## Run
 
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+```bash
+npm install
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+`npm run check` runs lint, type checks and a production build.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Where things live
 
-**Use GitHub Codespaces**
+| Path | What |
+| --- | --- |
+| `db/` | The Postgres schema and seed for all site content, and how to update it (see `db/README.md`). |
+| `content/` | Typed access to the content; `data.json` is the snapshot pulled from the database before each build. |
+| `components/home/` | The home page sections, in page order in `app/page.tsx`. |
+| `components/` | Shared pieces: header, command palette (⌘K), terminal, architecture diagram, footer. |
+| `app/globals.css` | The design tokens and the few classes the whole site is built from. |
+| `public/images/` | Optimised WebP images: portrait, logos, product screenshots, certificates. |
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Design rules
 
-## What technologies are used for this project?
+- **Colours:** lavender paper `#ebe8f6`, ink `#121016`, white cards, and candy accents used as flat blocks: pink `#f47a9a`, lime `#d4f25b`, blue `#2f5bea`, sun `#ffcf3a`, violet `#b9a6f5`, mint `#5fd3a4`.
+- **Type:** Anton for display (always uppercase, tight leading), Inter for everything else; `.voice` is the large sentence-case line, `.t-label` the small uppercase one.
+- **Controls:** pills only — `.btn-pill` (ink) for the main action, `.btn-ghost` (white, ink outline) for the rest.
+- **Hero:** the wordmark letters slide in as slices; stickers (`components/hero/Stickers.tsx`) pop in and bob; the ribbon (`components/hero/Ribbon.tsx`) waves behind. A pause button stops all looping motion, and reduced motion shows a still frame.
 
-This project is built with:
+## Adding a project
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Add an entry to `content/systems.ts`. Public entries get a case study at `/work/<slug>` automatically. Add an `architecture` block (nodes on a small grid, each tagged with a layer) to feature it in the Architecture section, and a `screen` to show a screenshot of the live product.
