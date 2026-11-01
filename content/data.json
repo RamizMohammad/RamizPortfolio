@@ -1478,6 +1478,44 @@
   ],
   "publications": [
     {
+      "kind": "Preprint",
+      "title": "Enforcing Data Authorization Below the Model: An Experience Report on a Production LLM Analytics Assistant for Enterprise Chat",
+      "authors": [
+        "Mohammad Ramiz"
+      ],
+      "venue": "ResearchGate · Independent research",
+      "date": "November 2026",
+      "year": 2026,
+      "abstract": "An experience report on a production assistant that answers business questions inside an enterprise chat platform by having an LLM write SQL against a cloud data warehouse. It argues that authorization must be enforced by a deterministic policy layer below the model, with anything the model is told about permissions treated as an efficiency measure rather than a control. It formalises the injected row-level predicate as monotone-narrowing, separates authorizing the identifiers a query names from expanding a grant into a filter, and adds a grounding rail that checks the tool-call record rather than the prose, because a sentence with a fabricated number reads exactly like one with a real number. It also compares building the same service with and without permission to change the schema, pins the guarantees lost to that constraint with negative tests, and reports nine field incidents and how each was closed.",
+      "href": "https://www.researchgate.net/publication/417293234_Enforcing_Data_Authorization_Below_the_Model_An_Experience_Report_on_a_Production_LLM_Analytics_Assistant_for_Enterprise_Chat",
+      "tags": [
+        "LLMs",
+        "Text-to-SQL",
+        "Access control",
+        "Row-level security",
+        "Guardrails"
+      ]
+    },
+    {
+      "kind": "Preprint",
+      "title": "bakup: A Git-Inspired, Offline-First Personal Backup System with Content-Addressed Cross-Repository Deduplication",
+      "authors": [
+        "Mohammad Ramiz"
+      ],
+      "venue": "ResearchGate · Independent research",
+      "date": "July 2026",
+      "year": 2026,
+      "abstract": "bakup is a self-hosted backup system that brings Git's interaction model to whole-directory backup: initialise any folder as a repository, commit snapshots entirely offline, push them to a personally owned server when it is reachable, and restore any past state on any machine with a single clone. It combines a metadata-only local snapshot log, an mtime/size stat cache that avoids re-hashing unchanged files, set-difference transfer negotiation, and a global content-addressed object store with SHA-256 deduplication across all repositories and clients. On a 150.8 MB, 1,206-file workload it stores the first snapshot at 68.5% of logical size, propagates a 1% change in 0.29 s by sending 1.08 MB, deduplicates 82.3% of a second repository sharing half its content, and restores a byte-identical copy in 6.6 s, in roughly 700 lines of Python and a single Docker container.",
+      "href": "https://www.researchgate.net/publication/409147519_bakup_A_Git-Inspired_Offline-First_Personal_Backup_System_with_Content-Addressed_Cross-Repository_Deduplication",
+      "tags": [
+        "Backup",
+        "Content addressing",
+        "Deduplication",
+        "Offline-first",
+        "Self-hosting"
+      ]
+    },
+    {
       "kind": "Patent",
       "title": "Method and System for Real-Time User Safety During Vehicle Commutes",
       "venue": "Indian Patent Office · Published patent application",
@@ -1498,6 +1536,72 @@
         "Safety",
         "Real-time monitoring",
         "Risk detection"
+      ]
+    },
+    {
+      "kind": "Conference paper",
+      "title": "The Talk of Realities: Augmented, Virtual, Extended — The Future",
+      "authors": [
+        "Mohammad Ramiz"
+      ],
+      "venue": "Conference on Augmented Reality · Greater Noida",
+      "date": "February 2025",
+      "year": 2025,
+      "abstract": "A look at the emerging world of multiple realities (AR, VR and XR). As more of everyday interaction moves to virtual channels, these technologies use cameras and depth sensors to blend virtual components with the real world. The paper discusses why they are growing so quickly, as people spend less time interacting in person and more through their devices, and how they are changing the way people communicate with one another.",
+      "href": "https://www.researchgate.net/publication/388764021_The_Talk_of_Realities_Augmented_Virtual_Extended_The_Future",
+      "tags": [
+        "Augmented reality",
+        "Virtual reality",
+        "Extended reality"
+      ]
+    }
+  ],
+  "companies": [
+    {
+      "name": "Loopax Technologies",
+      "tagline": "Building technology that solves real problems.",
+      "about": "A technology company building custom software, Android apps, backend systems, cloud infrastructure and automation tools for startups and enterprises.",
+      "role": "Founder",
+      "since": "June 2026",
+      "url": "https://www.loopax.online/",
+      "tone": "violet",
+      "links": [
+        {
+          "label": "LinkedIn",
+          "href": "https://www.linkedin.com/company/loopax-technologies/"
+        }
+      ]
+    },
+    {
+      "name": "Confess",
+      "tagline": "Say the thing you can't say out loud.",
+      "about": "An anonymous space to write about what's weighing on you and hear from people who have felt the same, with real-time feeds and reactions. Free on Google Play, for adults 18+.",
+      "role": "Creator",
+      "url": "https://www.confessapp.in/",
+      "tone": "pink",
+      "logo": {
+        "src": "/images/logos/confess-app.webp",
+        "width": 96,
+        "height": 96,
+        "alt": "Confess logo"
+      },
+      "links": [
+        {
+          "label": "Instagram",
+          "href": "https://www.instagram.com/getconfess/"
+        },
+        {
+          "label": "LinkedIn",
+          "href": "https://www.linkedin.com/company/getconfess/"
+        },
+        {
+          "label": "WhatsApp channel",
+          "href": "https://whatsapp.com/channel/0029Vb9cCcyFSAsv8FpC1G2F"
+        },
+        {
+          "label": "X",
+          "href": "https://x.com/get_confess"
+        }
       ]
     }
   ]

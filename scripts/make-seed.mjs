@@ -22,7 +22,7 @@ begin;
 
 truncate portfolio.profile, portfolio.profile_links, portfolio.schooling, portfolio.timeline,
   portfolio.stack_items, portfolio.systems, portfolio.achievements, portfolio.moments,
-  portfolio.publications restart identity;
+  portfolio.publications, portfolio.companies restart identity;
 
 `;
 
@@ -74,6 +74,13 @@ sql +=
     "publications",
     ["sort", "kind", "title", "authors", "venue", "date_label", "year", "id_label", "id_value", "abstract", "href", "image", "tags"],
     data.publications.map((x, i) => [i, q(x.kind), q(x.title), arr(x.authors), q(x.venue), q(x.date), num(x.year), q(x.id?.label), q(x.id?.value), q(x.abstract), q(x.href), json(x.image), arr(x.tags)]),
+  );
+sql +=
+  "\n" +
+  rows(
+    "companies",
+    ["sort", "name", "tagline", "about", "role", "since", "url", "tone", "logo", "links"],
+    (data.companies ?? []).map((c, i) => [i, q(c.name), q(c.tagline), q(c.about), q(c.role), q(c.since), q(c.url), q(c.tone), json(c.logo), json(c.links)]),
   );
 sql += "\ncommit;\n";
 

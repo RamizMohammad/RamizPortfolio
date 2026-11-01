@@ -110,18 +110,32 @@ function Paper({ p, i }: { p: Publication; i: number }) {
   );
 }
 
-export default function Publications() {
-  const sorted = [...publications].sort((a, b) => b.year - a.year);
+type ListProps = {
+  /** Section id, used by the header, the ⌘K palette and the cursor label. */
+  id: string;
+  n: number;
+  label: string;
+  heading: string;
+  /** Singular and plural noun for the count line. */
+  noun: [string, string];
+  items: Publication[];
+};
+
+/** One section of publications, newest first. */
+function PublicationList({ id, n, label, heading, noun, items }: ListProps) {
+  const sorted = [...items].sort((a, b) => b.year - a.year);
+  if (!sorted.length) return null;
   const kinds = [...new Set(sorted.map((p) => p.kind))];
   return (
-    <section id="publications" aria-labelledby="publications-title" className="edge pb-24">
-      <SectionLabel n={8}>Publications</SectionLabel>
+    <section id={id} aria-labelledby={`${id}-title`} className="edge pb-24">
+      <SectionLabel n={n}>{label}</SectionLabel>
       <div className="grid gap-4 pb-12 pt-16 lg:grid-cols-[1fr_auto] lg:items-end">
-        <h2 id="publications-title" className="t-h1 split" data-reveal>
-          <Words text="Published." />
+        <h2 id={`${id}-title`} className="t-h1 split" data-reveal>
+          <Words text={heading} />
         </h2>
         <p className="voice-sm muted ink-in max-w-[44ch]" data-reveal>
-          {sorted.length} {sorted.length === 1 ? "publication" : "publications"} · {kinds.join(", ")}. Open one for its abstract and a ready-to-paste citation.
+          {sorted.length} {sorted.length === 1 ? noun[0] : noun[1]}
+          {id === "papers" ? ` · ${kinds.join(", ")}` : ""}. Open one for its abstract and a ready-to-paste citation.
         </p>
       </div>
       <div className="grid gap-6">
@@ -131,4 +145,14 @@ export default function Publications() {
       </div>
     </section>
   );
+}
+
+/** Patents, right after Awards. */
+export function Patents() {
+  return <PublicationList id="patents" n={8} label="Patents" heading="Patented." noun={["patent", "patents"]} items={publications.filter((p) => p.kind === "Patent")} />;
+}
+
+/** Papers and articles, after Patents. */
+export function Papers() {
+  return <PublicationList id="papers" n={9} label="Papers" heading="Published." noun={["paper", "papers"]} items={publications.filter((p) => p.kind !== "Patent")} />;
 }

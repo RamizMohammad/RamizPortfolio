@@ -7,12 +7,14 @@ export const SECTIONS = [
   { id: "architecture", label: "Architecture" },
   { id: "stack", label: "Stack" },
   { id: "awards", label: "Awards" },
-  { id: "publications", label: "Publications" },
+  { id: "patents", label: "Patents" },
+  { id: "papers", label: "Papers" },
+  { id: "companies", label: "Companies" },
   { id: "contact", label: "Contact" },
 ] as const;
 
 /** The ones the header shows; the menu and ⌘K list them all. */
-export const NAV = SECTIONS.filter((s) => ["about", "moments", "experience", "work", "awards", "contact"].includes(s.id));
+export const NAV = SECTIONS.filter((s) => ["about", "moments", "experience", "work", "awards", "patents", "papers", "companies", "contact"].includes(s.id));
 
 /** Opens the command palette from anywhere (the header button, the mobile menu). */
 export const openPalette = () => window.dispatchEvent(new Event("open-palette"));
