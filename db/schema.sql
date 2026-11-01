@@ -148,11 +148,27 @@ create table if not exists publications (
   updated_at timestamptz not null default now()
 );
 
+-- ---------------------------------------------------------------- companies I founded or run
+create table if not exists companies (
+  id         serial primary key,
+  sort       int not null default 0,
+  name       text not null,
+  tagline    text not null,
+  about      text not null,
+  role       text not null,                   -- e.g. 'Founder'
+  since      text,                            -- as shown, e.g. 'June 2026'
+  url        text not null,                   -- the company's website
+  tone       text not null default 'violet' check (tone in ('pink', 'lime', 'blue', 'sun', 'violet', 'mint')),
+  logo       jsonb,                           -- {src, width, height, alt}; a monogram shows without one
+  links      jsonb not null default '[]',     -- [{label, href}] social pages, in display order
+  updated_at timestamptz not null default now()
+);
+
 -- updated_at triggers on every table
 do $$
 declare t text;
 begin
-  foreach t in array array['profile', 'profile_links', 'schooling', 'timeline', 'stack_items', 'systems', 'achievements', 'moments', 'publications'] loop
+  foreach t in array array['profile', 'profile_links', 'schooling', 'timeline', 'stack_items', 'systems', 'achievements', 'moments', 'publications', 'companies'] loop
     execute format('drop trigger if exists touch_updated_at on portfolio.%I', t);
     execute format('create trigger touch_updated_at before update on portfolio.%I for each row execute function portfolio.touch_updated_at()', t);
   end loop;

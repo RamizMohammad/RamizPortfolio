@@ -12,8 +12,10 @@ const SAYS: Record<string, string> = {
   architecture: "how it flows",
   stack: "my tools",
   awards: "wins!",
-  publications: "papers",
+  patents: "invented",
+  papers: "papers",
   contact: "say hi",
+  companies: "my ventures",
   header: "go to…",
   dialog: "pick one",
 };

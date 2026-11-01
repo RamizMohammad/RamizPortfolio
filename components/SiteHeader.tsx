@@ -122,7 +122,7 @@ export default function SiteHeader() {
             </svg>
           </Link>
 
-          <nav aria-label="Main" className="ml-auto hidden lg:block">
+          <nav aria-label="Main" className="ml-auto hidden xl:block">
             <ul ref={list} className="relative flex items-center">
               {/* The sliding highlight */}
               <span
@@ -145,7 +145,7 @@ export default function SiteHeader() {
             </ul>
           </nav>
 
-          <div className="ml-auto flex items-center gap-1.5 lg:ml-2">
+          <div className="ml-auto flex items-center gap-1.5 xl:ml-2">
             <button type="button" onClick={openPalette} className="btn-ghost btn-sm hidden md:inline-flex" aria-label="Open command menu" aria-keyshortcuts="Control+K Meta+K">
               ⌘K
             </button>
@@ -155,7 +155,7 @@ export default function SiteHeader() {
             </a>
 
             <Dialog.Root open={open} onOpenChange={setOpen}>
-              <Dialog.Trigger className="btn-pill btn-sm lg:hidden">Menu</Dialog.Trigger>
+              <Dialog.Trigger className="btn-pill btn-sm xl:hidden">Menu</Dialog.Trigger>
               <Dialog.Portal>
                 <Dialog.Content className="menu edge fixed inset-0 z-[70] flex flex-col bg-paper outline-none" style={{ paddingTop: "env(safe-area-inset-top, 0px)", paddingBottom: "max(24px, env(safe-area-inset-bottom, 0px))" }}>
                   <div className="dash-b flex h-[calc(var(--nav-h)-var(--strip-h))] items-center justify-between">

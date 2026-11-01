@@ -37,7 +37,7 @@ const j = (v) => (typeof v === "string" ? JSON.parse(v) : v);
 
 async function pull() {
   const T = (t, order = "sort, id") => query(`select * from portfolio.${t} order by ${order}`);
-  const [[p], links, schooling, timeline, stack, systems, achievements, moments, publications] = await Promise.all([
+  const [[p], links, schooling, timeline, stack, systems, achievements, moments, publications, companies] = await Promise.all([
     T("profile", "id"),
     T("profile_links"),
     T("schooling"),
@@ -47,6 +47,7 @@ async function pull() {
     T("achievements"),
     T("moments", "when_year, id"),
     T("publications"),
+    T("companies"),
   ]);
   if (!p) throw new Error("portfolio.profile is empty — run db/seed.sql first");
 
@@ -109,6 +110,9 @@ async function pull() {
         image: j(x.image),
         tags: x.tags,
       }),
+    ),
+    companies: companies.map((c) =>
+      clean({ name: c.name, tagline: c.tagline, about: c.about, role: c.role, since: c.since, url: c.url, tone: c.tone, logo: j(c.logo), links: j(c.links) }),
     ),
   };
 }
