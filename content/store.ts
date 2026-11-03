@@ -6,7 +6,8 @@ type File = { label: string; file: string; href: string };
 export type StoreApp = {
   slug: string;
   name: string;
-  kind: "app" | "extension";
+  /** app = Windows app, vscode = VS Code extension, extension = any other extension or plugin. */
+  kind: "app" | "vscode" | "extension";
   /** e.g. "Backup", "Browser extension". */
   category: string;
   /** When it ships under a company, e.g. "Loopax Technologies". */

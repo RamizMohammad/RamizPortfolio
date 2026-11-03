@@ -170,7 +170,7 @@ create table if not exists store_apps (
   sort        int not null default 0,
   slug        text not null unique,
   name        text not null,
-  kind        text not null check (kind in ('app', 'extension')),
+  kind        text not null check (kind in ('app', 'vscode', 'extension')),
   category    text not null,                  -- e.g. 'Backup', 'Browser extension'
   publisher   text,                           -- when not me, e.g. 'Loopax Technologies'
   tagline     text not null,

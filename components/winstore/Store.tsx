@@ -19,7 +19,8 @@ const TONE: Record<StoreApp["tone"], string> = {
 const FILTERS = [
   { id: "all", label: "All" },
   { id: "app", label: "Windows apps" },
-  { id: "extension", label: "Extensions" },
+  { id: "vscode", label: "VS Code extensions" },
+  { id: "extension", label: "Other extensions" },
 ] as const;
 type Filter = (typeof FILTERS)[number]["id"];
 
@@ -55,7 +56,7 @@ function Meta({ a }: { a: StoreApp }) {
 function GetButton({ a, className = "btn-pill" }: { a: StoreApp; className?: string }) {
   return (
     <a href={a.download.href} className={className} rel="noopener noreferrer" data-cursor="get it">
-      {a.kind === "app" ? "Get" : "Download"}
+      {a.kind === "extension" ? "Download" : "Get"}
       {a.size ? ` · ${a.size}` : ""}
     </a>
   );
@@ -206,7 +207,7 @@ function Details({ a, onClose }: { a: StoreApp; onClose: () => void }) {
 
 function Card({ a, i, onOpen }: { a: StoreApp; i: number; onOpen: () => void }) {
   return (
-    <article className="pop-in group grid content-start overflow-hidden rounded-[24px] border-[1.5px] border-ink bg-card" data-reveal style={{ ["--rd" as string]: `${(i % 3) * 90}ms` }}>
+    <article className="store-card group grid content-start overflow-hidden rounded-[24px] border-[1.5px] border-ink bg-card" style={{ ["--rd" as string]: `${i * 70}ms` }}>
       <button type="button" onClick={onOpen} className={`flex items-center gap-4 border-b-[1.5px] border-ink p-5 text-left ${TONE[a.tone]}`} aria-label={`Open ${a.name}`}>
         <span className="transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-105">
           <Icon a={a} />
@@ -290,10 +291,20 @@ export default function Store({ apps }: { apps: StoreApp[] }) {
         </div>
       </div>
 
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {/* Keyed by filter so the cards replay their entrance on every switch */}
+      <div key={filter} className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {list.map((a, i) => (
           <Card key={a.slug} a={a} i={i} onOpen={() => show(a.slug)} />
         ))}
+        {filter === "vscode" && !list.length && (
+          <div className="store-card grid content-center justify-items-start gap-4 rounded-[24px] border-[1.5px] border-dashed border-ink p-6 sm:col-span-2 lg:col-span-3">
+            <span aria-hidden="true" className="grid h-16 w-16 place-items-center rounded-[18px] border-[1.5px] border-ink bg-blue font-mono text-[26px] font-bold text-card">
+              {"{ }"}
+            </span>
+            <p className="t-h2">VS Code extensions are on the way</p>
+            <p className="voice-sm muted max-w-[52ch]">Editor tools I&rsquo;m building for my own workflow will land here first, with a link to each one on the Visual Studio Marketplace.</p>
+          </div>
+        )}
       </div>
 
       <p className="t-label muted pt-12">

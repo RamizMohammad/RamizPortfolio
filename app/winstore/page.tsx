@@ -19,7 +19,7 @@ export default function WinStorePage() {
           <h1 className="t-display">Win Store</h1>
         </div>
         <div className="grid max-w-[40ch] gap-4">
-          <p className="voice-sm">Windows apps and developer extensions I build. Free, no sign-in, downloaded straight from each project&rsquo;s GitHub Releases.</p>
+          <p className="voice-sm">Windows apps, VS Code extensions and developer tools I build. Free, no sign-in, downloaded straight from each project&rsquo;s GitHub Releases.</p>
           <p className="flex flex-wrap gap-2">
             <span className="t-micro rounded-full border-[1.5px] border-ink bg-card px-3 py-1.5">{apps} apps</span>
             <span className="t-micro rounded-full border-[1.5px] border-ink bg-card px-3 py-1.5">{extensions} extensions</span>
