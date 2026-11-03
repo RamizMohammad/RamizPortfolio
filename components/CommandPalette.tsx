@@ -47,6 +47,7 @@ export default function CommandPalette() {
     return [
       ...SECTIONS.map((s) => ({ group: "Sections", label: s.label, run: go(`/#${s.id}`) })),
       ...publicSystems.map((s) => ({ group: "Projects", label: s.name, hint: s.shipsAs, run: go(`/work/${s.slug}`) })),
+      { group: "Pages", label: "Win Store", hint: "Windows apps and extensions", run: go("/winstore") },
       { group: "Pages", label: "All achievements", run: go("/achievements") },
       { group: "Pages", label: "Résumé", run: go("/resume") },
       {

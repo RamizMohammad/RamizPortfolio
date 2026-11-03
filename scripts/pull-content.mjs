@@ -37,7 +37,7 @@ const j = (v) => (typeof v === "string" ? JSON.parse(v) : v);
 
 async function pull() {
   const T = (t, order = "sort, id") => query(`select * from portfolio.${t} order by ${order}`);
-  const [[p], links, schooling, timeline, stack, systems, achievements, moments, publications, companies] = await Promise.all([
+  const [[p], links, schooling, timeline, stack, systems, achievements, moments, publications, companies, store] = await Promise.all([
     T("profile", "id"),
     T("profile_links"),
     T("schooling"),
@@ -48,6 +48,7 @@ async function pull() {
     T("moments", "when_year, id"),
     T("publications"),
     T("companies"),
+    T("store_apps"),
   ]);
   if (!p) throw new Error("portfolio.profile is empty — run db/seed.sql first");
 
@@ -113,6 +114,30 @@ async function pull() {
     ),
     companies: companies.map((c) =>
       clean({ name: c.name, tagline: c.tagline, about: c.about, role: c.role, since: c.since, url: c.url, tone: c.tone, logo: j(c.logo), links: j(c.links) }),
+    ),
+    store: store.map((a) =>
+      clean({
+        slug: a.slug,
+        name: a.name,
+        kind: a.kind,
+        category: a.category,
+        publisher: a.publisher,
+        tagline: a.tagline,
+        about: a.about,
+        version: a.version,
+        released: a.released,
+        size: a.size_label,
+        requires: a.requires,
+        tone: a.tone,
+        logo: j(a.logo),
+        download: j(a.download),
+        install: a.install,
+        steps: a.steps,
+        downloads: j(a.downloads),
+        links: j(a.links),
+        features: a.features,
+        system: a.system_slug,
+      }),
     ),
   };
 }

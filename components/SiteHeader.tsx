@@ -174,6 +174,12 @@ export default function SiteHeader() {
                         </li>
                       ))}
                       <li className="menu-item dash-b overflow-hidden" style={{ ["--mi" as string]: SECTIONS.length }}>
+                        <Link href="/winstore" onClick={() => setOpen(false)} className="group flex items-baseline gap-4 py-3.5">
+                          <span className="t-label muted w-7">→</span>
+                          <span className="t-h1 !text-[clamp(36px,9vw,64px)] transition-transform duration-300 group-hover:translate-x-2">Win Store</span>
+                        </Link>
+                      </li>
+                      <li className="menu-item dash-b overflow-hidden" style={{ ["--mi" as string]: SECTIONS.length }}>
                         <Link href="/achievements" onClick={() => setOpen(false)} className="group flex items-baseline gap-4 py-3.5">
                           <span className="t-label muted w-7">→</span>
                           <span className="t-h1 !text-[clamp(36px,9vw,64px)] transition-transform duration-300 group-hover:translate-x-2">Achievements</span>

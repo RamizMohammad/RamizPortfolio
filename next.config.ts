@@ -14,7 +14,7 @@ const nextConfig: NextConfig = {
     return [{ source: "/(.*)", headers: securityHeaders }];
   },
   async redirects() {
-    return [{ source: "/windows-apps", destination: "/#work", permanent: true }];
+    return [{ source: "/windows-apps", destination: "/winstore", permanent: true }];
   },
 };
 

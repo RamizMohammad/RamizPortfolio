@@ -164,11 +164,38 @@ create table if not exists companies (
   updated_at timestamptz not null default now()
 );
 
+-- ---------------------------------------------------------------- the /winstore page
+create table if not exists store_apps (
+  id          serial primary key,
+  sort        int not null default 0,
+  slug        text not null unique,
+  name        text not null,
+  kind        text not null check (kind in ('app', 'extension')),
+  category    text not null,                  -- e.g. 'Backup', 'Browser extension'
+  publisher   text,                           -- when not me, e.g. 'Loopax Technologies'
+  tagline     text not null,
+  about       text not null,
+  version     text,
+  released    text,                           -- as shown, e.g. '21 Sep 2026'
+  size_label  text,                           -- e.g. '39.2 MB'
+  requires    text not null,                  -- system requirements line
+  tone        text not null default 'violet' check (tone in ('pink', 'lime', 'blue', 'sun', 'violet', 'mint')),
+  logo        jsonb,                          -- {src, width, height, alt}; a monogram shows without one
+  download    jsonb not null,                 -- {label, file, href}: the main Get button
+  install     text,                           -- optional one-line install command
+  steps       text[],                         -- optional manual install steps
+  downloads   jsonb,                          -- [{label, file, href}] other packages
+  links       jsonb,                          -- [{label, href}] website, releases, source
+  features    text[],
+  system_slug text,                           -- links to /work/<slug> when set
+  updated_at  timestamptz not null default now()
+);
+
 -- updated_at triggers on every table
 do $$
 declare t text;
 begin
-  foreach t in array array['profile', 'profile_links', 'schooling', 'timeline', 'stack_items', 'systems', 'achievements', 'moments', 'publications', 'companies'] loop
+  foreach t in array array['profile', 'profile_links', 'schooling', 'timeline', 'stack_items', 'systems', 'achievements', 'moments', 'publications', 'companies', 'store_apps'] loop
     execute format('drop trigger if exists touch_updated_at on portfolio.%I', t);
     execute format('create trigger touch_updated_at before update on portfolio.%I for each row execute function portfolio.touch_updated_at()', t);
   end loop;

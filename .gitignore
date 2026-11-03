@@ -28,3 +28,4 @@ dist-ssr
 out
 next-env.d.ts
 *.tsbuildinfo
+_to_delete

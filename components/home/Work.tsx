@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import Words from "@/components/Words";
 import Image from "next/image";
 import { useState, useSyncExternalStore, type ReactNode } from "react";
@@ -123,9 +124,14 @@ export default function Work() {
         <h2 id="work-title" className="t-h1 split" data-reveal>
           <Words text="Built and shipped." />
         </h2>
-        <p className="voice-sm muted ink-in max-w-[44ch]" data-reveal>
-          Click any project to open it where it was built: Android work in an Android IDE beside a phone, web apps in a code editor beside a browser.
-        </p>
+        <div className="grid max-w-[44ch] gap-4" data-reveal>
+          <p className="voice-sm muted ink-in">
+            Click any project to open it where it was built: Android work in an Android IDE beside a phone, web apps in a code editor beside a browser.
+          </p>
+          <Link href="/winstore" className="btn-ghost btn-sm w-fit">
+            Windows apps → Win Store
+          </Link>
+        </div>
       </div>
 
       {/* Collage */}

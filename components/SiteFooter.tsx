@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Image from "next/image";
 import { profile } from "@/content/profile";
 import { BackToTop, ConsoleHello, LocalTime } from "./FooterExtras";
@@ -33,6 +34,9 @@ export default function SiteFooter() {
           ))}
           <li>
             <a href={profile.resume} className="link">Résumé</a>
+          </li>
+          <li>
+            <Link href="/winstore" className="link">Win Store</Link>
           </li>
         </ul>
         <p className="muted">Last build {built}</p>

@@ -1604,5 +1604,236 @@
         }
       ]
     }
+  ],
+  "store": [
+    {
+      "slug": "snapy",
+      "name": "Snapy",
+      "kind": "app",
+      "category": "Utilities",
+      "publisher": "Loopax Technologies",
+      "tagline": "Back up a whole Android phone to your PC, and put it back after a wipe.",
+      "about": "Snapy captures an Android phone's full state to your PC and restores it after a wipe or an OS reinstall. It works entirely over ADB, so it needs no root and no cloud account, and comes as a desktop app with a scriptable CLI.",
+      "version": "1.0.0",
+      "released": "21 Sep 2026",
+      "size": "39.2 MB",
+      "requires": "Windows 10 or 11 · an Android phone with USB debugging on",
+      "tone": "sun",
+      "download": {
+        "label": "Get the installer",
+        "file": "Snapy-1.0.0-setup.exe",
+        "href": "https://github.com/RamizMohammad/snapy/releases/download/v1.0.0/Snapy-1.0.0-setup.exe"
+      },
+      "links": [
+        {
+          "label": "All releases",
+          "href": "https://github.com/RamizMohammad/snapy/releases"
+        }
+      ],
+      "features": [
+        "Full phone snapshot and restore over ADB",
+        "Works on stock, unrooted phones",
+        "PySide6 desktop app plus a Python CLI"
+      ],
+      "system": "snapy"
+    },
+    {
+      "slug": "bakup",
+      "name": "bakup",
+      "kind": "app",
+      "category": "Backup",
+      "tagline": "Backup like you git: commit offline, push to your own server.",
+      "about": "Turn any folder into a repository, commit snapshots offline and push them to your own server when you are online. Any earlier version restores on any machine with one clone, and identical files are stored once across every repository.",
+      "version": "0.1.0",
+      "released": "7 Jul 2026",
+      "size": "15.5 MB",
+      "requires": "Windows 10 or 11 · your own bakup server (Docker) for sync",
+      "tone": "lime",
+      "download": {
+        "label": "Get the installer",
+        "file": "bakup-setup-0.1.0.exe",
+        "href": "https://github.com/RamizMohammad/Bakup-Release/releases/download/backup-v1.0/bakup-setup-0.1.0.exe"
+      },
+      "downloads": [
+        {
+          "label": "Python wheel",
+          "file": "bakup-0.1.0-py3-none-any.whl",
+          "href": "https://github.com/RamizMohammad/Bakup-Release/releases/download/backup-v1.0/bakup-0.1.0-py3-none-any.whl"
+        },
+        {
+          "label": "Debian / Ubuntu",
+          "file": "bakup_0.1.0_all.deb",
+          "href": "https://github.com/RamizMohammad/Bakup-Release/releases/download/backup-v1.0/bakup_0.1.0_all.deb"
+        },
+        {
+          "label": "Server (Docker Compose)",
+          "file": "docker-compose.yml",
+          "href": "https://github.com/RamizMohammad/Bakup-Release/releases/download/backup-v1.0/docker-compose.yml"
+        }
+      ],
+      "links": [
+        {
+          "label": "bakup.mohammadramiz.in",
+          "href": "https://bakup.mohammadramiz.in/"
+        },
+        {
+          "label": "Read the paper",
+          "href": "https://www.researchgate.net/publication/409147519_bakup_A_Git-Inspired_Offline-First_Personal_Backup_System_with_Content-Addressed_Cross-Repository_Deduplication"
+        },
+        {
+          "label": "All releases",
+          "href": "https://github.com/RamizMohammad/Bakup-Release/releases"
+        }
+      ],
+      "features": [
+        "init, commit, push, clone and restore from the command line",
+        "SHA-256 content addressing deduplicates across repositories",
+        "Self-hosted FastAPI server with a web dashboard"
+      ],
+      "system": "bakup"
+    },
+    {
+      "slug": "linkium",
+      "name": "Linkium",
+      "kind": "app",
+      "category": "Connectivity",
+      "tagline": "Pair two devices and pass files and messages between them.",
+      "about": "Linkium pairs two devices and keeps a live WebSocket link between them, so you can move files and send messages without a cable or a cloud drive.",
+      "version": "2.0",
+      "released": "26 May 2026",
+      "size": "18.4 MB",
+      "requires": "Windows 10 or 11 · both devices on the same network",
+      "tone": "blue",
+      "logo": {
+        "src": "/images/logos/linkium.webp",
+        "width": 96,
+        "height": 96,
+        "alt": "Linkium logo"
+      },
+      "download": {
+        "label": "Get the installer",
+        "file": "Linkium_Setup_v2.0.exe",
+        "href": "https://github.com/RamizMohammad/SteamDeck/releases/download/Linkium-v2.0/Linkium_Setup_v2.0.exe"
+      },
+      "downloads": [
+        {
+          "label": "v1.0 MSIX package",
+          "file": "Linkium.msix",
+          "href": "https://github.com/RamizMohammad/SteamDeck/releases/download/v1.0/Linkium.msix"
+        }
+      ],
+      "links": [
+        {
+          "label": "Website",
+          "href": "https://www.desksync.space/"
+        },
+        {
+          "label": "All releases",
+          "href": "https://github.com/RamizMohammad/SteamDeck/releases"
+        }
+      ],
+      "features": [
+        "Device pairing with a live two-way connection",
+        "File transfer and messages over WebSocket",
+        "Lightweight Tkinter desktop app"
+      ],
+      "system": "linkium"
+    },
+    {
+      "slug": "backup-engine",
+      "name": "Backup Engine",
+      "kind": "app",
+      "category": "Backup",
+      "tagline": "Compressed snapshots of the folders that matter, on a schedule you set.",
+      "about": "Backup Engine takes compressed snapshots of the folders you choose and hashes every file, so each run only picks up what changed. The work runs on background threads, so the window never freezes.",
+      "version": "1.0",
+      "released": "25 Jan 2026",
+      "size": "29.1 MB",
+      "requires": "Windows 10 or 11",
+      "tone": "violet",
+      "logo": {
+        "src": "/images/logos/backup-engine.webp",
+        "width": 96,
+        "height": 96,
+        "alt": "Backup Engine logo"
+      },
+      "download": {
+        "label": "Get the installer",
+        "file": "Backup.Engine.Installer.exe",
+        "href": "https://github.com/RamizMohammad/Backup_Engine/releases/download/v1.0/Backup.Engine.Installer.exe"
+      },
+      "links": [
+        {
+          "label": "All releases",
+          "href": "https://github.com/RamizMohammad/Backup_Engine/releases"
+        }
+      ],
+      "features": [
+        "Change detection by file hashing",
+        "Compressed snapshot archives",
+        "PyQt interface with background worker threads"
+      ],
+      "system": "backup-engine"
+    },
+    {
+      "slug": "chatdump",
+      "name": "ChatDump",
+      "kind": "extension",
+      "category": "Browser extension",
+      "tagline": "A floating side panel for any AI chat.",
+      "about": "ChatDump opens a side panel beside Claude, ChatGPT or Gemini that renders the conversation as clean markdown, summarises it with Gemini, maps how the conversation flowed and keeps a history of your sessions.",
+      "version": "2.0.0",
+      "requires": "Chrome, Edge or Brave (Manifest V3)",
+      "tone": "pink",
+      "download": {
+        "label": "Download the source",
+        "file": "ChatDump.zip",
+        "href": "https://github.com/RamizMohammad/ChatDump---Extension/archive/refs/heads/main.zip"
+      },
+      "steps": [
+        "Download and unzip the source.",
+        "Open chrome://extensions and turn on Developer mode.",
+        "Choose Load unpacked and pick the unzipped folder."
+      ],
+      "links": [
+        {
+          "label": "Source on GitHub",
+          "href": "https://github.com/RamizMohammad/ChatDump---Extension"
+        }
+      ],
+      "features": [
+        "Markdown rendering of any AI chat",
+        "Gemini-powered conversation summary",
+        "Conversation flow map and session history"
+      ]
+    },
+    {
+      "slug": "leakyspanner",
+      "name": "LeakySpanner",
+      "kind": "extension",
+      "category": "FastAPI extension",
+      "tagline": "Find memory leaks in a FastAPI app without touching it.",
+      "about": "LeakySpanner attaches to a FastAPI app in one line and watches as a pure spectator: it samples memory on a background thread, tracks the memory each endpoint adds and uses tracemalloc to find the top allocation sites, without blocking a request or adding latency.",
+      "version": "0.1.2",
+      "requires": "Python 3.8+ · FastAPI",
+      "tone": "mint",
+      "download": {
+        "label": "Download the source",
+        "file": "LeakySpanner.zip",
+        "href": "https://github.com/RamizMohammad/LeakySpanner---Exttension-/archive/refs/heads/master.zip"
+      },
+      "install": "pip install git+https://github.com/RamizMohammad/LeakySpanner---Exttension-.git",
+      "links": [
+        {
+          "label": "Source on GitHub",
+          "href": "https://github.com/RamizMohammad/LeakySpanner---Exttension-"
+        }
+      ],
+      "features": [
+        "One-line setup: leakyspanner(app)",
+        "Per-endpoint memory deltas and allocation traces",
+        "Never blocks a request; if it crashes, your app keeps running"
+      ]
+    }
   ]
 }
