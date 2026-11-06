@@ -172,7 +172,7 @@ function Details({ a, onClose }: { a: StoreApp; onClose: () => void }) {
           </dl>
 
           <section className="grid gap-3">
-            <h3 className="t-label muted">Downloads</h3>
+            <h3 className="t-label muted">{a.kind === "vscode" ? "Get it" : "Downloads"}</h3>
             <ul className="grid gap-2">
               {[a.download, ...(a.downloads ?? [])].map((d, i) => (
                 <li key={d.href}>
@@ -181,7 +181,7 @@ function Details({ a, onClose }: { a: StoreApp; onClose: () => void }) {
                       <span className="text-[14px] font-semibold">{i === 0 ? a.download.label : d.label}</span>
                       <span className="truncate font-mono text-[11.5px] opacity-70">{d.file}</span>
                     </span>
-                    <span aria-hidden="true">↓</span>
+                    <span aria-hidden="true">{d.href.startsWith("http") && !/\.(exe|msi|msix|whl|deb|zip|ya?ml|ps1)$/i.test(d.href) ? "↗" : "↓"}</span>
                   </a>
                 </li>
               ))}
