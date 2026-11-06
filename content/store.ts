@@ -9,8 +9,8 @@ export const OS_LABEL: Record<OS, string> = { windows: "Windows", macos: "macOS"
 export type StoreApp = {
   slug: string;
   name: string;
-  /** app = Windows app, vscode = VS Code extension, extension = any other extension or plugin. */
-  kind: "app" | "vscode" | "extension";
+  /** app = desktop app, vscode = VS Code extension, pip = Python library on PyPI, chrome = Chrome extension. */
+  kind: "app" | "vscode" | "pip" | "chrome";
   /** e.g. "Backup", "Browser extension". */
   category: string;
   /** When it ships under a company, e.g. "Loopax Technologies". */

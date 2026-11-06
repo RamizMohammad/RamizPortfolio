@@ -1874,10 +1874,77 @@
       ]
     },
     {
+      "slug": "leakyspanner",
+      "name": "LeakySpanner",
+      "kind": "pip",
+      "category": "Python library · FastAPI",
+      "tagline": "Find memory leaks in a FastAPI app without touching it.",
+      "about": "LeakySpanner attaches to a FastAPI app in one line and watches as a pure spectator: it samples memory on a background thread, tracks the memory each endpoint adds and uses tracemalloc to find the top allocation sites, without blocking a request or adding latency.",
+      "version": "0.1.2",
+      "requires": "Python 3.8+ · FastAPI",
+      "tone": "mint",
+      "download": {
+        "label": "View on PyPI",
+        "file": "leakyspanner",
+        "href": "https://pypi.org/project/leakyspanner/"
+      },
+      "install": "pip install leakyspanner",
+      "links": [
+        {
+          "label": "PyPI",
+          "href": "https://pypi.org/project/leakyspanner/"
+        },
+        {
+          "label": "Source on GitHub",
+          "href": "https://github.com/RamizMohammad/LeakySpanner---Exttension-"
+        }
+      ],
+      "features": [
+        "One-line setup: leakyspanner(app)",
+        "Per-endpoint memory deltas and allocation traces",
+        "Never blocks a request; if it crashes, your app keeps running"
+      ],
+      "released": "20 Apr 2026"
+    },
+    {
+      "slug": "fastreact",
+      "name": "FastReact",
+      "kind": "pip",
+      "category": "Python library · FastAPI + React",
+      "tagline": "FastAPI and React as one stack: one server, zero config.",
+      "about": "FastReact bridges FastAPI (or Flask) and a React app into a single stack served by one uvicorn instance, in development and in production. React pages live behind routes you register in Python, so Python decides what the browser can reach, and Python errors show up in the browser as a traceback overlay instead of a JSON blob.",
+      "version": "0.1.1",
+      "released": "9 Mar 2026",
+      "requires": "Python 3.9+ · FastAPI or Flask",
+      "tone": "sun",
+      "download": {
+        "label": "View on PyPI",
+        "file": "fastreact",
+        "href": "https://pypi.org/project/fastreact/"
+      },
+      "install": "pip install fastreact",
+      "links": [
+        {
+          "label": "PyPI",
+          "href": "https://pypi.org/project/fastreact/"
+        },
+        {
+          "label": "Source on GitHub",
+          "href": "https://github.com/RamizMohammad/fastreact"
+        }
+      ],
+      "features": [
+        "One server for the API and the React app, in dev and production",
+        "fastreact create and fastreact dev: scaffold a Vite app and run both with one command",
+        "Browser-only React routes, plus Python tracebacks as an in-browser overlay",
+        "Flask support with pip install fastreact[flask]"
+      ]
+    },
+    {
       "slug": "chatdump",
       "name": "ChatDump",
-      "kind": "extension",
-      "category": "Browser extension",
+      "kind": "chrome",
+      "category": "Chrome extension",
       "tagline": "A floating side panel for any AI chat.",
       "about": "ChatDump opens a side panel beside Claude, ChatGPT or Gemini that renders the conversation as clean markdown, summarises it with Gemini, maps how the conversation flowed and keeps a history of your sessions.",
       "version": "2.0.0",
@@ -1903,34 +1970,6 @@
         "Markdown rendering of any AI chat",
         "Gemini-powered conversation summary",
         "Conversation flow map and session history"
-      ]
-    },
-    {
-      "slug": "leakyspanner",
-      "name": "LeakySpanner",
-      "kind": "extension",
-      "category": "FastAPI extension",
-      "tagline": "Find memory leaks in a FastAPI app without touching it.",
-      "about": "LeakySpanner attaches to a FastAPI app in one line and watches as a pure spectator: it samples memory on a background thread, tracks the memory each endpoint adds and uses tracemalloc to find the top allocation sites, without blocking a request or adding latency.",
-      "version": "0.1.2",
-      "requires": "Python 3.8+ · FastAPI",
-      "tone": "mint",
-      "download": {
-        "label": "Download the source",
-        "file": "LeakySpanner.zip",
-        "href": "https://github.com/RamizMohammad/LeakySpanner---Exttension-/archive/refs/heads/master.zip"
-      },
-      "install": "pip install git+https://github.com/RamizMohammad/LeakySpanner---Exttension-.git",
-      "links": [
-        {
-          "label": "Source on GitHub",
-          "href": "https://github.com/RamizMohammad/LeakySpanner---Exttension-"
-        }
-      ],
-      "features": [
-        "One-line setup: leakyspanner(app)",
-        "Per-endpoint memory deltas and allocation traces",
-        "Never blocks a request; if it crashes, your app keeps running"
       ]
     }
   ]

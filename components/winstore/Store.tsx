@@ -22,7 +22,8 @@ const FILTERS = [
   { id: "macos", label: "Mac apps" },
   { id: "linux", label: "Linux apps" },
   { id: "vscode", label: "VS Code extensions" },
-  { id: "extension", label: "Other extensions" },
+  { id: "pip", label: "Python libraries" },
+  { id: "chrome", label: "Chrome extensions" },
 ] as const;
 type Filter = (typeof FILTERS)[number]["id"];
 const isOS = (f: Filter): f is OS => f === "windows" || f === "macos" || f === "linux";
@@ -31,6 +32,8 @@ const isOS = (f: Filter): f is OS => f === "windows" || f === "macos" || f === "
 const EMPTY: Partial<Record<Filter, { mark: string; tone: string; title: string; body: string }>> = {
   macos: { mark: "⌘", tone: "bg-ink text-card", title: "Mac apps are on the way", body: "Native macOS builds of my desktop tools will land here, as signed .dmg downloads." },
   linux: { mark: "$_", tone: "bg-sun", title: "Linux apps are on the way", body: "Linux builds of my desktop tools will land here as .deb and AppImage downloads." },
+  pip: { mark: "py", tone: "bg-sun", title: "Python libraries are on the way", body: "Libraries I publish to PyPI will land here, each with its pip install line." },
+  chrome: { mark: "◎", tone: "bg-pink", title: "Chrome extensions are on the way", body: "Browser tools I build will land here, with a Chrome Web Store link once they are listed." },
   vscode: { mark: "{ }", tone: "bg-blue text-card", title: "VS Code extensions are on the way", body: "Editor tools I’m building for my own workflow will land here first, with a link to each one on the Visual Studio Marketplace." },
 };
 
@@ -77,7 +80,8 @@ function Meta({ a, os }: { a: StoreApp; os?: OS }) {
 function GetButton({ a, os, className = "btn-pill" }: { a: StoreApp; os?: OS; className?: string }) {
   const f = fileFor(a, os);
   const size = f === a.download ? a.size : f.size;
-  const label = a.kind === "extension" ? "Download" : os && os !== "windows" && f !== a.download ? `Get for ${OS_LABEL[os]}` : "Get";
+  const label =
+    a.kind === "chrome" ? "Download" : a.kind === "pip" ? "View on PyPI" : os && os !== "windows" && f !== a.download ? `Get for ${OS_LABEL[os]}` : "Get";
   return (
     <a href={f.href} className={className} rel="noopener noreferrer" data-cursor="get it">
       {label}
@@ -197,7 +201,7 @@ function Details({ a, onClose }: { a: StoreApp; onClose: () => void }) {
           </dl>
 
           <section className="grid gap-3">
-            <h3 className="t-label muted">{a.kind === "vscode" ? "Get it" : "Downloads"}</h3>
+            <h3 className="t-label muted">{a.kind === "vscode" || a.kind === "pip" ? "Get it" : "Downloads"}</h3>
             <ul className="grid gap-2">
               {[a.download, ...Object.values(a.osDownloads ?? {}), ...(a.downloads ?? [])].filter((d, i, all) => all.findIndex((x) => x.href === d.href) === i).map((d, i) => (
                 <li key={d.href}>
