@@ -131,6 +131,8 @@ async function pull() {
         tone: a.tone,
         logo: j(a.logo),
         download: j(a.download),
+        platforms: a.platforms,
+        osDownloads: j(a.os_downloads),
         install: a.install,
         steps: a.steps,
         downloads: j(a.downloads),

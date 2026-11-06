@@ -86,8 +86,8 @@ sql +=
   "\n" +
   rows(
     "store_apps",
-    ["sort", "slug", "name", "kind", "category", "publisher", "tagline", "about", "version", "released", "size_label", "requires", "tone", "logo", "download", "install", "steps", "downloads", "links", "features", "system_slug"],
-    (data.store ?? []).map((a, i) => [i, q(a.slug), q(a.name), q(a.kind), q(a.category), q(a.publisher), q(a.tagline), q(a.about), q(a.version), q(a.released), q(a.size), q(a.requires), q(a.tone), json(a.logo), json(a.download), q(a.install), arr(a.steps), json(a.downloads), json(a.links), arr(a.features), q(a.system)]),
+    ["sort", "slug", "name", "kind", "category", "publisher", "tagline", "about", "version", "released", "size_label", "requires", "tone", "logo", "download", "platforms", "os_downloads", "install", "steps", "downloads", "links", "features", "system_slug"],
+    (data.store ?? []).map((a, i) => [i, q(a.slug), q(a.name), q(a.kind), q(a.category), q(a.publisher), q(a.tagline), q(a.about), q(a.version), q(a.released), q(a.size), q(a.requires), q(a.tone), json(a.logo), json(a.download), arr(a.platforms), json(a.osDownloads), q(a.install), arr(a.steps), json(a.downloads), json(a.links), arr(a.features), q(a.system)]),
   );
 sql += "\ncommit;\n";
 

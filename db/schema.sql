@@ -170,7 +170,7 @@ create table if not exists store_apps (
   sort        int not null default 0,
   slug        text not null unique,
   name        text not null,
-  kind        text not null check (kind in ('app', 'vscode', 'extension')),
+  kind        text not null check (kind in ('app', 'vscode', 'pip', 'chrome')),
   category    text not null,                  -- e.g. 'Backup', 'Browser extension'
   publisher   text,                           -- when not me, e.g. 'Loopax Technologies'
   tagline     text not null,
@@ -181,7 +181,9 @@ create table if not exists store_apps (
   requires    text not null,                  -- system requirements line
   tone        text not null default 'violet' check (tone in ('pink', 'lime', 'blue', 'sun', 'violet', 'mint')),
   logo        jsonb,                          -- {src, width, height, alt}; a monogram shows without one
-  download    jsonb not null,                 -- {label, file, href}: the main Get button
+  download    jsonb not null,                 -- {label, file, href}: the main Get button (the Windows build, for apps)
+  platforms   text[],                         -- operating systems an app runs on: windows, macos, linux; null means windows
+  os_downloads jsonb,                         -- {macos?, linux?: {label, file, href, size?}} the Get button on those tabs
   install     text,                           -- optional one-line install command
   steps       text[],                         -- optional manual install steps
   downloads   jsonb,                          -- [{label, file, href}] other packages

@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Dialog } from "radix-ui";
 import { useState, useSyncExternalStore } from "react";
-import type { StoreApp } from "@/content/store";
+import { OS_LABEL, platformsOf, type OS, type StoreApp } from "@/content/store";
 
 // Written out in full so Tailwind sees every class.
 const TONE: Record<StoreApp["tone"], string> = {
@@ -18,11 +18,27 @@ const TONE: Record<StoreApp["tone"], string> = {
 
 const FILTERS = [
   { id: "all", label: "All" },
-  { id: "app", label: "Windows apps" },
+  { id: "windows", label: "Windows apps" },
+  { id: "macos", label: "Mac apps" },
+  { id: "linux", label: "Linux apps" },
   { id: "vscode", label: "VS Code extensions" },
-  { id: "extension", label: "Other extensions" },
+  { id: "pip", label: "Python libraries" },
+  { id: "chrome", label: "Chrome extensions" },
 ] as const;
 type Filter = (typeof FILTERS)[number]["id"];
+const isOS = (f: Filter): f is OS => f === "windows" || f === "macos" || f === "linux";
+
+/** Shown in place of the grid when a tab has nothing in it yet. */
+const EMPTY: Partial<Record<Filter, { mark: string; tone: string; title: string; body: string }>> = {
+  macos: { mark: "⌘", tone: "bg-ink text-card", title: "Mac apps are on the way", body: "Native macOS builds of my desktop tools will land here, as signed .dmg downloads." },
+  linux: { mark: "$_", tone: "bg-sun", title: "Linux apps are on the way", body: "Linux builds of my desktop tools will land here as .deb and AppImage downloads." },
+  pip: { mark: "py", tone: "bg-sun", title: "Python libraries are on the way", body: "Libraries I publish to PyPI will land here, each with its pip install line." },
+  chrome: { mark: "◎", tone: "bg-pink", title: "Chrome extensions are on the way", body: "Browser tools I build will land here, with a Chrome Web Store link once they are listed." },
+  vscode: { mark: "{ }", tone: "bg-blue text-card", title: "VS Code extensions are on the way", body: "Editor tools I’m building for my own workflow will land here first, with a link to each one on the Visual Studio Marketplace." },
+};
+
+/** The build to offer for an app on a given tab: that OS's own build when it has one. */
+const fileFor = (a: StoreApp, os?: OS) => (os && a.osDownloads?.[os]) || a.download;
 
 /** ?app=slug opens that app's page, so a link can point straight at one. */
 const noop = () => () => {};
@@ -40,8 +56,10 @@ function Icon({ a, size = "md" }: { a: StoreApp; size?: "md" | "lg" }) {
 }
 
 /** Version · size · date, as small chips. */
-function Meta({ a }: { a: StoreApp }) {
-  const bits = [a.version && `v${a.version}`, a.size, a.released].filter(Boolean) as string[];
+function Meta({ a, os }: { a: StoreApp; os?: OS }) {
+  const f = fileFor(a, os);
+  const size = f === a.download ? a.size : f.size;
+  const bits = [a.version && `v${a.version}`, size, a.released].filter(Boolean) as string[];
   return (
     <ul className="flex flex-wrap gap-1.5" aria-label="Release">
       {bits.map((b) => (
@@ -49,15 +67,25 @@ function Meta({ a }: { a: StoreApp }) {
           {b}
         </li>
       ))}
+      {a.kind === "app" &&
+        platformsOf(a).map((p) => (
+          <li key={p} className={`t-micro rounded-full border-[1.5px] border-ink px-2.5 py-1 ${p === os ? "bg-ink text-card" : "bg-paper"}`}>
+            {OS_LABEL[p]}
+          </li>
+        ))}
     </ul>
   );
 }
 
-function GetButton({ a, className = "btn-pill" }: { a: StoreApp; className?: string }) {
+function GetButton({ a, os, className = "btn-pill" }: { a: StoreApp; os?: OS; className?: string }) {
+  const f = fileFor(a, os);
+  const size = f === a.download ? a.size : f.size;
+  const label =
+    a.kind === "chrome" ? "Download" : a.kind === "pip" ? "View on PyPI" : os && os !== "windows" && f !== a.download ? `Get for ${OS_LABEL[os]}` : "Get";
   return (
-    <a href={a.download.href} className={className} rel="noopener noreferrer" data-cursor="get it">
-      {a.kind === "extension" ? "Download" : "Get"}
-      {a.size ? ` · ${a.size}` : ""}
+    <a href={f.href} className={className} rel="noopener noreferrer" data-cursor="get it">
+      {label}
+      {size ? ` · ${size}` : ""}
     </a>
   );
 }
@@ -89,6 +117,7 @@ function Details({ a, onClose }: { a: StoreApp; onClose: () => void }) {
     ["Version", a.version],
     ["Released", a.released],
     ["Download size", a.size],
+    ["Runs on", a.kind === "app" ? platformsOf(a).map((p) => OS_LABEL[p]).join(", ") : undefined],
     ["Requires", a.requires],
     ["Publisher", a.publisher ?? "Mohammad Ramiz"],
     ["Price", "Free"],
@@ -172,9 +201,9 @@ function Details({ a, onClose }: { a: StoreApp; onClose: () => void }) {
           </dl>
 
           <section className="grid gap-3">
-            <h3 className="t-label muted">{a.kind === "vscode" ? "Get it" : "Downloads"}</h3>
+            <h3 className="t-label muted">{a.kind === "vscode" || a.kind === "pip" ? "Get it" : "Downloads"}</h3>
             <ul className="grid gap-2">
-              {[a.download, ...(a.downloads ?? [])].map((d, i) => (
+              {[a.download, ...Object.values(a.osDownloads ?? {}), ...(a.downloads ?? [])].filter((d, i, all) => all.findIndex((x) => x.href === d.href) === i).map((d, i) => (
                 <li key={d.href}>
                   <a href={d.href} rel="noopener noreferrer" className="group flex items-center justify-between gap-3 rounded-[14px] border-[1.5px] border-ink px-4 py-3 transition-colors hover:bg-ink hover:text-card">
                     <span className="grid min-w-0">
@@ -205,7 +234,7 @@ function Details({ a, onClose }: { a: StoreApp; onClose: () => void }) {
   );
 }
 
-function Card({ a, i, onOpen }: { a: StoreApp; i: number; onOpen: () => void }) {
+function Card({ a, i, os, onOpen }: { a: StoreApp; i: number; os?: OS; onOpen: () => void }) {
   return (
     <article className="store-card group grid content-start overflow-hidden rounded-[24px] border-[1.5px] border-ink bg-card" style={{ ["--rd" as string]: `${i * 70}ms` }}>
       <button type="button" onClick={onOpen} className={`flex items-center gap-4 border-b-[1.5px] border-ink p-5 text-left ${TONE[a.tone]}`} aria-label={`Open ${a.name}`}>
@@ -219,9 +248,9 @@ function Card({ a, i, onOpen }: { a: StoreApp; i: number; onOpen: () => void }) 
       </button>
       <div className="grid content-start gap-4 p-5">
         <p className="text-[15px] leading-snug">{a.tagline}</p>
-        <Meta a={a} />
+        <Meta a={a} os={os} />
         <div className="flex flex-wrap items-center gap-2 pt-1">
-          <GetButton a={a} className="btn-pill btn-sm" />
+          <GetButton a={a} os={os} className="btn-pill btn-sm" />
           <button type="button" onClick={onOpen} className="btn-ghost btn-sm">
             Details
           </button>
@@ -274,7 +303,9 @@ export default function Store({ apps }: { apps: StoreApp[] }) {
   };
 
   const featured = apps.find((a) => a.kind === "app");
-  const list = apps.filter((a) => filter === "all" || a.kind === filter);
+  const os = isOS(filter) ? filter : undefined;
+  const list = apps.filter((a) => (os ? a.kind === "app" && platformsOf(a).includes(os) : filter === "all" || a.kind === filter));
+  const empty = !list.length ? EMPTY[filter] : undefined;
 
   return (
     <>
@@ -294,22 +325,22 @@ export default function Store({ apps }: { apps: StoreApp[] }) {
       {/* Keyed by filter so the cards replay their entrance on every switch */}
       <div key={filter} className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {list.map((a, i) => (
-          <Card key={a.slug} a={a} i={i} onOpen={() => show(a.slug)} />
+          <Card key={a.slug} a={a} i={i} os={os} onOpen={() => show(a.slug)} />
         ))}
-        {filter === "vscode" && !list.length && (
+        {empty && (
           <div className="store-card grid content-center justify-items-start gap-4 rounded-[24px] border-[1.5px] border-dashed border-ink p-6 sm:col-span-2 lg:col-span-3">
-            <span aria-hidden="true" className="grid h-16 w-16 place-items-center rounded-[18px] border-[1.5px] border-ink bg-blue font-mono text-[26px] font-bold text-card">
-              {"{ }"}
+            <span aria-hidden="true" className={`grid h-16 w-16 place-items-center rounded-[18px] border-[1.5px] border-ink font-mono text-[24px] font-bold ${empty.tone}`}>
+              {empty.mark}
             </span>
-            <p className="t-h2">VS Code extensions are on the way</p>
-            <p className="voice-sm muted max-w-[52ch]">Editor tools I&rsquo;m building for my own workflow will land here first, with a link to each one on the Visual Studio Marketplace.</p>
+            <p className="t-h2">{empty.title}</p>
+            <p className="voice-sm muted max-w-[52ch]">{empty.body}</p>
           </div>
         )}
       </div>
 
-      <p className="t-label muted pt-12">
-        If Windows SmartScreen warns about an unknown publisher, choose More info, then Run anyway.
-      </p>
+      {(filter === "all" || filter === "windows") && (
+        <p className="t-label muted pt-12">If Windows SmartScreen warns about an unknown publisher, choose More info, then Run anyway.</p>
+      )}
 
       <Dialog.Root open={!!open} onOpenChange={(o) => !o && show(null)}>
         <Dialog.Portal>
