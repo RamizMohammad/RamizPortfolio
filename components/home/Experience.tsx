@@ -21,30 +21,59 @@ export default function Experience() {
   const fill = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const l = list.current;
+    const f = fill.current;
+    if (!l || !f) return;
     let raf = 0;
+    let height = 0;
+    // Where each commit node sits down the list. Measured on resize, never during a scroll, so a
+    // scroll frame only reads one rect and writes one transform.
+    let nodes: { li: Element; at: number; on: boolean }[] = [];
+    const measure = () => {
+      height = l.offsetHeight;
+      nodes = Array.from(l.children).flatMap((li) => {
+        const node = (li as HTMLElement).querySelector<HTMLElement>("[data-node]");
+        return node ? [{ li, at: node.offsetTop + (li as HTMLElement).offsetTop, on: li.hasAttribute("data-on") }] : [];
+      });
+    };
     const update = () => {
       raf = 0;
-      const l = list.current;
-      if (!l || !fill.current) return;
-      const r = l.getBoundingClientRect();
+      const top = l.getBoundingClientRect().top;
       // The fill's tip follows a line 60% down the screen.
-      const head = Math.min(r.height, Math.max(0, window.innerHeight * 0.6 - r.top));
-      fill.current.style.height = `${head}px`;
-      Array.from(l.children).forEach((li) => {
-        const node = (li as HTMLElement).querySelector<HTMLElement>("[data-node]");
-        if (node) li.toggleAttribute("data-on", head >= node.offsetTop + (li as HTMLElement).offsetTop);
-      });
+      const head = Math.min(height, Math.max(0, window.innerHeight * 0.6 - top));
+      f.style.transform = `scaleY(${height ? head / height : 0})`;
+      for (const n of nodes) {
+        const on = head >= n.at;
+        if (on !== n.on) {
+          n.on = on;
+          n.li.toggleAttribute("data-on", on);
+        }
+      }
     };
     const schedule = () => {
       if (!raf) raf = requestAnimationFrame(update);
     };
+    // Only listen while the timeline is anywhere near the screen.
+    const onScroll = () => schedule();
+    const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) {
+        window.addEventListener("scroll", onScroll, { passive: true });
+        schedule();
+      } else window.removeEventListener("scroll", onScroll);
+    }, { rootMargin: "50% 0px" });
+    const ro = new ResizeObserver(() => {
+      measure();
+      schedule();
+    });
+    measure();
     update();
-    window.addEventListener("scroll", schedule, { passive: true });
-    window.addEventListener("resize", schedule);
+    io.observe(l);
+    ro.observe(l);
     return () => {
       cancelAnimationFrame(raf);
-      window.removeEventListener("scroll", schedule);
-      window.removeEventListener("resize", schedule);
+      io.disconnect();
+      ro.disconnect();
+      window.removeEventListener("scroll", onScroll);
     };
   }, []);
 
@@ -63,7 +92,7 @@ export default function Experience() {
       <div className="relative">
         {/* The spine and its fill */}
         <div aria-hidden="true" className="absolute bottom-0 left-[19px] top-0 w-0 border-l-[2px] border-dashed border-ink/30 lg:left-1/2" />
-        <div ref={fill} aria-hidden="true" className="absolute left-[18px] top-0 w-[4px] rounded-full bg-pink-deep lg:left-[calc(50%-1px)]" style={{ height: 0 }} />
+        <div ref={fill} aria-hidden="true" className="absolute bottom-0 left-[18px] top-0 w-[4px] origin-top rounded-full bg-pink-deep will-change-transform lg:left-[calc(50%-1px)]" style={{ transform: "scaleY(0)" }} />
         <ol ref={list} className="relative grid gap-10 lg:gap-6">
 
         {entries.map((t, i) => {

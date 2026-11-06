@@ -15,6 +15,8 @@ type Props = {
   sizes: string;
   /** Fill the parent (which sets the size) instead of keeping the screenshot's shape. */
   fill?: boolean;
+  /** Load the live site only once someone points at (or focuses) it, instead of when it scrolls near. */
+  onDemand?: boolean;
   className?: string;
 };
 
@@ -23,7 +25,7 @@ type Props = {
  * to fit; the screenshot shows until the live page has loaded and stays if the site is slow or
  * refuses to be embedded. Loads only when near the viewport, and not at all with Save-Data on.
  */
-export default function LivePreview({ url, title, poster, interactive = false, sizes, fill = false, className = "" }: Props) {
+export default function LivePreview({ url, title, poster, interactive = false, sizes, fill = false, onDemand = false, className = "" }: Props) {
   const box = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState({ w: 0, h: 0 });
   const scale = size.w / VW;
@@ -37,6 +39,19 @@ export default function LivePreview({ url, title, poster, interactive = false, s
     const ro = new ResizeObserver(([e]) => setSize({ w: e.contentRect.width, h: e.contentRect.height }));
     ro.observe(el);
     const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData;
+    if (onDemand) {
+      // Each live site runs its own scripts and animations, so a page of them would make scrolling
+      // past cost far more than it should: wait until this one is wanted.
+      const want = () => !saveData && setNear(true);
+      const tile = el.closest("button, a") ?? el;
+      tile.addEventListener("pointerenter", want, { once: true });
+      tile.addEventListener("focusin", want, { once: true });
+      return () => {
+        ro.disconnect();
+        tile.removeEventListener("pointerenter", want);
+        tile.removeEventListener("focusin", want);
+      };
+    }
     const io = new IntersectionObserver(
       ([e]) => {
         if (e.isIntersecting && !saveData) {
@@ -51,7 +66,7 @@ export default function LivePreview({ url, title, poster, interactive = false, s
       ro.disconnect();
       io.disconnect();
     };
-  }, []);
+  }, [onDemand]);
 
   // A site that never finishes loading (or is blocked from embedding) keeps the screenshot.
   useEffect(() => {

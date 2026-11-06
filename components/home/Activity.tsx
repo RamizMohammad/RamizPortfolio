@@ -128,6 +128,7 @@ export default function Activity() {
                 gridTemplateColumns: `repeat(${github.weeks.length}, minmax(0, 1fr))`,
               }}
               role="img"
+              data-days
               aria-label={`${github.total} contributions in the last year`}
             >
               {github.weeks.map((w, wi) =>
@@ -135,11 +136,10 @@ export default function Activity() {
                   <span
                     key={d.date}
                     title={`${d.count || "No"} contribution${d.count === 1 ? "" : "s"} on ${DAY.format(new Date(`${d.date}T00:00:00Z`))}`}
-                    className={`activity-day aspect-square rounded-[3px] border border-ink/15 md:rounded-[4px] ${SHADE[d.level]}`}
+                    className={`aspect-square rounded-[3px] border border-ink/15 md:rounded-[4px] ${SHADE[d.level]}`}
                     style={{
                       gridColumn: wi + 1,
                       gridRow: (wi === 0 ? 7 - w.length : 0) + di + 1,
-                      ["--i" as string]: wi,
                     }}
                   />
                 )),
