@@ -26,7 +26,7 @@ const card = "rounded-[28px] border-[1.5px] border-ink";
 export default function About() {
   return (
     <section id="about" aria-labelledby="about-title" className="edge pb-24">
-      <SectionLabel n={1}>About</SectionLabel>
+      <SectionLabel id="about">About</SectionLabel>
       <div className="grid gap-4 pt-16 lg:grid-cols-12">
         {/* Intro */}
         <div className={`${card} pop-in grid content-between gap-8 bg-card p-7 md:p-10 lg:col-span-7`} data-reveal>

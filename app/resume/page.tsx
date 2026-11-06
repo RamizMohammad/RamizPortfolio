@@ -1,4 +1,9 @@
+import LensPitch from "@/components/lens/LensPitch";
+import LensSwitch from "@/components/lens/LensSwitch";
+import PrintButton from "@/components/lens/PrintButton";
 import { achievements } from "@/content/achievements";
+import { lensTags } from "@/content/lens";
+import { systems } from "@/content/systems";
 import { profile } from "@/content/profile";
 import { stack } from "@/content/stack";
 import { timeline } from "@/content/timeline";
@@ -7,7 +12,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Résumé",
-  description: "One-page résumé of Mohammad Ramiz: experience, skills, education, achievements and contact.",
+  description: "Résumé of Mohammad Ramiz: experience, projects, skills, education and achievements. Pick a role (GenAI, backend, Android, ML) to tailor it.",
   alternates: { canonical: "/resume" },
 };
 
@@ -22,18 +27,23 @@ function Row({ title, children }: { title: string; children: React.ReactNode }) 
 
 export default function ResumePage() {
   const work = timeline.filter((t) => t.kind !== "Education");
+  const projects = systems.map((s) => ({ ...s, tags: lensTags(s.stack.join(" "), s.summary, ...(s.points ?? [])) }));
 
   return (
-    <main id="main" className="edge pt-[var(--nav-h)]">
+    <main id="main" className="print-lens edge pt-[var(--nav-h)]">
       <header className="grid gap-8 py-24 lg:grid-cols-[1fr_auto] lg:items-end">
         <div className="grid gap-5">
           <p className="t-label muted">~/resume</p>
           <h1 className="t-display">{profile.name}</h1>
           <p className="t-label">
-            {profile.headline} — {profile.role}, {profile.company} — {profile.location}
+            <LensPitch fallback={profile.headline} /> — {profile.role}, {profile.company} — {profile.location}
           </p>
         </div>
-        <a href={profile.resume} className="btn-pill w-fit">Download PDF</a>
+        <div className="no-print grid justify-items-start gap-3 lg:justify-items-end">
+          <a href={profile.resume} className="btn-pill w-fit">Download PDF</a>
+          <PrintButton />
+        </div>
+        <LensSwitch className="no-print !justify-start lg:col-span-2" />
       </header>
 
       <Row title="Summary">
@@ -49,9 +59,11 @@ export default function ResumePage() {
                 <p className="t-sub">
                   {t.title} — {t.org}
                 </p>
-                <ul className="voice-sm grid gap-1">
+                <ul className="lens-order voice-sm flex flex-col gap-1">
                   {t.points.map((p) => (
-                    <li key={p}>{p}</li>
+                    <li key={p} data-lens-tags={lensTags(p)}>
+                      {p}
+                    </li>
                   ))}
                 </ul>
               </div>
@@ -60,12 +72,33 @@ export default function ResumePage() {
         </ol>
       </Row>
 
+      <Row title="Projects">
+        <ul className="lens-order flex flex-col gap-6">
+          {projects.map((s) => (
+            <li key={s.slug} data-lens-tags={s.tags} className="grid gap-1 md:grid-cols-[200px_1fr] md:gap-6">
+              <p className="t-label muted">{s.org ?? s.shipsAs}</p>
+              <div className="grid gap-1">
+                <p className="t-sub">{s.name}</p>
+                <p className="voice-sm">{s.summary}</p>
+                <p className="t-micro muted">{s.stack.join(" · ")}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </Row>
+
       <Row title="Skills">
         <dl className="grid">
           {LAYERS.map((l) => (
             <div key={l.id} className="dash-b grid gap-2 py-3 md:grid-cols-[200px_1fr] md:gap-6">
               <dt className="t-label muted">{l.label}</dt>
-              <dd className="t-label leading-[1.5]">{stack[l.id].join(" · ")}</dd>
+              <dd className="lens-order t-label flex flex-wrap gap-x-3 gap-y-1 leading-[1.5]">
+                {stack[l.id].map((t) => (
+                  <span key={t} data-lens-tags={lensTags(t)}>
+                    {t}
+                  </span>
+                ))}
+              </dd>
             </div>
           ))}
         </dl>

@@ -69,7 +69,7 @@ export default function Moments() {
   return (
     <section ref={section} id="moments" aria-labelledby="moments-title" className="moments-pin" style={{ ["--n" as string]: sorted.length }}>
       <div className="moments-stage edge flex flex-col">
-        <SectionLabel n={2}>Moments</SectionLabel>
+        <SectionLabel id="moments">Moments</SectionLabel>
         <div className="grid gap-4 pb-8 pt-12 lg:grid-cols-[1fr_auto] lg:items-end lg:pb-4 lg:pt-8">
           <h2 id="moments-title" className="t-h1 split" data-reveal>
             <Words text="Places I’ve been." />

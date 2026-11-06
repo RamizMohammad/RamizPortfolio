@@ -72,7 +72,7 @@ function Spotlight({ a }: { a: Achievement }) {
 export default function Awards() {
   return (
     <section id="awards" aria-labelledby="awards-title" className="edge pb-24">
-      <SectionLabel n={7}>Awards</SectionLabel>
+      <SectionLabel id="awards">Awards</SectionLabel>
       <div className="grid gap-4 pb-12 pt-16 lg:grid-cols-[1fr_auto] lg:items-end">
         <h2 id="awards-title" className="t-h1 split" data-reveal>
           <Words text="Awards & wins." />

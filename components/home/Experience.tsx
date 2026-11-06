@@ -1,5 +1,6 @@
 "use client";
 
+import { lensTags } from "@/content/lens";
 import Words from "@/components/Words";
 import { useEffect, useRef } from "react";
 import { timeline } from "@/content/timeline";
@@ -49,7 +50,7 @@ export default function Experience() {
 
   return (
     <section id="experience" aria-labelledby="experience-title" className="edge pb-24">
-      <SectionLabel n={3}>Experience</SectionLabel>
+      <SectionLabel id="experience">Experience</SectionLabel>
       <div className="grid gap-4 pb-14 pt-16 lg:grid-cols-[1fr_auto] lg:items-end">
         <h2 id="experience-title" className="t-h1 split" data-reveal>
           <Words text="Where I’ve worked." />
@@ -112,7 +113,7 @@ export default function Experience() {
                   </div>
                   <ul className="grid gap-1.5 text-[16px] leading-snug">
                     {t.points.map((p) => (
-                      <li key={p} className="grid grid-cols-[20px_1fr]">
+                      <li key={p} className="grid grid-cols-[20px_1fr]" data-lens-tags={lensTags(p)}>
                         <span aria-hidden="true" className="text-pink-deep">→</span>
                         {p}
                       </li>

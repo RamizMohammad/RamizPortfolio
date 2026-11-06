@@ -1,4 +1,5 @@
 import About from "@/components/home/About";
+import Activity from "@/components/home/Activity";
 import Awards from "@/components/home/Awards";
 import Companies from "@/components/home/Companies";
 import Architecture from "@/components/home/Architecture";
@@ -20,6 +21,7 @@ export default function Home() {
       <Work />
       <Architecture />
       <Stack />
+      <Activity />
       <Awards />
       <Patents />
       <Papers />

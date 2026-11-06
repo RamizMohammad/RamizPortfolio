@@ -1,0 +1,14 @@
+{
+  "host": "VPS",
+  "proxy": { "label": "nginx", "description": "Reverse proxy, TLS and routing for every site below" },
+  "services": [
+    {
+      "id": "example-api",
+      "label": "Example API",
+      "description": "What this service does, in one line",
+      "container": "the-container-name",
+      "domain": "api.example.com",
+      "kind": "api"
+    }
+  ]
+}

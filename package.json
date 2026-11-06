@@ -12,7 +12,8 @@
     "check": "npm run lint && npm run typecheck && npm run build",
     "content:pull": "node scripts/pull-content.mjs",
     "content:seed": "node scripts/make-seed.mjs",
-    "prebuild": "node scripts/pull-content.mjs"
+    "prebuild": "node scripts/pull-content.mjs && node scripts/pull-github.mjs",
+    "github:pull": "node scripts/pull-github.mjs"
   },
   "dependencies": {
     "next": "16.4.3",
