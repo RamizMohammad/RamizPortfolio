@@ -45,14 +45,29 @@ export default function Cursor() {
     const target = { x: -100, y: -100 };
     const pos = { x: -100, y: -100 };
     let raf = 0;
+    // The face eases only slightly, so it still feels like the pointer, and the loop stops as soon
+    // as it has caught up: a still mouse costs nothing.
     const loop = () => {
-      // Eases only slightly, so it still feels like the pointer.
       pos.x += (target.x - pos.x) * 0.45;
       pos.y += (target.y - pos.y) * 0.45;
+      if (Math.abs(target.x - pos.x) < 0.3 && Math.abs(target.y - pos.y) < 0.3) {
+        pos.x = target.x;
+        pos.y = target.y;
+        raf = 0;
+      } else raf = requestAnimationFrame(loop);
       if (face.current) face.current.style.transform = `translate3d(${pos.x}px, ${pos.y}px, 0)`;
-      raf = requestAnimationFrame(loop);
     };
-    raf = requestAnimationFrame(loop);
+    const wake = () => {
+      if (!raf) raf = requestAnimationFrame(loop);
+    };
+    // Only touch React state when what it shows actually changes.
+    const shown = { say: "hi!", action: false, hidden: false };
+    const show = (next: typeof shown) => {
+      if (next.say !== shown.say) setSay(next.say);
+      if (next.action !== shown.action) setAction(next.action);
+      if (next.hidden !== shown.hidden) setHidden(next.hidden);
+      Object.assign(shown, next);
+    };
 
     const move = (e: PointerEvent) => {
       if (e.pointerType !== "mouse") return;
@@ -67,23 +82,32 @@ export default function Cursor() {
       }
       target.x = e.clientX;
       target.y = e.clientY;
-      const el = e.target as Element | null;
-      setHidden(!!el?.closest("input, textarea, [contenteditable='true']"));
+      wake();
+      read(e.target as Element | null);
+    };
+    const read = (el: Element | null) => {
       const hit = el?.closest<HTMLElement>(`[data-cursor], ${INTERACTIVE}`) ?? null;
       const named = hit?.closest<HTMLElement>("[data-cursor]")?.dataset.cursor;
       const where = el?.closest("[role='dialog']") ? "dialog" : el?.closest("header") ? "header" : (el?.closest("section[id]")?.id ?? "");
-      setAction(!!hit);
-      setSay(named ?? (hit ? (hit.matches("a[target=_blank]") ? "visit ↗" : "click") : (SAYS[where] ?? "hi!")));
+      show({
+        hidden: !!el?.closest("input, textarea, [contenteditable='true']"),
+        action: !!hit,
+        say: named ?? (hit ? (hit.matches("a[target=_blank]") ? "visit ↗" : "click") : (SAYS[where] ?? "hi!")),
+      });
     };
-    // Scrolling moves the page under a still mouse, so the tag is re-read for what is now beneath it.
+    // Scrolling moves the page under a still mouse, so the tag is re-read for what is now beneath
+    // it, once the scroll settles: hit-testing on every scroll frame would force a layout each time.
+    let settle = 0;
     const rescan = () => {
-      if (!lastMove) return;
-      const el = document.elementFromPoint(lastMove.clientX, lastMove.clientY);
-      if (el) move({ ...lastMove, pointerType: "mouse", clientX: lastMove.clientX, clientY: lastMove.clientY, target: el } as unknown as PointerEvent);
+      window.clearTimeout(settle);
+      settle = window.setTimeout(() => {
+        if (lastMove) read(document.elementFromPoint(lastMove.clientX, lastMove.clientY));
+      }, 120);
     };
     window.addEventListener("scroll", rescan, { passive: true });
     const leave = () => {
       target.x = target.y = -100;
+      wake();
     };
     const press = () => setDown(true);
     const release = () => setDown(false);
@@ -93,6 +117,7 @@ export default function Cursor() {
     window.addEventListener("pointerup", release);
     return () => {
       cancelAnimationFrame(raf);
+      window.clearTimeout(settle);
       document.documentElement.classList.remove("custom-cursor");
       window.removeEventListener("pointermove", move);
       window.removeEventListener("scroll", rescan);

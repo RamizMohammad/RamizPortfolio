@@ -404,27 +404,25 @@ html.js .stack-pile.in .stack-key { animation: key-pop 450ms cubic-bezier(0.34, 
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
     /* The hero wordmark drifts up and shrinks a touch as you scroll away from it, fading only at the end. */
-    #hero .t-mega { animation: hero-away linear both; animation-timeline: view(); animation-range: exit 0% exit 90% }
+    #hero .t-mega { animation: hero-away linear both; animation-timeline: view(); animation-range: exit 0% exit 90%; will-change: transform, opacity }
     @keyframes hero-away { 60% { opacity: 1 } to { transform: translateY(-10%) scale(0.93); opacity: 0.55 } }
 
-    /* Intro sentences fill with ink, left to right, as they reach reading position. */
-    .ink-in {
+    /* Intro sentences fill with ink, left to right, once when they are revealed. (Tying this to
+       scroll position repainted the text on every scroll frame, which no GPU can take over.) */
+    html.js .ink-in {
       background-image: linear-gradient(90deg, var(--color-ink) 50%, color-mix(in oklab, var(--color-ink) 22%, transparent) 50%);
       background-size: 200% 100%; background-position: 100% 0;
       -webkit-background-clip: text; background-clip: text; color: transparent;
-      animation: ink-in linear both; animation-timeline: view(); animation-range: entry 30% cover 42%;
+      transition: opacity 400ms ease-out, transform 400ms ease-out, background-position 1400ms cubic-bezier(0.65, 0, 0.35, 1) 250ms;
     }
-    .ink-in.muted { background-image: linear-gradient(90deg, var(--color-muted) 50%, color-mix(in oklab, var(--color-muted) 25%, transparent) 50%) }
-    @keyframes ink-in { to { background-position: 0 0 } }
+    html.js .ink-in.muted { background-image: linear-gradient(90deg, var(--color-muted) 50%, color-mix(in oklab, var(--color-muted) 25%, transparent) 50%) }
+    html.js :is(.ink-in.in, .in .ink-in) { background-position: 0 0 }
 
-    /* Cards ease back and desaturate as they leave the top, so the page reads in layers. */
-    /* :where keeps this weightless, so it never overrides an element's own entrance animation. */
-    :where(#about .pop-in, .exp-card, .paper, #awards article) { animation-name: depth-away; animation-timing-function: linear; animation-fill-mode: both; animation-timeline: view(); animation-range: exit 15% exit 100% }
-    html.js .stack-pile.in .stack-block { animation: block-drop 750ms cubic-bezier(0.34, 1.45, 0.64, 1) both calc(var(--o) * 150ms), depth-away linear both; animation-timeline: auto, view(); animation-range: normal, exit 15% exit 100% }
-    @keyframes depth-away { to { scale: 0.94; filter: saturate(0.55) } }
+    /* (Cards used to shrink back as they left the top. That repainted every large card on every
+       scroll frame, so it is gone; the stack blocks keep their drop-in.) */
 
     /* The big mascot drifts gently inside its frame. */
-    .scroll-parallax { scale: 1.1; animation: drift linear both; animation-timeline: view() }
+    .scroll-parallax { scale: 1.1; animation: drift linear both; animation-timeline: view(); will-change: translate }
     @keyframes drift { from { translate: 0 -4% } to { translate: 0 4% } }
   }
 }
@@ -506,11 +504,12 @@ html[data-lens="ml"] .lens-order > [data-lens-tags~="ml"] { order: -1 }
 @keyframes nav-menu-out { to { opacity: 0; transform: translate(-50%, -4px) } }
 @media (prefers-reduced-motion: reduce) { .nav-menu[data-state] { animation: none } }
 
-/* Activity calendar: days fill in week by week as the section scrolls in */
-html.js [data-reveal] .activity-day { opacity: 0; transform: scale(0.4) }
-html.js [data-reveal].in .activity-day { opacity: 1; transform: none; transition: opacity 300ms ease, transform 400ms cubic-bezier(0.34, 1.56, 0.64, 1); transition-delay: calc(var(--i, 0) * 12ms + 150ms) }
+/* Activity calendar: the year wipes in from the left as the section is revealed. One clip on the
+   whole grid, rather than 370 separately animated days. */
+html.js [data-reveal] [data-days] { clip-path: inset(0 100% 0 0) }
+html.js [data-reveal].in [data-days] { clip-path: inset(0); transition: clip-path 1300ms cubic-bezier(0.65, 0, 0.35, 1) 200ms }
 .activity-cal { scrollbar-width: thin }
-@media (prefers-reduced-motion: reduce) { html.js [data-reveal] .activity-day { opacity: 1; transform: none } }
+@media (prefers-reduced-motion: reduce) { html.js [data-reveal] [data-days] { clip-path: none } }
 
 /* Live infra: running services pulse, and packets travel along the wires into nginx */
 .infra-led { animation: infra-led 2.4s ease-in-out infinite }
@@ -519,3 +518,32 @@ html.js [data-reveal].in .activity-day { opacity: 1; transform: none; transition
 @keyframes infra-wire { to { background-position: 24px 0 } }
 html[data-paused] :is(.infra-led, .infra-wire) { animation-play-state: paused }
 @media (prefers-reduced-motion: reduce) { .infra-led, .infra-wire { animation: none } }
+
+/* ---------------------------------------------------------------- performance
+   Home sections far from the screen skip style, layout and paint, and their animations stop
+   ticking, until they come near again. The hero is always on screen at load, and Moments pins
+   with its own scroll maths, so both are left alone. The intrinsic size is a placeholder until a
+   section has been rendered once; after that the browser remembers its real height. */
+main > section:not(#hero, #moments) { content-visibility: auto; contain-intrinsic-size: auto 1100px }
+
+/* Hero ribbon entrance: a soft edge travels from the left of the screen to the right and the
+   ribbon is drawn in behind it, fading up as it goes. The edge's position is the animated value
+   itself (a registered custom property), so it crosses the screen evenly over the whole duration
+   instead of rushing through the middle. It starts with the page's first paint, waits for the
+   splash like the rest of the hero, and is skipped under reduced motion. */
+@property --ribbon-edge { syntax: "<percentage>"; inherits: false; initial-value: 0% }
+.ribbon-in {
+  --ribbon-edge: 0%;
+  -webkit-mask-image: linear-gradient(90deg, #000 calc(var(--ribbon-edge) - 18%), transparent var(--ribbon-edge));
+  mask-image: linear-gradient(90deg, #000 calc(var(--ribbon-edge) - 18%), transparent var(--ribbon-edge));
+  animation: ribbon-in 2200ms cubic-bezier(0.45, 0.05, 0.55, 0.95) 100ms both;
+}
+@keyframes ribbon-in {
+  0% { --ribbon-edge: 0%; opacity: 0 }
+  30% { opacity: 1 }
+  100% { --ribbon-edge: 118%; opacity: 1 }
+}
+/* Once it has arrived the mask is dropped altogether, so it costs nothing while the ribbon waves. */
+.ribbon-in.ribbon-done { -webkit-mask-image: none; mask-image: none; animation: none }
+html[data-splash="on"] .ribbon-in { animation-play-state: paused }
+@media (prefers-reduced-motion: reduce) { .ribbon-in { animation: none; -webkit-mask-image: none; mask-image: none } }
