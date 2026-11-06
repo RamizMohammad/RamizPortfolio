@@ -1776,6 +1776,84 @@
       "system": "backup-engine"
     },
     {
+      "slug": "secretshield",
+      "name": "SecretShield",
+      "kind": "vscode",
+      "category": "VS Code · Linters",
+      "tagline": "Catch leaked keys and tokens before they ever leave your machine.",
+      "about": "SecretShield scans your workspace for secrets entirely on your machine: no uploads, no LLM calls and no telemetry, with every secret value masked in its output. It sorts findings into three phases (general exposure, highly restricted credentials and unprotected sensitive files), checks with Git itself whether those files are tracked, ignored or already in history, and installs a pre-push hook that blocks commits carrying restricted secrets.",
+      "version": "0.3.0",
+      "released": "4 Nov 2026",
+      "requires": "VS Code · runs fully offline",
+      "tone": "pink",
+      "logo": {
+        "src": "/images/logos/secretshield.webp",
+        "width": 96,
+        "height": 96,
+        "alt": "SecretShield icon"
+      },
+      "download": {
+        "label": "Install from the Marketplace",
+        "file": "MohammadRamiz.secretshield",
+        "href": "https://marketplace.visualstudio.com/items?itemName=MohammadRamiz.secretshield"
+      },
+      "install": "code --install-extension MohammadRamiz.secretshield",
+      "links": [
+        {
+          "label": "Visual Studio Marketplace",
+          "href": "https://marketplace.visualstudio.com/items?itemName=MohammadRamiz.secretshield"
+        },
+        {
+          "label": "Open in VS Code",
+          "href": "vscode:extension/MohammadRamiz.secretshield"
+        }
+      ],
+      "features": [
+        "Three-phase classification: exposure, restricted credentials, file hygiene",
+        "Pre-push hook that scans outgoing commits and blocks restricted secrets",
+        "Squiggles, hovers and quick fixes: move to an env variable, add to .gitignore, suppress with a reason"
+      ]
+    },
+    {
+      "slug": "codeflow-mapper",
+      "name": "CodeFlow Mapper",
+      "kind": "vscode",
+      "category": "VS Code · Python",
+      "tagline": "See how a Python codebase actually runs, as an interactive flowchart.",
+      "about": "CodeFlow Mapper statically analyses a Python project from its entry points and draws an interactive map of how it runs, without ever importing or executing your code. It understands FastAPI first, plus Flask, Django, Celery and plain scripts: routes, middleware, dependency injection and calls across files, with each edge labelled by how sure it is.",
+      "version": "0.1.0",
+      "released": "4 Nov 2026",
+      "requires": "VS Code 1.85+ · Python 3.8+",
+      "tone": "blue",
+      "logo": {
+        "src": "/images/logos/codeflow-mapper.webp",
+        "width": 96,
+        "height": 96,
+        "alt": "CodeFlow Mapper icon"
+      },
+      "download": {
+        "label": "Install from the Marketplace",
+        "file": "MohammadRamiz.codeflow-mapper",
+        "href": "https://marketplace.visualstudio.com/items?itemName=MohammadRamiz.codeflow-mapper"
+      },
+      "install": "code --install-extension MohammadRamiz.codeflow-mapper",
+      "links": [
+        {
+          "label": "Visual Studio Marketplace",
+          "href": "https://marketplace.visualstudio.com/items?itemName=MohammadRamiz.codeflow-mapper"
+        },
+        {
+          "label": "Open in VS Code",
+          "href": "vscode:extension/MohammadRamiz.codeflow-mapper"
+        }
+      ],
+      "features": [
+        "Finds entry points: FastAPI routes, Flask blueprints, Django URLs, Celery tasks, scripts",
+        "Overview, execution-flow, function explorer and impact views, with double-click to jump to source",
+        "Exports to PNG, SVG, Mermaid, JSON and Markdown; optional AI explanations are off by default"
+      ]
+    },
+    {
       "slug": "chatdump",
       "name": "ChatDump",
       "kind": "extension",
