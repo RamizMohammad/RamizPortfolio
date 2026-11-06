@@ -1635,7 +1635,10 @@
         "Works on stock, unrooted phones",
         "PySide6 desktop app plus a Python CLI"
       ],
-      "system": "snapy"
+      "system": "snapy",
+      "platforms": [
+        "windows"
+      ]
     },
     {
       "slug": "bakup",
@@ -1647,7 +1650,7 @@
       "version": "0.1.0",
       "released": "7 Jul 2026",
       "size": "15.5 MB",
-      "requires": "Windows 10 or 11 · your own bakup server (Docker) for sync",
+      "requires": "Windows 10 or 11, or Debian / Ubuntu · your own bakup server (Docker) for sync",
       "tone": "lime",
       "download": {
         "label": "Get the installer",
@@ -1690,7 +1693,18 @@
         "SHA-256 content addressing deduplicates across repositories",
         "Self-hosted FastAPI server with a web dashboard"
       ],
-      "system": "bakup"
+      "system": "bakup",
+      "platforms": [
+        "windows",
+        "linux"
+      ],
+      "osDownloads": {
+        "linux": {
+          "label": "Debian / Ubuntu",
+          "file": "bakup_0.1.0_all.deb",
+          "href": "https://github.com/RamizMohammad/Bakup-Release/releases/download/backup-v1.0/bakup_0.1.0_all.deb"
+        }
+      }
     },
     {
       "slug": "linkium",
@@ -1737,7 +1751,10 @@
         "File transfer and messages over WebSocket",
         "Lightweight Tkinter desktop app"
       ],
-      "system": "linkium"
+      "system": "linkium",
+      "platforms": [
+        "windows"
+      ]
     },
     {
       "slug": "backup-engine",
@@ -1773,7 +1790,10 @@
         "Compressed snapshot archives",
         "PyQt interface with background worker threads"
       ],
-      "system": "backup-engine"
+      "system": "backup-engine",
+      "platforms": [
+        "windows"
+      ]
     },
     {
       "slug": "secretshield",
