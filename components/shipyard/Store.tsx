@@ -262,30 +262,46 @@ function Card({ a, i, os, tab, onOpen }: { a: StoreApp; i: number; os?: OS; tab?
   );
 }
 
-/** The newest app, as the store's banner. */
-function Featured({ a, onOpen }: { a: StoreApp; onOpen: () => void }) {
+/** The catalog's shelves, one per kind, in the order they appear on the All tab. */
+const SHELVES: { kind: StoreApp["kind"]; title: string; hint: string; tab: Filter }[] = [
+  { kind: "app", title: "Desktop apps", hint: "Windows, Mac and Linux", tab: "windows" },
+  { kind: "vscode", title: "VS Code extensions", hint: "From the Visual Studio Marketplace", tab: "vscode" },
+  { kind: "pip", title: "Python libraries", hint: "pip install, straight from PyPI", tab: "pip" },
+  { kind: "chrome", title: "Chrome extensions", hint: "Load unpacked in any Chromium browser", tab: "chrome" },
+];
+
+/** The All tab: the whole catalog, one numbered shelf per kind that scrolls sideways. */
+function Catalog({ apps, onOpen, onSeeAll }: { apps: StoreApp[]; onOpen: (slug: string) => void; onSeeAll: (tab: Filter) => void }) {
+  const shelves = SHELVES.map((s) => ({ ...s, items: apps.filter((a) => a.kind === s.kind) })).filter((s) => s.items.length);
+  let n = 0;
   return (
-    <section aria-label="Featured" className={`pop-in relative mb-12 grid gap-8 overflow-hidden rounded-[32px] border-[1.5px] border-ink p-7 md:grid-cols-[1fr_auto] md:items-center md:p-10 ${TONE[a.tone]}`} data-reveal>
-      <div className="grid gap-4">
-        <p className="t-label">
-          New{a.version ? ` · v${a.version}` : ""}
-          {a.released ? ` · ${a.released}` : ""}
-        </p>
-        <h2 className="t-h1">{a.name}</h2>
-        <p className="voice max-w-[26ch]">{a.tagline}</p>
-        <div className="flex flex-wrap items-center gap-2 pt-2">
-          <GetButton a={a} />
-          <button type="button" onClick={onOpen} className="btn-ghost">
-            Details
-          </button>
-        </div>
-      </div>
-      <div className="justify-self-center md:justify-self-end md:pr-6">
-        <div className="rotate-[-6deg]">
-          <Icon a={a} size="lg" />
-        </div>
-      </div>
-    </section>
+    <div className="grid gap-14">
+      {shelves.map((s, si) => (
+        <section key={s.kind} aria-labelledby={`shelf-${s.kind}`} className="grid gap-5">
+          <div className="dash-t flex flex-wrap items-end justify-between gap-3 pt-5">
+            <div className="flex items-baseline gap-4">
+              <span className="t-label muted">{String(si + 1).padStart(2, "0")}</span>
+              <div className="grid gap-1">
+                <h3 id={`shelf-${s.kind}`} className="t-h2">
+                  {s.title} <span className="muted">· {s.items.length}</span>
+                </h3>
+                <p className="t-micro muted">{s.hint}</p>
+              </div>
+            </div>
+            <button type="button" onClick={() => onSeeAll(s.tab)} className="btn-ghost btn-sm">
+              See all →
+            </button>
+          </div>
+          <ul className="shelf -mx-[var(--edge)] flex snap-x snap-mandatory gap-5 overflow-x-auto px-[var(--edge)] pb-3">
+            {s.items.map((a) => (
+              <li key={a.slug} className="w-[min(320px,82vw)] shrink-0 snap-start [&>article]:h-full">
+                <Card a={a} i={n++} onOpen={() => onOpen(a.slug)} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+    </div>
   );
 }
 
@@ -304,7 +320,6 @@ export default function Store({ apps }: { apps: StoreApp[] }) {
     window.history.replaceState(null, "", url);
   };
 
-  const featured = apps.find((a) => a.kind === "app");
   const os = isOS(filter) ? filter : undefined;
   const list = apps.filter((a) => (os ? a.kind === "app" && platformsOf(a).includes(os) : filter === "all" || a.kind === filter));
   // The Mac banner already says its builds are on the way, so it needs no empty card too.
@@ -314,10 +329,8 @@ export default function Store({ apps }: { apps: StoreApp[] }) {
 
   return (
     <>
-      {featured && <Featured a={featured} onOpen={() => show(featured.slug)} />}
-
       <div className="flex flex-wrap items-center justify-between gap-4 pb-8">
-        <h2 className="t-h2">{FILTERS.find((f) => f.id === filter)!.label}</h2>
+        <h2 className="t-h2">{filter === "all" ? "The catalog" : FILTERS.find((f) => f.id === filter)!.label}</h2>
         <div role="group" aria-label="Filter" className="flex flex-wrap gap-2">
           {FILTERS.map((f) => (
             <button key={f.id} type="button" aria-pressed={filter === f.id} onClick={() => setFilter(f.id)} className="btn-ghost btn-sm">
@@ -329,21 +342,25 @@ export default function Store({ apps }: { apps: StoreApp[] }) {
 
       {tab && (list.length > 0 || tab === "macos") && <TabBanner key={`banner-${tab}`} tab={tab} apps={list} />}
 
-      {/* Keyed by filter so the cards replay their entrance on every switch */}
-      <div key={filter} className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {list.map((a, i) => (
-          <Card key={a.slug} a={a} i={i} os={os} tab={tab} onOpen={() => show(a.slug)} />
-        ))}
-        {empty && (
-          <div className="store-card grid content-center justify-items-start gap-4 rounded-[24px] border-[1.5px] border-dashed border-ink p-6 sm:col-span-2 lg:col-span-3">
-            <span aria-hidden="true" className={`grid h-16 w-16 place-items-center rounded-[18px] border-[1.5px] border-ink font-mono text-[24px] font-bold ${empty.tone}`}>
-              {empty.mark}
-            </span>
-            <p className="t-h2">{empty.title}</p>
-            <p className="voice-sm muted max-w-[52ch]">{empty.body}</p>
-          </div>
-        )}
-      </div>
+      {filter === "all" ? (
+        <Catalog key="catalog" apps={apps} onOpen={show} onSeeAll={(t) => setFilter(t)} />
+      ) : (
+        // Keyed by filter so the cards replay their entrance on every switch
+        <div key={filter} className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {list.map((a, i) => (
+            <Card key={a.slug} a={a} i={i} os={os} tab={tab} onOpen={() => show(a.slug)} />
+          ))}
+          {empty && (
+            <div className="store-card grid content-center justify-items-start gap-4 rounded-[24px] border-[1.5px] border-dashed border-ink p-6 sm:col-span-2 lg:col-span-3">
+              <span aria-hidden="true" className={`grid h-16 w-16 place-items-center rounded-[18px] border-[1.5px] border-ink font-mono text-[24px] font-bold ${empty.tone}`}>
+                {empty.mark}
+              </span>
+              <p className="t-h2">{empty.title}</p>
+              <p className="voice-sm muted max-w-[52ch]">{empty.body}</p>
+            </div>
+          )}
+        </div>
+      )}
 
       {(filter === "all" || filter === "windows") && (
         <p className="t-label muted pt-12">If Windows SmartScreen warns about an unknown publisher, choose More info, then Run anyway.</p>
