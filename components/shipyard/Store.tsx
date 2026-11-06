@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Dialog } from "radix-ui";
-import { useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { OS_LABEL, platformsOf, type OS, type StoreApp } from "@/content/store";
 import { CardChrome, TabBanner, type Platform } from "./Glimpse";
 
@@ -262,46 +262,103 @@ function Card({ a, i, os, tab, onOpen }: { a: StoreApp; i: number; os?: OS; tab?
   );
 }
 
-/** The catalog's shelves, one per kind, in the order they appear on the All tab. */
-const SHELVES: { kind: StoreApp["kind"]; title: string; hint: string; tab: Filter }[] = [
-  { kind: "app", title: "Desktop apps", hint: "Windows, Mac and Linux", tab: "windows" },
-  { kind: "vscode", title: "VS Code extensions", hint: "From the Visual Studio Marketplace", tab: "vscode" },
-  { kind: "pip", title: "Python libraries", hint: "pip install, straight from PyPI", tab: "pip" },
-  { kind: "chrome", title: "Chrome extensions", hint: "Load unpacked in any Chromium browser", tab: "chrome" },
-];
+const KIND_LABEL: Record<StoreApp["kind"], string> = { app: "Desktop app", vscode: "VS Code extension", pip: "Python library", chrome: "Chrome extension" };
 
-/** The All tab: the whole catalog, one numbered shelf per kind that scrolls sideways. */
-function Catalog({ apps, onOpen, onSeeAll }: { apps: StoreApp[]; onOpen: (slug: string) => void; onSeeAll: (tab: Filter) => void }) {
-  const shelves = SHELVES.map((s) => ({ ...s, items: apps.filter((a) => a.kind === s.kind) })).filter((s) => s.items.length);
-  let n = 0;
+/**
+ * The All tab's scrolling banner: every item in turn, as a big colour block. It moves on by itself
+ * every few seconds, holds still while hovered, focused, paused (the site's motion toggle) or under
+ * reduced motion, and can be swiped, arrowed or jumped through with the dots.
+ */
+function Showcase({ apps, onOpen }: { apps: StoreApp[]; onOpen: (slug: string) => void }) {
+  const track = useRef<HTMLDivElement>(null);
+  const [index, setIndex] = useState(0);
+  const [hold, setHold] = useState(false);
+
+  const go = (i: number) => {
+    const el = track.current;
+    if (!el) return;
+    const n = (i + apps.length) % apps.length;
+    el.scrollTo({ left: n * el.clientWidth, behavior: "smooth" });
+  };
+
+  // Track which slide is showing, however it got there (swipe, arrows, dots or autoplay).
+  const onScroll = () => {
+    const el = track.current;
+    if (el) setIndex(Math.round(el.scrollLeft / el.clientWidth));
+  };
+
+  useEffect(() => {
+    const still = () => hold || document.documentElement.hasAttribute("data-paused") || window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const t = window.setInterval(() => !still() && go(index + 1), 5000);
+    return () => window.clearInterval(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [index, hold]);
+
   return (
-    <div className="grid gap-14">
-      {shelves.map((s, si) => (
-        <section key={s.kind} aria-labelledby={`shelf-${s.kind}`} className="grid gap-5">
-          <div className="dash-t flex flex-wrap items-end justify-between gap-3 pt-5">
-            <div className="flex items-baseline gap-4">
-              <span className="t-label muted">{String(si + 1).padStart(2, "0")}</span>
-              <div className="grid gap-1">
-                <h3 id={`shelf-${s.kind}`} className="t-h2">
-                  {s.title} <span className="muted">· {s.items.length}</span>
-                </h3>
-                <p className="t-micro muted">{s.hint}</p>
+    <section
+      aria-roledescription="carousel"
+      aria-label="Everything in the Shipyard"
+      className="store-card relative mb-10"
+      onMouseEnter={() => setHold(true)}
+      onMouseLeave={() => setHold(false)}
+      onFocusCapture={() => setHold(true)}
+      onBlurCapture={() => setHold(false)}
+    >
+      <div ref={track} onScroll={onScroll} className="showcase flex snap-x snap-mandatory overflow-x-auto rounded-[32px] border-[1.5px] border-ink">
+        {apps.map((a, i) => (
+          <article
+            key={a.slug}
+            aria-roledescription="slide"
+            aria-label={`${i + 1} of ${apps.length}: ${a.name}`}
+            className={`grid w-full shrink-0 snap-start gap-8 p-7 md:min-h-[380px] md:grid-cols-[1fr_auto] md:items-center md:p-10 ${TONE[a.tone]}`}
+          >
+            <div className="grid content-center gap-4">
+              <p className="t-label">
+                {String(i + 1).padStart(2, "0")} / {String(apps.length).padStart(2, "0")} · {KIND_LABEL[a.kind]}
+                {a.version ? ` · v${a.version}` : ""}
+                {a.released ? ` · ${a.released}` : ""}
+              </p>
+              <h2 className="t-h1">{a.name}</h2>
+              <p className="voice max-w-[26ch]">{a.tagline}</p>
+              <div className="flex flex-wrap items-center gap-2 pt-2">
+                <GetButton a={a} />
+                <button type="button" onClick={() => onOpen(a.slug)} className="btn-ghost">
+                  Details
+                </button>
               </div>
             </div>
-            <button type="button" onClick={() => onSeeAll(s.tab)} className="btn-ghost btn-sm">
-              See all →
-            </button>
-          </div>
-          <ul className="shelf -mx-[var(--edge)] flex snap-x snap-mandatory gap-5 overflow-x-auto px-[var(--edge)] pb-3">
-            {s.items.map((a) => (
-              <li key={a.slug} className="w-[min(320px,82vw)] shrink-0 snap-start [&>article]:h-full">
-                <Card a={a} i={n++} onOpen={() => onOpen(a.slug)} />
-              </li>
-            ))}
-          </ul>
-        </section>
-      ))}
-    </div>
+            <div className="hidden justify-self-end pr-6 md:block">
+              <div className={i % 2 ? "rotate-[5deg]" : "rotate-[-6deg]"}>
+                <Icon a={a} size="lg" />
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <div className="mt-4 flex items-center justify-between gap-4">
+        <div className="flex flex-wrap items-center gap-1.5" role="group" aria-label="Choose a slide">
+          {apps.map((a, i) => (
+            <button
+              key={a.slug}
+              type="button"
+              onClick={() => go(i)}
+              aria-label={`Show ${a.name}`}
+              aria-current={i === index ? "true" : undefined}
+              className={`h-2.5 rounded-full border-[1.5px] border-ink transition-all duration-300 ${i === index ? "w-8 bg-ink" : "w-2.5 bg-transparent hover:bg-ink/30"}`}
+            />
+          ))}
+        </div>
+        <div className="flex gap-2">
+          <button type="button" onClick={() => go(index - 1)} className="btn-ghost btn-sm" aria-label="Previous">
+            ←
+          </button>
+          <button type="button" onClick={() => go(index + 1)} className="btn-ghost btn-sm" aria-label="Next">
+            →
+          </button>
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -330,7 +387,7 @@ export default function Store({ apps }: { apps: StoreApp[] }) {
   return (
     <>
       <div className="flex flex-wrap items-center justify-between gap-4 pb-8">
-        <h2 className="t-h2">{filter === "all" ? "The catalog" : FILTERS.find((f) => f.id === filter)!.label}</h2>
+        <h2 className="t-h2">{FILTERS.find((f) => f.id === filter)!.label}</h2>
         <div role="group" aria-label="Filter" className="flex flex-wrap gap-2">
           {FILTERS.map((f) => (
             <button key={f.id} type="button" aria-pressed={filter === f.id} onClick={() => setFilter(f.id)} className="btn-ghost btn-sm">
@@ -342,25 +399,23 @@ export default function Store({ apps }: { apps: StoreApp[] }) {
 
       {tab && (list.length > 0 || tab === "macos") && <TabBanner key={`banner-${tab}`} tab={tab} apps={list} />}
 
-      {filter === "all" ? (
-        <Catalog key="catalog" apps={apps} onOpen={show} onSeeAll={(t) => setFilter(t)} />
-      ) : (
-        // Keyed by filter so the cards replay their entrance on every switch
-        <div key={filter} className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {list.map((a, i) => (
-            <Card key={a.slug} a={a} i={i} os={os} tab={tab} onOpen={() => show(a.slug)} />
-          ))}
-          {empty && (
-            <div className="store-card grid content-center justify-items-start gap-4 rounded-[24px] border-[1.5px] border-dashed border-ink p-6 sm:col-span-2 lg:col-span-3">
-              <span aria-hidden="true" className={`grid h-16 w-16 place-items-center rounded-[18px] border-[1.5px] border-ink font-mono text-[24px] font-bold ${empty.tone}`}>
-                {empty.mark}
-              </span>
-              <p className="t-h2">{empty.title}</p>
-              <p className="voice-sm muted max-w-[52ch]">{empty.body}</p>
-            </div>
-          )}
-        </div>
-      )}
+      {filter === "all" && <Showcase key="showcase" apps={apps} onOpen={show} />}
+
+      {/* Keyed by filter so the cards replay their entrance on every switch */}
+      <div key={filter} className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {list.map((a, i) => (
+          <Card key={a.slug} a={a} i={i} os={os} tab={tab} onOpen={() => show(a.slug)} />
+        ))}
+        {empty && (
+          <div className="store-card grid content-center justify-items-start gap-4 rounded-[24px] border-[1.5px] border-dashed border-ink p-6 sm:col-span-2 lg:col-span-3">
+            <span aria-hidden="true" className={`grid h-16 w-16 place-items-center rounded-[18px] border-[1.5px] border-ink font-mono text-[24px] font-bold ${empty.tone}`}>
+              {empty.mark}
+            </span>
+            <p className="t-h2">{empty.title}</p>
+            <p className="voice-sm muted max-w-[52ch]">{empty.body}</p>
+          </div>
+        )}
+      </div>
 
       {(filter === "all" || filter === "windows") && (
         <p className="t-label muted pt-12">If Windows SmartScreen warns about an unknown publisher, choose More info, then Run anyway.</p>
