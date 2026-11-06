@@ -1,6 +1,7 @@
 import Terminal from "@/components/Terminal";
 import { toolIcon } from "@/components/toolIcons";
 import Words from "@/components/Words";
+import { lensTags } from "@/content/lens";
 import { stack } from "@/content/stack";
 import { LAYERS, type Layer } from "@/content/types";
 import SectionLabel from "./SectionLabel";
@@ -44,7 +45,7 @@ const total = LAYERS.reduce((n, l) => n + stack[l.id].length, 0);
 export default function Stack() {
   return (
     <section id="stack" aria-labelledby="stack-title" className="edge">
-      <SectionLabel n={6}>Stack</SectionLabel>
+      <SectionLabel id="stack">Stack</SectionLabel>
       <div className="grid gap-[41px] py-24 lg:grid-cols-[4fr_7fr]">
         <div className="grid content-start gap-8 lg:sticky lg:top-28 lg:self-start">
           <h2 id="stack-title" className="t-h1 split" data-reveal>
@@ -91,6 +92,7 @@ export default function Stack() {
                         key={t}
                         className="stack-key flex items-center gap-2 rounded-[10px] border-[1.5px] border-[#121016] bg-white py-1.5 pl-2 pr-3 font-mono text-[12.5px] font-medium text-[#121016] shadow-[0_3px_0_#121016]"
                         style={{ ["--k" as string]: j, ["--o" as string]: order }}
+                        data-lens-tags={lensTags(t)}
                       >
                         {/* The tool's logo in its brand colour, or the layer's glyph when it has none */}
                         <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0" aria-hidden="true" fill={icon ? `#${icon.hex}` : "none"} stroke={icon ? undefined : look.side} strokeWidth={icon ? undefined : 2} strokeLinecap="round" strokeLinejoin="round">

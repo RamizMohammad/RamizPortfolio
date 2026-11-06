@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useState, useSyncExternalStore, type ReactNode } from "react";
 import LivePreview, { liveUrl } from "@/components/work/LivePreview";
 import SystemViewer from "@/components/work/SystemViewer";
+import { lensTags } from "@/content/lens";
 import { systems } from "@/content/systems";
 import type { System } from "@/content/types";
 import SectionLabel from "./SectionLabel";
@@ -34,15 +35,18 @@ const LAYOUT: Record<string, { m: string; d: string; tone: string; rot: number }
   "backup-engine": { m: "col-span-2 row-span-2", d: "lg:col-span-3 lg:row-span-2", tone: "bg-mint", rot: 1.5 },
 };
 const bySlug = (slug: string) => pub.find((s) => s.slug === slug);
+/** Which hiring lenses a project belongs to, read from its stack, summary and highlights. */
+const systemTags = (s: System) => lensTags(s.stack.join(" "), s.summary, ...(s.points ?? []));
+const internalTags = lensTags(...internal.map((s) => [s.stack.join(" "), s.summary].join(" ")));
 
 const noop = () => () => {};
 const readParam = () => new URLSearchParams(window.location.search).get("system");
 
-function Tile({ className, rot, i, children, onOpen, label }: { className: string; rot: number; i: number; children: ReactNode; onOpen?: () => void; label?: string }) {
+function Tile({ className, rot, i, children, onOpen, label, tags }: { className: string; rot: number; i: number; children: ReactNode; onOpen?: () => void; label?: string; tags?: string }) {
   const style = { ["--rot" as string]: `${rot}deg`, ["--rd" as string]: `${i * 70}ms` };
   const cls = `collage-tile pop-in relative overflow-hidden rounded-[24px] border-[1.5px] border-ink ${className}`;
   return onOpen ? (
-    <button type="button" onClick={onOpen} aria-label={label} data-cursor="open" className={`${cls} cursor-pointer text-left`} style={style} data-reveal>
+    <button type="button" onClick={onOpen} aria-label={label} data-cursor="open" className={`${cls} cursor-pointer text-left`} style={style} data-reveal data-lens-tags={tags}>
       {children}
     </button>
   ) : (
@@ -56,7 +60,7 @@ function Tile({ className, rot, i, children, onOpen, label }: { className: strin
 function ProjectTile({ s, i, onOpen }: { s: System; i: number; onOpen: () => void }) {
   const l = LAYOUT[s.slug] ?? { m: "col-span-1 row-span-2", d: "lg:col-span-3 lg:row-span-2", tone: "bg-card", rot: 0 };
   return (
-    <Tile className={`${l.m} ${l.d} ${l.tone} flex flex-col`} rot={l.rot} i={i} onOpen={onOpen} label={`Open ${s.name} in its editor`}>
+    <Tile className={`${l.m} ${l.d} ${l.tone} flex flex-col`} rot={l.rot} i={i} onOpen={onOpen} label={`Open ${s.name} in its editor`} tags={systemTags(s)}>
       <div className="relative min-h-0 flex-1">
         {s.screen && liveUrl(s) ? (
           // The real landing page, live (view-only here); the screenshot shows until it loads.
@@ -119,7 +123,7 @@ export default function Work() {
 
   return (
     <section id="work" aria-labelledby="work-title" className="edge pb-24">
-      <SectionLabel n={4}>Systems</SectionLabel>
+      <SectionLabel id="work">Systems</SectionLabel>
       <div className="grid gap-4 pb-12 pt-16 lg:grid-cols-[1fr_auto] lg:items-end">
         <h2 id="work-title" className="t-h1 split" data-reveal>
           <Words text="Built and shipped." />
@@ -169,7 +173,7 @@ export default function Work() {
         {tile("buddycode", 9)}
         {tile("linkium", 10)}
         {tile("backup-engine", 11)}
-        <Tile className="col-span-1 row-span-2 bg-ink p-5 text-card lg:col-span-3 lg:row-span-2" rot={1.5} i={12} onOpen={() => show("moglix")} label="Open the internal Moglix systems">
+        <Tile className="col-span-1 row-span-2 bg-ink p-5 text-card lg:col-span-3 lg:row-span-2" rot={1.5} i={12} onOpen={() => show("moglix")} label="Open the internal Moglix systems" tags={internalTags}>
           <p className="t-label text-lime">🔒 Inside Moglix</p>
           <p className="t-display mt-2 !text-[clamp(48px,5vw,80px)]">{internal.length}</p>
           <p className="t-label">Internal systems →</p>
@@ -182,7 +186,7 @@ export default function Work() {
         <ol className="relative grid grid-cols-2 gap-6 sm:grid-cols-4 lg:flex lg:justify-between">
           <span aria-hidden="true" className="road-line absolute left-8 right-8 top-8 hidden h-[2px] bg-ink lg:block" />
           {rail.map((s, i) => (
-            <li key={s.slug} className="relative">
+            <li key={s.slug} className="relative" data-lens-tags={s.slug === "moglix" ? internalTags : systemTags(bySlug(s.slug)!)}>
               <button type="button" onClick={() => show(s.slug)} className="group grid w-full justify-items-center gap-2 text-center">
                 <span style={{ ["--i" as string]: i }} className="road-step grid h-16 w-16 place-items-center overflow-hidden rounded-full border-[2px] border-ink bg-card transition-transform group-hover:-translate-y-1 group-hover:rotate-6">
                   {s.logo ? (

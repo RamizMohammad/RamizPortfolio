@@ -3,10 +3,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Dialog } from "radix-ui";
+import { Dialog, NavigationMenu } from "radix-ui";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { profile } from "@/content/profile";
-import { NAV, openPalette, SECTIONS } from "./nav";
+import { activeGroup, GROUPS, openPalette, SECTIONS, type NavLink } from "./nav";
+import ResumeButton from "./lens/ResumeButton";
 import ThemeToggle from "./ThemeToggle";
 
 const RING = 2 * Math.PI * 21;
@@ -25,6 +26,7 @@ export default function SiteHeader() {
   const [open, setOpen] = useState(false);
   const ring = useRef<SVGCircleElement>(null);
   const list = useRef<HTMLUListElement>(null);
+  const group = activeGroup(onHome ? active : null, pathname);
   const [pill, setPill] = useState<{ left: number; width: number } | null>(null);
 
   useEffect(() => {
@@ -71,7 +73,7 @@ export default function SiteHeader() {
   useLayoutEffect(() => {
     // Measured on the list item, whose offsetParent is the list.
     const measure = () => {
-      const li = list.current?.querySelector<HTMLElement>(`a[data-id="${active}"]`)?.parentElement;
+      const li = list.current?.querySelector<HTMLElement>(`[data-id="${group}"]`)?.parentElement;
       setPill(li ? { left: li.offsetLeft, width: li.offsetWidth } : null);
     };
     measure();
@@ -82,10 +84,11 @@ export default function SiteHeader() {
       window.clearTimeout(t);
       window.removeEventListener("resize", measure);
     };
-  }, [active, scrolled]);
+  }, [group, scrolled]);
 
   const href = (id: string) => (onHome ? `#${id}` : `/#${id}`);
   const current = onHome ? active : null;
+  const linkHref = (l: NavLink) => l.page ?? href(l.section!);
   const strip = ["Open to engineering roles and freelance work", `${profile.role} at ${profile.company}`, "Python · FastAPI · LLM agents · Docker", "Automation · Backends · Infrastructure"];
   const compact = scrolled || !onHome;
 
@@ -122,37 +125,85 @@ export default function SiteHeader() {
             </svg>
           </Link>
 
-          <nav aria-label="Main" className="ml-auto hidden xl:block">
-            <ul ref={list} className="relative flex items-center">
-              {/* The sliding highlight */}
+          <NavigationMenu.Root aria-label="Main" className="ml-auto hidden xl:block" delayDuration={60}>
+            <NavigationMenu.List ref={list} className="relative flex items-center">
+              {/* The sliding highlight, under the group that holds the section in view */}
               <span
                 aria-hidden="true"
                 className="absolute top-1/2 h-9 -translate-y-1/2 rounded-full transition-all duration-500 ease-[cubic-bezier(0.34,1.4,0.64,1)]"
-                style={{ background: "var(--color-ink)", left: pill?.left ?? 0, width: pill?.width ?? 0, opacity: pill && current ? 1 : 0 }}
+                style={{ background: "var(--color-ink)", left: pill?.left ?? 0, width: pill?.width ?? 0, opacity: pill && group ? 1 : 0 }}
               />
-              {NAV.map((n) => (
-                <li key={n.id} className="relative">
-                  <a
-                    href={href(n.id)}
-                    data-id={n.id}
-                    aria-current={current === n.id ? "true" : undefined}
-                    className="nav-link block rounded-full px-3.5 py-2.5 text-[12px] font-semibold uppercase tracking-[0.03em] transition-colors duration-300"
-                  >
-                    {n.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
+              {GROUPS.map((g) =>
+                g.links ? (
+                  <NavigationMenu.Item key={g.id} value={g.id} className="relative">
+                    <NavigationMenu.Trigger
+                      data-id={g.id}
+                      aria-current={group === g.id ? "true" : undefined}
+                      className="nav-link group flex items-center gap-1.5 rounded-full px-3.5 py-2.5 text-[12px] font-semibold uppercase tracking-[0.03em] transition-colors duration-300"
+                    >
+                      {g.label}
+                      <svg viewBox="0 0 10 6" className="h-1.5 w-2.5 transition-transform duration-300 group-data-[state=open]:rotate-180" aria-hidden="true">
+                        <path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </NavigationMenu.Trigger>
+                    {/* Padding, not margin, bridges the gap so the menu stays open on the way down */}
+                    <NavigationMenu.Content className="nav-menu absolute left-1/2 top-full z-10 w-[340px] -translate-x-1/2 pt-3">
+                      <ul className="grid gap-0.5 rounded-[22px] border-[1.5px] border-ink bg-card p-2 shadow-[0_18px_40px_-18px_rgb(0_0_0/0.45)]">
+                        {g.links.map((l) => {
+                          const here = l.section ? current === l.section : pathname === l.page;
+                          const body = (
+                            <>
+                              <span className="flex items-center justify-between gap-2 text-[13.5px] font-semibold">
+                                {l.label}
+                                {l.page && <span className="t-micro muted">page ↗</span>}
+                              </span>
+                              <span className="muted text-[12.5px] leading-snug">{l.hint}</span>
+                            </>
+                          );
+                          const cls = `grid gap-0.5 rounded-[14px] px-3.5 py-2.5 transition-colors hover:bg-paper focus-visible:bg-paper ${here ? "bg-paper" : ""}`;
+                          return (
+                            <li key={l.label}>
+                              <NavigationMenu.Link asChild active={here}>
+                                {l.page ? (
+                                  <Link href={l.page} className={cls}>
+                                    {body}
+                                  </Link>
+                                ) : (
+                                  <a href={linkHref(l)} className={cls}>
+                                    {body}
+                                  </a>
+                                )}
+                              </NavigationMenu.Link>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </NavigationMenu.Content>
+                  </NavigationMenu.Item>
+                ) : (
+                  <NavigationMenu.Item key={g.id} value={g.id} className="relative">
+                    <NavigationMenu.Link asChild>
+                      <a
+                        href={href(g.section!)}
+                        data-id={g.id}
+                        aria-current={group === g.id ? "true" : undefined}
+                        className="nav-link block rounded-full px-3.5 py-2.5 text-[12px] font-semibold uppercase tracking-[0.03em] transition-colors duration-300"
+                      >
+                        {g.label}
+                      </a>
+                    </NavigationMenu.Link>
+                  </NavigationMenu.Item>
+                ),
+              )}
+            </NavigationMenu.List>
+          </NavigationMenu.Root>
 
           <div className="ml-auto flex items-center gap-1.5 xl:ml-2">
             <button type="button" onClick={openPalette} className="btn-ghost btn-sm hidden md:inline-flex" aria-label="Open command menu" aria-keyshortcuts="Control+K Meta+K">
               ⌘K
             </button>
             <ThemeToggle />
-            <a href={profile.resume} className="btn-pill btn-sm hidden md:inline-flex">
-              Résumé
-            </a>
+            <ResumeButton className="btn-pill btn-sm hidden md:inline-flex" />
 
             <Dialog.Root open={open} onOpenChange={setOpen}>
               <Dialog.Trigger className="btn-pill btn-sm xl:hidden">Menu</Dialog.Trigger>
@@ -164,33 +215,48 @@ export default function SiteHeader() {
                     <Dialog.Close className="btn-ghost btn-sm">Close</Dialog.Close>
                   </div>
                   <nav aria-label="Mobile" className="flex-1 overflow-y-auto py-6">
-                    <ul className="grid">
-                      {SECTIONS.map((n, i) => (
-                        <li key={n.id} className="menu-item dash-b overflow-hidden" style={{ ["--mi" as string]: i }}>
-                          <a href={href(n.id)} onClick={() => setOpen(false)} aria-current={current === n.id ? "true" : undefined} className="group flex items-baseline gap-4 py-3.5">
-                            <span className="t-label muted w-7">{String(i + 1).padStart(2, "0")}</span>
-                            <span className="t-h1 !text-[clamp(36px,9vw,64px)] transition-transform duration-300 group-hover:translate-x-2 group-aria-[current=true]:text-pink-deep">{n.label}</span>
+                    {GROUPS.map((g, gi) => (
+                      <section key={g.id} className="menu-item dash-b overflow-hidden py-3" style={{ ["--mi" as string]: gi }}>
+                        {g.links ? (
+                          <div>
+                            <p className="t-label muted pb-1.5">
+                              {String(gi + 1).padStart(2, "0")} · {g.label}
+                            </p>
+                            <ul className="grid">
+                              {g.links.map((l) => {
+                                const here = l.section ? current === l.section : pathname === l.page;
+                                const cls = "group flex items-baseline justify-between gap-4 py-1.5";
+                                const text = (
+                                  <span className="t-h1 !text-[clamp(30px,7.5vw,52px)] transition-transform duration-300 group-hover:translate-x-2 group-aria-[current=true]:text-pink-deep">{l.label}</span>
+                                );
+                                return (
+                                  <li key={l.label}>
+                                    {l.page ? (
+                                      <Link href={l.page} onClick={() => setOpen(false)} aria-current={here ? "true" : undefined} className={cls}>
+                                        {text}
+                                        <span className="t-micro muted">page ↗</span>
+                                      </Link>
+                                    ) : (
+                                      <a href={linkHref(l)} onClick={() => setOpen(false)} aria-current={here ? "true" : undefined} className={cls}>
+                                        {text}
+                                      </a>
+                                    )}
+                                  </li>
+                                );
+                              })}
+                            </ul>
+                          </div>
+                        ) : (
+                          <a href={href(g.section!)} onClick={() => setOpen(false)} aria-current={current === g.section ? "true" : undefined} className="group flex items-baseline gap-4">
+                            <span className="t-label muted w-7">{String(gi + 1).padStart(2, "0")}</span>
+                            <span className="t-h1 !text-[clamp(30px,7.5vw,52px)] transition-transform duration-300 group-hover:translate-x-2 group-aria-[current=true]:text-pink-deep">{g.label}</span>
                           </a>
-                        </li>
-                      ))}
-                      <li className="menu-item dash-b overflow-hidden" style={{ ["--mi" as string]: SECTIONS.length }}>
-                        <Link href="/shipyard" onClick={() => setOpen(false)} className="group flex items-baseline gap-4 py-3.5">
-                          <span className="t-label muted w-7">→</span>
-                          <span className="t-h1 !text-[clamp(36px,9vw,64px)] transition-transform duration-300 group-hover:translate-x-2">Shipyard</span>
-                        </Link>
-                      </li>
-                      <li className="menu-item dash-b overflow-hidden" style={{ ["--mi" as string]: SECTIONS.length }}>
-                        <Link href="/achievements" onClick={() => setOpen(false)} className="group flex items-baseline gap-4 py-3.5">
-                          <span className="t-label muted w-7">→</span>
-                          <span className="t-h1 !text-[clamp(36px,9vw,64px)] transition-transform duration-300 group-hover:translate-x-2">Achievements</span>
-                        </Link>
-                      </li>
-                    </ul>
+                        )}
+                      </section>
+                    ))}
                   </nav>
-                  <div className="menu-item flex flex-wrap gap-3" style={{ ["--mi" as string]: SECTIONS.length + 1 }}>
-                    <a href={profile.resume} className="btn-pill">
-                      Résumé PDF
-                    </a>
+                  <div className="menu-item flex flex-wrap gap-3" style={{ ["--mi" as string]: GROUPS.length + 1 }}>
+                    <ResumeButton className="btn-pill" />
                     <button
                       type="button"
                       className="btn-ghost"

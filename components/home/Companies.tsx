@@ -62,7 +62,7 @@ export default function Companies() {
   if (!companies.length) return null;
   return (
     <section id="companies" aria-labelledby="companies-title" className="edge pb-24">
-      <SectionLabel n={10}>Companies</SectionLabel>
+      <SectionLabel id="companies">Companies</SectionLabel>
       <div className="grid gap-4 pb-12 pt-16 lg:grid-cols-[1fr_auto] lg:items-end">
         <h2 id="companies-title" className="t-h1 split" data-reveal>
           <Words text="Things I run." />

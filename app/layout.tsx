@@ -8,6 +8,7 @@ import SiteHeader from "@/components/SiteHeader";
 import AsciiMode, { asciiScript } from "@/components/ascii/AsciiMode";
 import Splash, { splashScript } from "@/components/Splash";
 import { themeScript } from "@/components/ThemeToggle";
+import { lensScript } from "@/content/lens";
 import { profile } from "@/content/profile";
 import "./globals.css";
 
@@ -38,6 +39,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <script dangerouslySetInnerHTML={{ __html: jsFlag }} />
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <script dangerouslySetInnerHTML={{ __html: lensScript }} />
         <script dangerouslySetInnerHTML={{ __html: splashScript }} />
         <script dangerouslySetInnerHTML={{ __html: asciiScript }} />
       </head>

@@ -464,3 +464,58 @@ html[data-paused] .term-caret { animation-play-state: paused }
 /* Shipyard's scrolling banner: swipeable, with no visible scrollbar */
 .showcase { scrollbar-width: none }
 .showcase::-webkit-scrollbar { display: none }
+
+/* ---------------------------------------------------------------- the "Hiring for" lens
+   One attribute on <html> (data-lens) drives it all: content tagged for the chosen role stays,
+   everything else steps back, and matching items move to the front of any flex or grid list. */
+[data-lens-pitch]:not([data-lens-pitch="any"]) { display: none }
+html[data-lens] [data-lens-pitch="any"] { display: none }
+[data-lens-tags] { transition: opacity 400ms ease, filter 400ms ease }
+.lens-badge { display: none }
+html[data-lens="genai"] [data-lens-pitch="genai"] { display: inline }
+html[data-lens="genai"] [data-lens-tags]:not([data-lens-tags~="genai"]) { opacity: 0.28 !important; filter: grayscale(1) !important }
+html[data-lens="genai"] [data-lens-tags~="genai"] > .lens-badge { display: inline-flex }
+html[data-lens="genai"] .lens-order > [data-lens-tags~="genai"] { order: -1 }
+html[data-lens="backend"] [data-lens-pitch="backend"] { display: inline }
+html[data-lens="backend"] [data-lens-tags]:not([data-lens-tags~="backend"]) { opacity: 0.28 !important; filter: grayscale(1) !important }
+html[data-lens="backend"] [data-lens-tags~="backend"] > .lens-badge { display: inline-flex }
+html[data-lens="backend"] .lens-order > [data-lens-tags~="backend"] { order: -1 }
+html[data-lens="android"] [data-lens-pitch="android"] { display: inline }
+html[data-lens="android"] [data-lens-tags]:not([data-lens-tags~="android"]) { opacity: 0.28 !important; filter: grayscale(1) !important }
+html[data-lens="android"] [data-lens-tags~="android"] > .lens-badge { display: inline-flex }
+html[data-lens="android"] .lens-order > [data-lens-tags~="android"] { order: -1 }
+html[data-lens="ml"] [data-lens-pitch="ml"] { display: inline }
+html[data-lens="ml"] [data-lens-tags]:not([data-lens-tags~="ml"]) { opacity: 0.28 !important; filter: grayscale(1) !important }
+html[data-lens="ml"] [data-lens-tags~="ml"] > .lens-badge { display: inline-flex }
+html[data-lens="ml"] .lens-order > [data-lens-tags~="ml"] { order: -1 }
+
+/* A tailored résumé prints only what matches the lens. */
+@media print {
+  .no-print, body > header, body > footer, footer.edge, .cursor-face, .splash { display: none !important }
+  body { background: #fff !important; color: #000 !important }
+  html[data-lens="genai"] .print-lens [data-lens-tags]:not([data-lens-tags~="genai"]) { display: none !important }
+  html[data-lens="backend"] .print-lens [data-lens-tags]:not([data-lens-tags~="backend"]) { display: none !important }
+  html[data-lens="android"] .print-lens [data-lens-tags]:not([data-lens-tags~="android"]) { display: none !important }
+  html[data-lens="ml"] .print-lens [data-lens-tags]:not([data-lens-tags~="ml"]) { display: none !important }
+}
+
+/* Header dropdowns */
+.nav-menu[data-state="open"] { animation: nav-menu-in 220ms cubic-bezier(0.34, 1.4, 0.64, 1) both }
+.nav-menu[data-state="closed"] { animation: nav-menu-out 140ms ease-in both }
+@keyframes nav-menu-in { from { opacity: 0; transform: translate(-50%, -6px) scale(0.97) } to { opacity: 1; transform: translate(-50%, 0) } }
+@keyframes nav-menu-out { to { opacity: 0; transform: translate(-50%, -4px) } }
+@media (prefers-reduced-motion: reduce) { .nav-menu[data-state] { animation: none } }
+
+/* Activity calendar: days fill in week by week as the section scrolls in */
+html.js [data-reveal] .activity-day { opacity: 0; transform: scale(0.4) }
+html.js [data-reveal].in .activity-day { opacity: 1; transform: none; transition: opacity 300ms ease, transform 400ms cubic-bezier(0.34, 1.56, 0.64, 1); transition-delay: calc(var(--i, 0) * 12ms + 150ms) }
+.activity-cal { scrollbar-width: thin }
+@media (prefers-reduced-motion: reduce) { html.js [data-reveal] .activity-day { opacity: 1; transform: none } }
+
+/* Live infra: running services pulse, and packets travel along the wires into nginx */
+.infra-led { animation: infra-led 2.4s ease-in-out infinite }
+@keyframes infra-led { 50% { opacity: 0.45 } }
+.infra-wire { background: repeating-linear-gradient(90deg, rgb(255 255 255 / 0.35) 0 6px, transparent 6px 12px); background-size: 24px 1px; animation: infra-wire 1.2s linear infinite }
+@keyframes infra-wire { to { background-position: 24px 0 } }
+html[data-paused] :is(.infra-led, .infra-wire) { animation-play-state: paused }
+@media (prefers-reduced-motion: reduce) { .infra-led, .infra-wire { animation: none } }

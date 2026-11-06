@@ -113,7 +113,6 @@ function Paper({ p, i }: { p: Publication; i: number }) {
 type ListProps = {
   /** Section id, used by the header, the ⌘K palette and the cursor label. */
   id: string;
-  n: number;
   label: string;
   heading: string;
   /** Singular and plural noun for the count line. */
@@ -122,13 +121,13 @@ type ListProps = {
 };
 
 /** One section of publications, newest first. */
-function PublicationList({ id, n, label, heading, noun, items }: ListProps) {
+function PublicationList({ id, label, heading, noun, items }: ListProps) {
   const sorted = [...items].sort((a, b) => b.year - a.year);
   if (!sorted.length) return null;
   const kinds = [...new Set(sorted.map((p) => p.kind))];
   return (
     <section id={id} aria-labelledby={`${id}-title`} className="edge pb-24">
-      <SectionLabel n={n}>{label}</SectionLabel>
+      <SectionLabel id={id}>{label}</SectionLabel>
       <div className="grid gap-4 pb-12 pt-16 lg:grid-cols-[1fr_auto] lg:items-end">
         <h2 id={`${id}-title`} className="t-h1 split" data-reveal>
           <Words text={heading} />
@@ -149,10 +148,10 @@ function PublicationList({ id, n, label, heading, noun, items }: ListProps) {
 
 /** Patents, right after Awards. */
 export function Patents() {
-  return <PublicationList id="patents" n={8} label="Patents" heading="Patented." noun={["patent", "patents"]} items={publications.filter((p) => p.kind === "Patent")} />;
+  return <PublicationList id="patents" label="Patents" heading="Patented." noun={["patent", "patents"]} items={publications.filter((p) => p.kind === "Patent")} />;
 }
 
 /** Papers and articles, after Patents. */
 export function Papers() {
-  return <PublicationList id="papers" n={9} label="Papers" heading="Published." noun={["paper", "papers"]} items={publications.filter((p) => p.kind !== "Patent")} />;
+  return <PublicationList id="papers" label="Papers" heading="Published." noun={["paper", "papers"]} items={publications.filter((p) => p.kind !== "Patent")} />;
 }

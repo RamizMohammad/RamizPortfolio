@@ -1,0 +1,16 @@
+# Runs next to the Beszel hub on the existing proxy_network, so it reaches Beszel by name and nginx
+# reaches it by name. It publishes no ports of its own.
+services:
+  infra-status:
+    build: .
+    container_name: infra-status
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./services.json:/config/services.json:ro
+    networks:
+      - proxy_network
+
+networks:
+  proxy_network:
+    external: true

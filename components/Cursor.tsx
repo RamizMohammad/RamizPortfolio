@@ -11,6 +11,7 @@ const SAYS: Record<string, string> = {
   work: "my builds",
   architecture: "how it flows",
   stack: "my tools",
+  activity: "commits",
   awards: "wins!",
   patents: "invented",
   papers: "papers",

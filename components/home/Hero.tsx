@@ -2,6 +2,8 @@ import MotionToggle from "@/components/hero/MotionToggle";
 import Ribbon from "@/components/hero/Ribbon";
 import { Ball, BraceCoin, Database, Gear, PaperPlane, TerminalCard } from "@/components/hero/Stickers";
 import { BANNER } from "@/components/ascii/art";
+import LensPitch from "@/components/lens/LensPitch";
+import LensSwitch from "@/components/lens/LensSwitch";
 import { profile } from "@/content/profile";
 
 const WORD = "RAMIZ";
@@ -68,7 +70,7 @@ export default function Hero() {
           </span>
         </h1>
         <p className="voice rise max-w-[24ch] text-[clamp(28px,3.4vw,52px)] [text-wrap:balance]" style={{ ["--d" as string]: "900ms" }}>
-          Build the backend. Ship the rest.
+          <LensPitch fallback="Build the backend. Ship the rest." />
         </p>
         <p className="t-label rise" style={{ ["--d" as string]: "1000ms" }}>
           {profile.name} — {profile.role} at {profile.company}
@@ -76,6 +78,9 @@ export default function Hero() {
         <div className="rise flex flex-wrap justify-center gap-3" style={{ ["--d" as string]: "1100ms" }}>
           <a href="#work" className="btn-pill">See my work</a>
           <a href="#contact" className="btn-ghost">Email me ↗</a>
+        </div>
+        <div className="rise" style={{ ["--d" as string]: "1200ms" }}>
+          <LensSwitch />
         </div>
       </div>
       <div className="absolute bottom-5 right-[var(--edge-r)]">
