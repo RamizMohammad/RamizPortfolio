@@ -25,44 +25,78 @@ export default function Moments() {
 
   useEffect(() => {
     const mq = window.matchMedia(PIN);
+    const s = section.current;
+    const t = track.current;
+    if (!s || !t) return;
     let raf = 0;
-    const items = () => Array.from(list.current?.children ?? []) as HTMLElement[];
+    // Sizes the scroll maths needs, measured on resize only, so a scroll frame reads one rect and
+    // writes three transforms, and never forces a layout.
+    let span = 0;
+    let travel = 0;
+    let width = 0;
+    let photos: { el: HTMLElement; at: number; on: boolean }[] = [];
+    const measure = () => {
+      span = s.offsetHeight - window.innerHeight;
+      width = t.scrollWidth;
+      travel = Math.max(0, width - (t.parentElement?.clientWidth ?? 0));
+      photos = (Array.from(list.current?.children ?? []) as HTMLElement[]).map((el) => ({
+        el,
+        // A photo comes into focus once the rider is close to it.
+        at: el.offsetLeft + el.offsetWidth / 2 - el.offsetWidth * 0.9,
+        on: el.hasAttribute("data-on"),
+      }));
+    };
 
     const update = () => {
       raf = 0;
-      const s = section.current;
-      const t = track.current;
-      if (!s || !t) return;
       if (!mq.matches) {
         t.style.transform = "";
-        items().forEach((el) => el.removeAttribute("data-on"));
+        photos.forEach((p) => {
+          p.on = false;
+          p.el.removeAttribute("data-on");
+        });
         return;
       }
-      const r = s.getBoundingClientRect();
-      const p = Math.min(1, Math.max(0, -r.top / (r.height - window.innerHeight)));
-      const travel = Math.max(0, t.scrollWidth - t.parentElement!.clientWidth);
+      const p = span > 0 ? Math.min(1, Math.max(0, -s.getBoundingClientRect().top / span)) : 0;
       t.style.transform = `translate3d(${-p * travel}px,0,0)`;
-      const head = p * t.scrollWidth; // where the rider is, in track coordinates
-      if (fill.current) fill.current.style.width = `${head}px`;
+      const head = p * width; // where the rider is, in track coordinates
+      if (fill.current) fill.current.style.transform = `translateY(-50%) scaleX(${width ? p : 0})`;
       if (rider.current) rider.current.style.transform = `translate3d(${head}px,0,0) translateX(-50%)`;
-      // A photo comes into focus once the rider is close to it.
-      items().forEach((el) => {
-        const centre = el.offsetLeft + el.offsetWidth / 2;
-        el.toggleAttribute("data-on", head > centre - el.offsetWidth * 0.9);
-      });
+      for (const ph of photos) {
+        const on = head > ph.at;
+        if (on !== ph.on) {
+          ph.on = on;
+          ph.el.toggleAttribute("data-on", on);
+        }
+      }
     };
     const schedule = () => {
       if (!raf) raf = requestAnimationFrame(update);
     };
+    const remeasure = () => {
+      measure();
+      schedule();
+    };
+    // Only listen while the section is anywhere near the screen.
+    const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) {
+        window.addEventListener("scroll", schedule, { passive: true });
+        schedule();
+      } else window.removeEventListener("scroll", schedule);
+    }, { rootMargin: "50% 0px" });
+    const ro = new ResizeObserver(remeasure);
+    measure();
     update();
-    window.addEventListener("scroll", schedule, { passive: true });
-    window.addEventListener("resize", schedule);
-    mq.addEventListener("change", schedule);
+    io.observe(s);
+    ro.observe(s);
+    ro.observe(t);
+    mq.addEventListener("change", remeasure);
     return () => {
       cancelAnimationFrame(raf);
+      io.disconnect();
+      ro.disconnect();
       window.removeEventListener("scroll", schedule);
-      window.removeEventListener("resize", schedule);
-      mq.removeEventListener("change", schedule);
+      mq.removeEventListener("change", remeasure);
     };
   }, []);
 
@@ -107,7 +141,7 @@ export default function Moments() {
             {/* The line, its pink fill and the rider; only shown in the pinned layout. */}
             <div aria-hidden="true" className="moments-line pointer-events-none absolute inset-x-0 bottom-[calc(3rem+16px)] hidden h-0">
               <div className="absolute inset-x-0 top-0 border-t-[2px] border-dashed border-ink/40" />
-              <div ref={fill} className="absolute left-0 top-0 h-[4px] -translate-y-1/2 rounded-full bg-pink-deep" style={{ width: 0 }} />
+              <div ref={fill} className="absolute inset-x-0 top-0 h-[4px] origin-left rounded-full bg-pink-deep will-change-transform" style={{ transform: "translateY(-50%) scaleX(0)" }} />
               <div ref={rider} className="absolute left-0 top-0 mt-[8px] h-11 w-11 overflow-hidden rounded-full border-[2px] border-ink bg-sun">
                 <Image src="/images/mascot-face.webp" alt="" width={112} height={112} className="h-full w-full" />
               </div>

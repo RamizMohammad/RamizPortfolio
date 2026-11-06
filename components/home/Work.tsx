@@ -65,7 +65,7 @@ function ProjectTile({ s, i, onOpen }: { s: System; i: number; onOpen: () => voi
         {s.screen && liveUrl(s) ? (
           // The real landing page, live (view-only here); the screenshot shows until it loads.
           <div className="absolute inset-3 overflow-hidden rounded-[14px] border-[1.5px] border-ink">
-            <LivePreview url={liveUrl(s)!} title={s.name} poster={s.screen} fill sizes="(min-width: 1024px) 40vw, 90vw" />
+            <LivePreview url={liveUrl(s)!} title={s.name} poster={s.screen} fill onDemand sizes="(min-width: 1024px) 40vw, 90vw" />
           </div>
         ) : s.screen ? (
           <Image src={s.screen.src} alt="" fill sizes="(min-width: 1024px) 40vw, 90vw" className={`rounded-[18px] object-cover p-3 ${s.screen.kind === "phone" ? "object-left" : "object-top"}`} />
@@ -129,7 +129,7 @@ export default function Work() {
           <Words text="Built and shipped." />
         </h2>
         <div className="grid max-w-[44ch] gap-4" data-reveal>
-          <p className="voice-sm muted ink-in">
+          <p className="voice-sm muted ink-in" data-reveal>
             Click any project to open it where it was built: Android work in an Android IDE beside a phone, web apps in a code editor beside a browser.
           </p>
           <Link href="/shipyard" className="btn-ghost btn-sm w-fit">
