@@ -128,8 +128,8 @@ export default function Work() {
           <p className="voice-sm muted ink-in">
             Click any project to open it where it was built: Android work in an Android IDE beside a phone, web apps in a code editor beside a browser.
           </p>
-          <Link href="/winstore" className="btn-ghost btn-sm w-fit">
-            Windows apps → Win Store
+          <Link href="/shipyard" className="btn-ghost btn-sm w-fit">
+            Install them → Shipyard
           </Link>
         </div>
       </div>

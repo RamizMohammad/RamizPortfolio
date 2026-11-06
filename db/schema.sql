@@ -164,7 +164,7 @@ create table if not exists companies (
   updated_at timestamptz not null default now()
 );
 
--- ---------------------------------------------------------------- the /winstore page
+-- ---------------------------------------------------------------- the /shipyard page
 create table if not exists store_apps (
   id          serial primary key,
   sort        int not null default 0,

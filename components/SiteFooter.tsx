@@ -36,7 +36,7 @@ export default function SiteFooter() {
             <a href={profile.resume} className="link">Résumé</a>
           </li>
           <li>
-            <Link href="/winstore" className="link">Win Store</Link>
+            <Link href="/shipyard" className="link">Shipyard</Link>
           </li>
         </ul>
         <p className="muted">Last build {built}</p>
