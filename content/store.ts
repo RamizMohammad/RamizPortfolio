@@ -5,7 +5,7 @@ type File = { label: string; file: string; href: string; /** e.g. "2.1 MB" */ si
 export type OS = "windows" | "macos" | "linux";
 export const OS_LABEL: Record<OS, string> = { windows: "Windows", macos: "macOS", linux: "Linux" };
 
-/** An app or extension on the /winstore page. Add one by adding a row to portfolio.store_apps. */
+/** An app or extension on the /shipyard page. Add one by adding a row to portfolio.store_apps. */
 export type StoreApp = {
   slug: string;
   name: string;

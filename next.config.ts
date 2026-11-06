@@ -14,7 +14,11 @@ const nextConfig: NextConfig = {
     return [{ source: "/(.*)", headers: securityHeaders }];
   },
   async redirects() {
-    return [{ source: "/windows-apps", destination: "/winstore", permanent: true }];
+    return [
+      { source: "/windows-apps", destination: "/shipyard", permanent: true },
+      { source: "/winstore", destination: "/shipyard", permanent: true },
+      { source: "/store", destination: "/shipyard", permanent: true },
+    ];
   },
 };
 

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Dialog } from "radix-ui";
 import { useState, useSyncExternalStore } from "react";
 import { OS_LABEL, platformsOf, type OS, type StoreApp } from "@/content/store";
+import { CardChrome, TabBanner, type Platform } from "./Glimpse";
 
 // Written out in full so Tailwind sees every class.
 const TONE: Record<StoreApp["tone"], string> = {
@@ -234,9 +235,10 @@ function Details({ a, onClose }: { a: StoreApp; onClose: () => void }) {
   );
 }
 
-function Card({ a, i, os, onOpen }: { a: StoreApp; i: number; os?: OS; onOpen: () => void }) {
+function Card({ a, i, os, tab, onOpen }: { a: StoreApp; i: number; os?: OS; tab?: Platform; onOpen: () => void }) {
   return (
     <article className="store-card group grid content-start overflow-hidden rounded-[24px] border-[1.5px] border-ink bg-card" style={{ ["--rd" as string]: `${i * 70}ms` }}>
+      {tab && <CardChrome tab={tab} a={a} />}
       <button type="button" onClick={onOpen} className={`flex items-center gap-4 border-b-[1.5px] border-ink p-5 text-left ${TONE[a.tone]}`} aria-label={`Open ${a.name}`}>
         <span className="transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-105">
           <Icon a={a} />
@@ -305,7 +307,10 @@ export default function Store({ apps }: { apps: StoreApp[] }) {
   const featured = apps.find((a) => a.kind === "app");
   const os = isOS(filter) ? filter : undefined;
   const list = apps.filter((a) => (os ? a.kind === "app" && platformsOf(a).includes(os) : filter === "all" || a.kind === filter));
-  const empty = !list.length ? EMPTY[filter] : undefined;
+  // The Mac banner already says its builds are on the way, so it needs no empty card too.
+  const empty = !list.length && filter !== "macos" ? EMPTY[filter] : undefined;
+  // Each platform's tab borrows a little of that platform's look; "All" stays in the site's own theme.
+  const tab = filter === "all" ? undefined : (filter as Platform);
 
   return (
     <>
@@ -322,10 +327,12 @@ export default function Store({ apps }: { apps: StoreApp[] }) {
         </div>
       </div>
 
+      {tab && (list.length > 0 || tab === "macos") && <TabBanner key={`banner-${tab}`} tab={tab} apps={list} />}
+
       {/* Keyed by filter so the cards replay their entrance on every switch */}
       <div key={filter} className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {list.map((a, i) => (
-          <Card key={a.slug} a={a} i={i} os={os} onOpen={() => show(a.slug)} />
+          <Card key={a.slug} a={a} i={i} os={os} tab={tab} onOpen={() => show(a.slug)} />
         ))}
         {empty && (
           <div className="store-card grid content-center justify-items-start gap-4 rounded-[24px] border-[1.5px] border-dashed border-ink p-6 sm:col-span-2 lg:col-span-3">
