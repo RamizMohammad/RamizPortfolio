@@ -149,6 +149,16 @@ const WORKER_SOURCE = `const ribbon=(${ribbonProgram.toString()})(()=>postMessag
 export default function Ribbon() {
   const canvas = useRef<HTMLCanvasElement>(null);
   const poster = useRef<HTMLCanvasElement>(null);
+  const wrap = useRef<HTMLDivElement>(null);
+
+  // When the wipe-in has finished, drop its mask so the waving ribbon is never masked again.
+  useEffect(() => {
+    const el = wrap.current;
+    if (!el) return;
+    const done = (e: AnimationEvent) => e.animationName === "ribbon-in" && el.classList.add("ribbon-done");
+    el.addEventListener("animationend", done);
+    return () => el.removeEventListener("animationend", done);
+  }, []);
 
   useEffect(() => {
     const c = canvas.current;
@@ -160,11 +170,23 @@ export default function Ribbon() {
     const shouldRun = () => visible && !document.hidden && !document.documentElement.dataset.paused;
 
     const p = poster.current;
-    // The poster is only needed until the worker has drawn; this also frees its pixels.
+    // The poster sits under the worker's canvas, so once the worker draws it is simply covered. It
+    // is only faded out (then freed) after the worker has been drawing for a moment, because a
+    // worker's frames reach the screen on their own schedule: switching the poster off the instant
+    // the first frame is drawn can leave one blank frame, which reads as the ribbon popping in.
+    let fade = 0;
     const dropPoster = () => {
       if (!p) return;
       p.style.display = "none";
       p.width = p.height = 0;
+    };
+    const retirePoster = () => {
+      if (!p || fade) return;
+      fade = window.setTimeout(() => {
+        p.style.transition = "opacity 600ms ease";
+        p.style.opacity = "0";
+        fade = window.setTimeout(dropPoster, 700);
+      }, 400);
     };
 
     let surface = surfaces.get(c);
@@ -177,7 +199,7 @@ export default function Ribbon() {
         const url = URL.createObjectURL(new Blob([WORKER_SOURCE], { type: "text/javascript" }));
         const worker = new Worker(url);
         // Swap only after the worker's frame has reached the screen, so there is never a blank frame.
-        worker.onmessage = (e) => e.data?.type === "drawn" && requestAnimationFrame(() => requestAnimationFrame(dropPoster));
+        worker.onmessage = (e) => e.data?.type === "drawn" && retirePoster();
         const off = c.transferControlToOffscreen();
         worker.postMessage({ type: "init", canvas: off, size: size(), reduced, start }, [off]);
         surface = {
@@ -214,6 +236,7 @@ export default function Ribbon() {
       io.disconnect();
       window.removeEventListener("motion-toggle", sync);
       document.removeEventListener("visibilitychange", sync);
+      window.clearTimeout(fade);
       send({ type: "run", on: false });
       // Only let the worker go once the canvas has really left the page (not on a development re-run).
       window.setTimeout(() => {
@@ -227,11 +250,12 @@ export default function Ribbon() {
 
   return (
     // The wrapper wipes the ribbon in from the left (globals.css .ribbon-in), so it arrives instead of popping in.
-    <div aria-hidden="true" className="ribbon-in pointer-events-none absolute inset-0">
-      <canvas ref={canvas} aria-hidden="true" className="absolute inset-0 h-full w-full" />
-      <canvas ref={poster} aria-hidden="true" className="pointer-events-none absolute inset-0 h-full w-full" />
+    <div ref={wrap} aria-hidden="true" className="ribbon-in pointer-events-none absolute inset-0">
+      {/* The poster first, so the worker's canvas (after it) is drawn on top. The inline script sizes and marks it before React loads, hence suppressHydrationWarning. */}
+      <canvas ref={poster} aria-hidden="true" className="pointer-events-none absolute inset-0 h-full w-full" suppressHydrationWarning />
       {/* The function's compiled text differs between the server and browser bundles, which is fine: it only ever runs from the HTML. */}
       <script dangerouslySetInnerHTML={{ __html: POSTER_SCRIPT }} suppressHydrationWarning />
+      <canvas ref={canvas} aria-hidden="true" className="absolute inset-0 h-full w-full" />
     </div>
   );
 }

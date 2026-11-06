@@ -526,21 +526,24 @@ html[data-paused] :is(.infra-led, .infra-wire) { animation-play-state: paused }
    section has been rendered once; after that the browser remembers its real height. */
 main > section:not(#hero, #moments) { content-visibility: auto; contain-intrinsic-size: auto 1100px }
 
-/* Hero ribbon entrance: drawn in from left to right behind a soft-edged mask. It starts with the
-   page's first paint, waits for the splash like the rest of the hero, and is skipped under reduced
-   motion. */
+/* Hero ribbon entrance: a soft edge travels from the left of the screen to the right and the
+   ribbon is drawn in behind it, fading up as it goes. The edge's position is the animated value
+   itself (a registered custom property), so it crosses the screen evenly over the whole duration
+   instead of rushing through the middle. It starts with the page's first paint, waits for the
+   splash like the rest of the hero, and is skipped under reduced motion. */
+@property --ribbon-edge { syntax: "<percentage>"; inherits: false; initial-value: 0% }
 .ribbon-in {
-  -webkit-mask-image: linear-gradient(90deg, #000 0%, #000 40%, transparent 60%, transparent 100%);
-  mask-image: linear-gradient(90deg, #000 0%, #000 40%, transparent 60%, transparent 100%);
-  -webkit-mask-size: 300% 100%;
-  mask-size: 300% 100%;
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  animation: ribbon-in 1600ms cubic-bezier(0.65, 0, 0.35, 1) 150ms both;
+  --ribbon-edge: 0%;
+  -webkit-mask-image: linear-gradient(90deg, #000 calc(var(--ribbon-edge) - 18%), transparent var(--ribbon-edge));
+  mask-image: linear-gradient(90deg, #000 calc(var(--ribbon-edge) - 18%), transparent var(--ribbon-edge));
+  animation: ribbon-in 2200ms cubic-bezier(0.45, 0.05, 0.55, 0.95) 100ms both;
 }
 @keyframes ribbon-in {
-  from { -webkit-mask-position: 100% 0; mask-position: 100% 0 }
-  to { -webkit-mask-position: 0% 0; mask-position: 0% 0 }
+  0% { --ribbon-edge: 0%; opacity: 0 }
+  30% { opacity: 1 }
+  100% { --ribbon-edge: 118%; opacity: 1 }
 }
+/* Once it has arrived the mask is dropped altogether, so it costs nothing while the ribbon waves. */
+.ribbon-in.ribbon-done { -webkit-mask-image: none; mask-image: none; animation: none }
 html[data-splash="on"] .ribbon-in { animation-play-state: paused }
 @media (prefers-reduced-motion: reduce) { .ribbon-in { animation: none; -webkit-mask-image: none; mask-image: none } }
