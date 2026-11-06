@@ -2,17 +2,16 @@
 // from. Runs before every build (npm "prebuild"), after the content pull.
 //
 //   GITHUB_USER    whose activity to show (default RamizMohammad)
-//   GITHUB_TOKEN   optional. With it, the calendar comes from the GraphQL API and the REST calls
-//                  get a higher rate limit; without it, the public contributions page is read.
+//   GITHUB_TOKEN   optional. With it, the calendar comes from the GraphQL API; without it, the
+//                  public contributions page is read.
 //
 // Only public activity is shown. If GitHub can't be reached, the committed snapshot is kept, so the
 // site always builds.
-import { readFileSync, writeFileSync } from "node:fs";
+import { writeFileSync } from "node:fs";
 
 const USER = process.env.GITHUB_USER || "RamizMohammad";
 const TOKEN = process.env.GITHUB_TOKEN || process.env.GH_TOKEN;
 const FILE = new URL("../content/github.json", import.meta.url);
-const COMMITS = 8;
 
 const headers = { "User-Agent": "mohammadramiz.in build", Accept: "application/vnd.github+json", ...(TOKEN ? { Authorization: `Bearer ${TOKEN}` } : {}) };
 
@@ -67,45 +66,16 @@ async function calendarFromPage() {
   return cal;
 }
 
-/** The latest public pushes, one line each. The events feed no longer carries messages, so each head commit is looked up. */
-async function recentCommits() {
-  const events = await get(`https://api.github.com/users/${USER}/events/public?per_page=100`).then((r) => r.json());
-  const heads = [];
-  const seen = new Set();
-  for (const e of events) {
-    if (e.type !== "PushEvent" || !e.payload?.head || seen.has(e.payload.head)) continue;
-    seen.add(e.payload.head);
-    heads.push({ repo: e.repo.name, sha: e.payload.head, at: e.created_at });
-    if (heads.length === COMMITS) break;
-  }
-  const commits = await Promise.all(
-    heads.map(async (h) => {
-      try {
-        const c = await get(`https://api.github.com/repos/${h.repo}/commits/${h.sha}`).then((r) => r.json());
-        return { repo: h.repo.split("/")[1], message: c.commit.message.split("\n")[0].slice(0, 120), sha: h.sha.slice(0, 7), url: c.html_url, date: c.commit.author?.date ?? h.at };
-      } catch {
-        return null;
-      }
-    }),
-  );
-  return commits.filter(Boolean);
-}
-
 async function pull() {
   const cal = await (TOKEN ? calendarFromApi().catch(() => calendarFromPage()) : calendarFromPage());
-  const commits = await recentCommits().catch((e) => {
-    console.warn(`github: no recent commits (${e.message})`);
-    return null;
-  });
-  const prev = JSON.parse(readFileSync(FILE, "utf8"));
-  return { user: USER, pulledAt: new Date().toISOString(), total: cal.total, weeks: cal.weeks, commits: commits ?? prev.commits ?? [] };
+  return { user: USER, pulledAt: new Date().toISOString(), total: cal.total, weeks: cal.weeks };
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
   try {
     const data = await pull();
     writeFileSync(FILE, JSON.stringify(data, null, 2) + "\n");
-    console.log(`github: ${data.total} contributions over ${data.weeks.length} weeks, ${data.commits.length} recent commits`);
+    console.log(`github: ${data.total} contributions over ${data.weeks.length} weeks`);
   } catch (e) {
     console.warn(`github: could not pull activity (${e.message}); building from the saved snapshot`);
   }
