@@ -41,9 +41,10 @@ export const GROUPS: NavGroup[] = [
       { section: "stack", label: "Stack", hint: "Tools, layer by layer" },
       ...(hasActivity ? [{ section: "activity", label: "Activity", hint: "A year of commits on GitHub" }] : []),
       { page: "/shipyard", label: "Shipyard", hint: "Apps, extensions and libraries to install" },
-      { page: "/infra", label: "Live infra", hint: "My own server, in real time" },
+      // Live infra is switched off until the status endpoint is online; see app/_infra/page.tsx.
+      // { page: "/infra", label: "Live infra", hint: "My own server, in real time" },
     ],
-    pages: ["/shipyard", "/infra", "/work"],
+    pages: ["/shipyard", "/work"], // add "/infra" back with the link above
   },
   {
     id: "recognition",

@@ -48,7 +48,8 @@ export default function CommandPalette() {
       ...SECTIONS.map((s) => ({ group: "Sections", label: s.label, run: go(`/#${s.id}`) })),
       ...publicSystems.map((s) => ({ group: "Projects", label: s.name, hint: s.shipsAs, run: go(`/work/${s.slug}`) })),
       { group: "Pages", label: "Shipyard", hint: "Apps, extensions and libraries to install", run: go("/shipyard") },
-      { group: "Pages", label: "Live infra", hint: "My server, in real time", run: go("/infra") },
+      // Switched off until the status endpoint is online; see app/_infra/page.tsx.
+      // { group: "Pages", label: "Live infra", hint: "My server, in real time", run: go("/infra") },
       { group: "Pages", label: "All achievements", run: go("/achievements") },
       { group: "Pages", label: "Résumé", run: go("/resume") },
       {

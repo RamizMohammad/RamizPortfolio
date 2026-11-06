@@ -1,3 +1,13 @@
+/*
+ * SWITCHED OFF FOR NOW. The live infra page is kept here, outside the routes (Next.js skips folders
+ * that start with "_"), until the status endpoint is running on the VPS (infra/status-api/README.md).
+ *
+ * To switch it back on:
+ *   1. Rename this folder from app/_infra to app/infra.
+ *   2. Uncomment the "Live infra" lines in components/nav.ts, components/CommandPalette.tsx and
+ *      app/sitemap.ts, and add "/infra" back to the Work group's pages in components/nav.ts.
+ *   3. Set NEXT_PUBLIC_INFRA_URL in Vercel.
+ */
 import type { Metadata } from "next";
 import LiveInfra from "@/components/infra/LiveInfra";
 
