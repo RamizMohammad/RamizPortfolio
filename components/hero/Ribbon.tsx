@@ -226,11 +226,12 @@ export default function Ribbon() {
   }, []);
 
   return (
-    <>
+    // The wrapper wipes the ribbon in from the left (globals.css .ribbon-in), so it arrives instead of popping in.
+    <div aria-hidden="true" className="ribbon-in pointer-events-none absolute inset-0">
       <canvas ref={canvas} aria-hidden="true" className="absolute inset-0 h-full w-full" />
       <canvas ref={poster} aria-hidden="true" className="pointer-events-none absolute inset-0 h-full w-full" />
       {/* The function's compiled text differs between the server and browser bundles, which is fine: it only ever runs from the HTML. */}
       <script dangerouslySetInnerHTML={{ __html: POSTER_SCRIPT }} suppressHydrationWarning />
-    </>
+    </div>
   );
 }
