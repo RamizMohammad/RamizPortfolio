@@ -20,8 +20,11 @@ function Home() {
       <circle cx="126" cy="130" r="1.5" fill="currentColor" />
       {/* A dish on the roof: the self-hosted server lives here. */}
       <path d="M146 70 V48" />
-      <path d="M134 48 A12 12 0 0 0 158 48 Z" />
-      <circle cx="146" cy="44" r="3" className="fill-pink-deep" stroke="none" />
+      <g className="sc-sway" style={{ transformOrigin: "146px 48px" }}>
+        <path d="M134 48 A12 12 0 0 0 158 48 Z" />
+        <circle cx="146" cy="44" r="3" className="sc-blink fill-pink-deep" stroke="none" />
+      </g>
+      <path d="M100 76 q4 -4 8 0 t8 0" className="sc-steam" />
       <path d="M196 150 V116 H214 V126 H196" />
       <circle cx="214" cy="112" r="3.5" className="fill-pink-deep" stroke="none" />
     </svg>
@@ -36,13 +39,13 @@ function Store() {
       <path d="M70 106 V150 M170 106 V150" />
       <rect x="38" y="26" width="38" height="68" rx="7" />
       <path d="M50 32 H64" />
-      <rect x="45" y="42" width="10" height="10" rx="2" className="fill-lime" />
-      <rect x="59" y="42" width="10" height="10" rx="2" className="fill-sun" />
-      <rect x="45" y="56" width="10" height="10" rx="2" className="fill-violet" />
-      <rect x="59" y="56" width="10" height="10" rx="2" className="fill-pink" />
+      <rect x="45" y="42" width="10" height="10" rx="2" className="sc-tile fill-lime" style={{ ["--i" as string]: 0 }} />
+      <rect x="59" y="42" width="10" height="10" rx="2" className="sc-tile fill-sun" style={{ ["--i" as string]: 1 }} />
+      <rect x="45" y="56" width="10" height="10" rx="2" className="sc-tile fill-violet" style={{ ["--i" as string]: 2 }} />
+      <rect x="59" y="56" width="10" height="10" rx="2" className="sc-tile fill-pink" style={{ ["--i" as string]: 3 }} />
       <text x="92" y="52" className="font-mono" fontSize="12" letterSpacing="2" fill="currentColor" stroke="none">SHIPPED TO</text>
       <text x="92" y="74" className="font-mono fill-pink-deep" fontSize="12" letterSpacing="2" stroke="none">PLAY STORE</text>
-      <path d="M92 86 L100 86 M106 86 L196 86" strokeDasharray="2 5" />
+      <path d="M92 86 H196" strokeDasharray="2 5" className="sc-march" />
     </svg>
   );
 }
@@ -57,7 +60,7 @@ function Campus() {
       <path d="M62 80 V138 M90 80 V138 M150 80 V138 M178 80 V138" />
       <rect x="108" y="102" width="24" height="48" />
       <path d="M120 22 V2" />
-      <path d="M120 3 L140 9 L120 15 Z" className="fill-pink-deep" stroke="none" />
+      <path d="M120 3 L140 9 L120 15 Z" className="sc-flag fill-pink-deep" stroke="none" />
     </svg>
   );
 }
@@ -66,8 +69,11 @@ function Cones() {
   return (
     <svg viewBox="0 0 240 160" className="w-full" {...S}>
       <path d="M8 150 H232" />
-      <path d="M70 14 L110 80 H30 Z" className="fill-card" />
-      <text x="70" y="70" textAnchor="middle" fontSize="28" fontWeight="700" fill="currentColor" stroke="none">!</text>
+      <g className="sc-wobble" style={{ transformOrigin: "70px 150px" }}>
+        <path d="M70 14 L110 80 H30 Z" className="fill-card" />
+        <text x="70" y="70" textAnchor="middle" fontSize="28" fontWeight="700" fill="currentColor" stroke="none">!</text>
+      </g>
+      <circle cx="164" cy="100" r="3" className="sc-blink fill-sun" stroke="none" />
       <path d="M70 80 V150" />
       <text x="80" y="104" className="font-mono" fontSize="10" letterSpacing="2" fill="currentColor" stroke="none">BUGS AHEAD</text>
       <path d="M150 150 L164 106 L178 150 Z" className="fill-pink-deep" stroke="none" />
@@ -86,7 +92,7 @@ function Servers() {
       {[34, 58, 82, 106].map((y) => (
         <g key={y}>
           <rect x="36" y={y} width="46" height="16" rx="2" />
-          <circle cx="44" cy={y + 8} r="2.2" className="fill-lime" stroke="none" />
+          <circle cx="44" cy={y + 8} r="2.2" className="sc-led fill-lime" stroke="none" style={{ ["--i" as string]: y }} />
           <path d={`M54 ${y + 8} H74`} />
         </g>
       ))}
@@ -106,12 +112,14 @@ function Warehouse() {
       <path d="M14 150 V62 L80 30 L146 62 V150" />
       <rect x="40" y="96" width="80" height="54" />
       <path d="M40 110 H120 M40 124 H120 M40 138 H120" />
+      <g className="sc-rock">
       <rect x="150" y="106" width="52" height="34" rx="2" className="fill-card" />
       <text x="176" y="127" textAnchor="middle" className="font-mono" fontSize="9" letterSpacing="1" fill="currentColor" stroke="none">PO·RFQ</text>
       <path d="M202 116 H218 L228 128 V140 H202" />
       <circle cx="166" cy="144" r="7" className="fill-card" />
       <circle cx="214" cy="144" r="7" className="fill-card" />
-      <circle cx="80" cy="76" r="4" className="fill-pink-deep" stroke="none" />
+      </g>
+      <circle cx="80" cy="76" r="4" className="sc-blink fill-pink-deep" stroke="none" />
     </svg>
   );
 }
@@ -136,7 +144,10 @@ function Board({ top, bottom }: { top: string; bottom: string }) {
     <div className="grid justify-items-center">
       <div className="rounded-[10px] border-[1.5px] border-ink bg-card px-3.5 py-2 font-mono text-[12px] uppercase leading-[1.5] tracking-[0.16em]">
         <p>{top}</p>
-        <p className="text-pink-deep">{bottom}</p>
+        <p className="text-pink-deep">
+          {bottom}
+          <span className="sc-caret ml-0.5 inline-block h-[0.95em] w-[0.5em] translate-y-[2px] bg-pink-deep" />
+        </p>
       </div>
       <span className="h-12 w-[1.5px] bg-ink" />
     </div>
@@ -147,7 +158,7 @@ function Board({ top, bottom }: { top: string; bottom: string }) {
 function Limit({ value, unit }: { value: string; unit: string }) {
   return (
     <div className="grid justify-items-center">
-      <div className="grid h-[76px] w-[76px] place-items-center rounded-full border-[6px] border-pink-deep bg-card text-center leading-none">
+      <div className="sc-ring grid h-[76px] w-[76px] place-items-center rounded-full border-[6px] border-pink-deep bg-card text-center leading-none">
         <span>
           <span className="block font-display text-[26px]">{value}</span>
           <span className="t-micro">{unit}</span>
@@ -161,9 +172,11 @@ function Limit({ value, unit }: { value: string; unit: string }) {
 function Sky() {
   return (
     <svg viewBox="0 0 200 80" className="w-[180px]" {...S}>
-      <path d="M20 70 H120 C134 70 136 52 120 50 C120 36 100 30 92 42 C86 24 56 24 52 44 C34 40 24 54 30 62 C20 62 16 70 20 70 Z" />
-      <path d="M150 22 q6 -7 12 0 q6 -7 12 0" />
-      <path d="M140 46 q5 -6 10 0 q5 -6 10 0" />
+      <path className="sc-drift" d="M20 70 H120 C134 70 136 52 120 50 C120 36 100 30 92 42 C86 24 56 24 52 44 C34 40 24 54 30 62 C20 62 16 70 20 70 Z" />
+      <g className="sc-fly">
+        <path className="sc-flap" d="M150 22 q6 -7 12 0 q6 -7 12 0" />
+        <path className="sc-flap" style={{ animationDelay: "-0.3s" }} d="M140 46 q5 -6 10 0 q5 -6 10 0" />
+      </g>
     </svg>
   );
 }
