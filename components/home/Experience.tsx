@@ -5,6 +5,7 @@ import Words from "@/components/Words";
 import { lensTags } from "@/content/lens";
 import { profile } from "@/content/profile";
 import { timeline } from "@/content/timeline";
+import { findEgg } from "@/components/EasterEggs";
 import { Filler, Milestone, Scene, type SceneKind } from "./RoadScenery";
 import SectionLabel from "./SectionLabel";
 
@@ -79,6 +80,7 @@ export default function Experience() {
     const d = new Date();
     const now = d.getFullYear() + (d.getMonth() + (d.getDate() - 1) / 31) / 12;
     const value = Math.min(99.99, Math.max(0, now - START)).toFixed(2).padStart(5, "0");
+    o.dataset.value = value;
     o.querySelectorAll<HTMLElement>("[data-digit]").forEach((col) => {
       col.style.setProperty("--n", value[Number(col.dataset.digit)]);
     });
@@ -283,6 +285,29 @@ export default function Experience() {
     };
   }, []);
 
+  // Easter eggs: honk the car, tamper with the odometer.
+  const honk = () => {
+    const g = car.current?.firstElementChild;
+    if (!g) return;
+    g.classList.remove("honk");
+    void (g as SVGGElement).getBoundingClientRect();
+    g.classList.add("honk");
+    g.addEventListener("animationend", () => g.classList.remove("honk"), { once: true });
+    findEgg("honk");
+  };
+  const leet = () => {
+    const o = odo.current;
+    if (!o || o.dataset.leet) return;
+    o.dataset.leet = "1";
+    const set = (v: string) => o.querySelectorAll<HTMLElement>("[data-digit]").forEach((c) => c.style.setProperty("--n", v[Number(c.dataset.digit)]));
+    set("13.37");
+    findEgg("leet");
+    window.setTimeout(() => {
+      set(o.dataset.value ?? "00.00");
+      delete o.dataset.leet;
+    }, 2800);
+  };
+
   return (
     <section id="experience" aria-labelledby="experience-title" className="edge overflow-x-clip pb-6">
       <SectionLabel id="experience">Experience</SectionLabel>
@@ -307,7 +332,7 @@ export default function Experience() {
         </div>
 
         <div className="grid justify-items-start gap-5 lg:justify-items-end lg:pt-6">
-          <div ref={odo} className="odo w-[min(100%,330px)] rotate-[1.5deg] rounded-[20px] border-[1.5px] border-ink bg-ink p-5 text-card shadow-[6px_6px_0_0_var(--color-pink-deep)]" data-reveal>
+          <div ref={odo} onClick={leet} className="odo w-[min(100%,330px)] cursor-pointer select-none rotate-[1.5deg] rounded-[20px] border-[1.5px] border-ink bg-ink p-5 text-card shadow-[6px_6px_0_0_var(--color-pink-deep)]" data-reveal>
             <span data-sr className="sr-only" />
             <div className="t-micro flex justify-between gap-4 opacity-80" aria-hidden="true">
               <span>Odometer</span>
@@ -346,7 +371,7 @@ export default function Experience() {
 
       <div ref={box} className="road relative mx-auto max-w-[1440px]">
         {/* The road, its centre line and the route drawn behind the car. Built on the client from the stops' positions. */}
-        <svg ref={svg} aria-hidden="true" className="pointer-events-none absolute left-0 top-0 overflow-visible">
+        <svg ref={svg} aria-hidden="true" className="pointer-events-none absolute left-0 top-0 z-[2] overflow-visible">
           <path data-road className="road-edge" />
           <path data-road className="road-tar" />
           <path data-road className="road-side" />
@@ -362,7 +387,7 @@ export default function Experience() {
             </g>
           ))}
           <g ref={car} style={{ visibility: "hidden" }}>
-            <g className="road-car">
+            <g className="road-car pointer-events-auto cursor-pointer" onClick={honk}>
               {/* Exhaust, out of the back (the car faces down, +y). */}
               <circle cx="-6" cy="-30" r="5" className="road-puff" style={{ ["--d" as string]: "0ms" }} />
               <circle cx="5" cy="-31" r="4" className="road-puff" style={{ ["--d" as string]: "200ms" }} />
@@ -487,8 +512,8 @@ export default function Experience() {
 
         {/* Where the road runs on: it fades out past the current stop. */}
         <div className="relative h-[300px] lg:h-[380px]">
-          <div aria-hidden="true" className="absolute inset-x-0 bottom-0 z-[1] h-[85%] bg-linear-to-b from-transparent to-paper" />
-          <div className="absolute left-[60px] top-28 z-[2] flex flex-wrap items-center gap-3 lg:left-[calc(50%+70px)] lg:top-36">
+          <div aria-hidden="true" className="absolute inset-x-0 bottom-0 z-[3] h-[85%] bg-linear-to-b from-transparent to-paper" />
+          <div className="absolute left-[60px] top-28 z-[4] flex flex-wrap items-center gap-3 lg:left-[calc(50%+70px)] lg:top-36">
             <span className="t-micro rounded-full border-[1.5px] border-dashed border-ink bg-paper px-3.5 py-2 font-mono tracking-[0.16em]">To be continued…</span>
             <a href="#contact" className="btn-pill rotate-[-2deg]">
               Next exit → ?
@@ -497,7 +522,7 @@ export default function Experience() {
         </div>
 
         {/* The year under the car. */}
-        <div ref={chip} aria-hidden="true" className="road-chip t-micro pointer-events-none absolute left-0 top-0 z-[3] hidden items-center gap-1.5 rounded-full border-[1.5px] border-ink bg-sun px-3 py-1.5 font-mono tracking-[0.14em] text-[#121016] lg:flex">
+        <div ref={chip} aria-hidden="true" className="road-chip t-micro pointer-events-none absolute left-0 top-0 z-[5] hidden items-center gap-1.5 rounded-full border-[1.5px] border-ink bg-sun px-3 py-1.5 font-mono tracking-[0.14em] text-[#121016] lg:flex">
           ◐ <span ref={chipText}>{Math.floor(START)}</span>
         </div>
       </div>

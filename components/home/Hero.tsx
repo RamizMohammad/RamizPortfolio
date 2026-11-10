@@ -3,7 +3,6 @@ import Ribbon from "@/components/hero/Ribbon";
 import { Ball, BraceCoin, Database, Gear, PaperPlane, TerminalCard } from "@/components/hero/Stickers";
 import { BANNER } from "@/components/ascii/art";
 import LensPitch from "@/components/lens/LensPitch";
-import LensSwitch from "@/components/lens/LensSwitch";
 import { profile } from "@/content/profile";
 
 const WORD = "RAMIZ";
@@ -78,9 +77,6 @@ export default function Hero() {
         <div className="rise flex flex-wrap justify-center gap-3" style={{ ["--d" as string]: "1100ms" }}>
           <a href="#work" className="btn-pill">See my work</a>
           <a href="#contact" className="btn-ghost">Email me ↗</a>
-        </div>
-        <div className="rise" style={{ ["--d" as string]: "1200ms" }}>
-          <LensSwitch />
         </div>
       </div>
       <div className="absolute bottom-5 right-[var(--edge-r)]">

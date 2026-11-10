@@ -7,6 +7,8 @@ import { Dialog, NavigationMenu } from "radix-ui";
 import { memo, useEffect, useLayoutEffect, useRef, useState, type RefObject } from "react";
 import { profile } from "@/content/profile";
 import { activeGroup, GROUPS, openPalette, SECTIONS, type NavLink } from "./nav";
+import LensMenu from "./lens/LensMenu";
+import LensSwitch from "./lens/LensSwitch";
 import ResumeButton from "./lens/ResumeButton";
 import ThemeToggle from "./ThemeToggle";
 
@@ -133,6 +135,7 @@ export default function SiteHeader() {
             </button>
             <ThemeToggle />
             <ResumeButton className="btn-pill btn-sm hidden md:inline-flex" />
+            <LensMenu className="hidden md:inline-flex" />
 
             <Dialog.Root open={open} onOpenChange={setOpen}>
               <Dialog.Trigger className="btn-pill btn-sm xl:hidden">Menu</Dialog.Trigger>
@@ -184,6 +187,9 @@ export default function SiteHeader() {
                       </section>
                     ))}
                   </nav>
+                  <div className="menu-item pb-4" style={{ ["--mi" as string]: GROUPS.length }}>
+                    <LensSwitch className="!justify-start" />
+                  </div>
                   <div className="menu-item flex flex-wrap gap-3" style={{ ["--mi" as string]: GROUPS.length + 1 }}>
                     <ResumeButton className="btn-pill" />
                     <button

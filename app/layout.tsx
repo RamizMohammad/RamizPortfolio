@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Anton, Inter, JetBrains_Mono } from "next/font/google";
 import CommandPalette from "@/components/CommandPalette";
+import EasterEggs from "@/components/EasterEggs";
 import Cursor from "@/components/Cursor";
 import RevealObserver from "@/components/RevealObserver";
 import SiteFooter from "@/components/SiteFooter";
@@ -55,6 +56,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <RevealObserver />
         <Cursor />
         <AsciiMode />
+        <EasterEggs />
       </body>
     </html>
   );

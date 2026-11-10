@@ -649,3 +649,29 @@ main > section:not(#hero, #moments) { content-visibility: auto; contain-intrinsi
 .ribbon-in.ribbon-done { -webkit-mask-image: none; mask-image: none; animation: none }
 html[data-splash="on"] .ribbon-in { animation-play-state: paused }
 @media (prefers-reduced-motion: reduce) { .ribbon-in { animation: none; -webkit-mask-image: none; mask-image: none } }
+
+/* "Hiring for" dropdown in the header. */
+.lens-trigger[data-state="open"] { background: var(--color-ink); color: var(--color-card) }
+.lens-menu[data-state="open"] { animation: lens-in 240ms cubic-bezier(0.34, 1.4, 0.64, 1) both; transform-origin: var(--radix-dropdown-menu-content-transform-origin) }
+.lens-menu[data-state="closed"] { animation: lens-out 140ms ease-in both }
+@keyframes lens-in { from { opacity: 0; transform: translateY(-6px) scale(0.96) } }
+@keyframes lens-out { to { opacity: 0; transform: translateY(-4px) scale(0.98) } }
+@media (prefers-reduced-motion: reduce) { .lens-menu[data-state] { animation: none } }
+
+/* Easter eggs: the toast, the sudo shake, the Konami road trip, the car's honk. */
+.egg-toast { animation: egg-in 520ms cubic-bezier(0.34, 1.56, 0.64, 1) both }
+@keyframes egg-in { from { opacity: 0; transform: translateY(24px) rotate(-3deg) scale(0.9) } }
+html.egg-shake body { animation: egg-shake 600ms cubic-bezier(0.36, 0.07, 0.19, 0.97) both }
+@keyframes egg-shake { 10%, 90% { transform: translateX(-2px) } 20%, 80% { transform: translateX(4px) } 30%, 50%, 70% { transform: translateX(-8px) } 40%, 60% { transform: translateX(8px) } }
+.egg-trip { animation: egg-trip 4.2s ease both }
+@keyframes egg-trip { 0% { transform: translateY(100%) } 10%, 88% { transform: none } 100% { transform: translateY(100%) } }
+.egg-car { left: -80px; animation: egg-drive 3.2s cubic-bezier(0.45, 0, 0.55, 1) 350ms both }
+@keyframes egg-drive { from { transform: translateX(0) } to { transform: translateX(calc(100vw + 160px)) } }
+.egg-bit { opacity: 0; animation: egg-bit 1.4s cubic-bezier(0.2, 0.8, 0.4, 1) both }
+@keyframes egg-bit { 0% { opacity: 1; transform: translate(0, 0) rotate(0) } 100% { opacity: 0; transform: translate(var(--dx), var(--dy)) rotate(var(--r)) } }
+.road-car.honk { animation: honk 520ms cubic-bezier(0.34, 1.56, 0.64, 1) }
+@keyframes honk { 0%, 100% { transform: none } 30% { transform: scale(1.35) rotate(-8deg) } 60% { transform: scale(0.95) rotate(6deg) } }
+@media (prefers-reduced-motion: reduce) {
+  .egg-toast, html.egg-shake body, .egg-trip, .egg-car, .egg-bit, .road-car.honk { animation: none }
+  .egg-trip { display: none }
+}
