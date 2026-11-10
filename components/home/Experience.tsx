@@ -5,6 +5,7 @@ import Words from "@/components/Words";
 import { lensTags } from "@/content/lens";
 import { profile } from "@/content/profile";
 import { timeline } from "@/content/timeline";
+import { findEgg } from "@/components/EasterEggs";
 import { Filler, Milestone, Scene, type SceneKind } from "./RoadScenery";
 import SectionLabel from "./SectionLabel";
 
@@ -79,6 +80,7 @@ export default function Experience() {
     const d = new Date();
     const now = d.getFullYear() + (d.getMonth() + (d.getDate() - 1) / 31) / 12;
     const value = Math.min(99.99, Math.max(0, now - START)).toFixed(2).padStart(5, "0");
+    o.dataset.value = value;
     o.querySelectorAll<HTMLElement>("[data-digit]").forEach((col) => {
       col.style.setProperty("--n", value[Number(col.dataset.digit)]);
     });
@@ -96,6 +98,7 @@ export default function Experience() {
     const roads = Array.from(s.querySelectorAll<SVGPathElement>("[data-road]"));
     const trail = s.querySelector<SVGPathElement>("[data-trail]");
     if (!trail) return;
+    const lampEls = Array.from(s.querySelectorAll<SVGGElement>("[data-lamp]"));
     const lg = window.matchMedia("(min-width: 1024px)");
     const still = window.matchMedia("(prefers-reduced-motion: reduce)");
 
@@ -112,6 +115,9 @@ export default function Experience() {
     let ys = new Float64Array(0);
     let ls = new Float64Array(0);
     let rows: { li: HTMLElement; y: number; year: number; on: boolean }[] = [];
+    let lamps: { el: SVGGElement; y: number; on: boolean }[] = [];
+    let lastY = -1;
+    let idle = 0;
 
     const build = () => {
       W = b.clientWidth;
@@ -124,18 +130,17 @@ export default function Experience() {
         on: li.hasAttribute("data-on"),
       }));
       if (!rows.length || !W) return;
-      const mid = wide ? W / 2 : 24;
-      // On wide screens the road bends away from each card: right of centre for cards on the left.
-      const pts: [number, number][] = [
-        [mid, 0],
-        ...rows.map((r, i): [number, number] => [wide ? W * (i % 2 === 0 ? 0.62 : 0.38) : mid, r.y]),
-        [mid, H],
-      ];
+      const mid = wide ? W / 2 : 26;
+      // On wide screens the road swings well away from each card: right for cards on the left. Phones
+      // get a gentle wiggle down the left edge.
+      const swing = (i: number) => (wide ? W * (i % 2 === 0 ? 0.71 : 0.29) : mid + (i % 2 === 0 ? 7 : -7));
+      const pts: [number, number][] = [[mid, 0], ...rows.map((r, i): [number, number] => [swing(i), r.y]), [mid, H]];
       let d = `M${pts[0][0]} ${pts[0][1]}`;
       for (let i = 1; i < pts.length; i++) {
         const [x0, y0] = pts[i - 1];
         const [x1, y1] = pts[i];
-        const k = (y1 - y0) * 0.5;
+        // Long vertical handles give full, round S-bends; under the segment height the road still only runs downward.
+        const k = (y1 - y0) * 0.62;
         d += ` C${x0} ${y0 + k} ${x1} ${y1 - k} ${x1} ${y1}`;
       }
       s.setAttribute("viewBox", `0 0 ${W} ${H}`);
@@ -151,12 +156,38 @@ export default function Experience() {
         ys[i] = trail.getPointAtLength(ls[i]).y;
       }
       trail.style.strokeDasharray = `${L} ${L}`;
+      // Street lamps stand between stops, where the road crosses the middle, alternating sides.
+      lamps = lampEls.map((el, i) => {
+        const a = rows[i];
+        const z = rows[i + 1];
+        if (!wide || !a || !z) {
+          el.style.display = "none";
+          return { el, y: Infinity, on: false };
+        }
+        const y = (a.y + z.y) / 2;
+        const l = lengthAt(y);
+        const pt = trail.getPointAtLength(l);
+        const ahead = trail.getPointAtLength(Math.min(L, l + 2));
+        // Stand the lamp on the upper verge: step off the centre line along the road's normal,
+        // on whichever side faces up the page, so the post never stands on the tarmac.
+        let nx = -(ahead.y - pt.y);
+        let ny = ahead.x - pt.x;
+        const len = Math.hypot(nx, ny) || 1;
+        if (ny > 0) {
+          nx = -nx;
+          ny = -ny;
+        }
+        const gap = 52;
+        el.style.display = "";
+        el.setAttribute("transform", `translate(${pt.x + (nx / len) * gap} ${pt.y + (ny / len) * gap})`);
+        return { el, y, on: el.hasAttribute("data-on") };
+      });
       startY = wide ? 72 : 44;
       parkY = rows[rows.length - 1].y;
       c.style.visibility = "visible";
     };
 
-    const lengthAt = (y: number) => {
+    function lengthAt(y: number) {
       let lo = 0;
       let hi = ys.length - 1;
       while (hi - lo > 1) {
@@ -166,7 +197,7 @@ export default function Experience() {
       }
       const span = ys[hi] - ys[lo];
       return ls[lo] + (span > 0 ? ((y - ys[lo]) / span) * (ls[hi] - ls[lo]) : 0);
-    };
+    }
 
     const update = () => {
       raf = 0;
@@ -180,6 +211,20 @@ export default function Experience() {
       c.setAttribute("transform", `translate(${p.x} ${p.y}) rotate(${angle}) scale(${wide ? 1 : 0.7})`);
       trail.style.strokeDashoffset = String(L - l);
 
+      for (const m of lamps) {
+        const on = y >= m.y;
+        if (on !== m.on) {
+          m.on = on;
+          m.el.toggleAttribute("data-on", on);
+        }
+      }
+      // While the car is moving it bobs and puffs exhaust; it settles a moment after scrolling stops.
+      if (lastY >= 0 && Math.abs(y - lastY) > 0.5) {
+        b.setAttribute("data-moving", "");
+        clearTimeout(idle);
+        idle = window.setTimeout(() => b.removeAttribute("data-moving"), 220);
+      }
+      lastY = y;
       for (const r of rows) {
         const on = y >= r.y - 40;
         if (on !== r.on) {
@@ -232,12 +277,36 @@ export default function Experience() {
     ro.observe(b);
     return () => {
       cancelAnimationFrame(raf);
+      clearTimeout(idle);
       io.disconnect();
       ro.disconnect();
       still.removeEventListener("change", onMotion);
       window.removeEventListener("scroll", onScroll);
     };
   }, []);
+
+  // Easter eggs: honk the car, tamper with the odometer.
+  const honk = () => {
+    const g = car.current?.firstElementChild;
+    if (!g) return;
+    g.classList.remove("honk");
+    void (g as SVGGElement).getBoundingClientRect();
+    g.classList.add("honk");
+    g.addEventListener("animationend", () => g.classList.remove("honk"), { once: true });
+    findEgg("honk");
+  };
+  const leet = () => {
+    const o = odo.current;
+    if (!o || o.dataset.leet) return;
+    o.dataset.leet = "1";
+    const set = (v: string) => o.querySelectorAll<HTMLElement>("[data-digit]").forEach((c) => c.style.setProperty("--n", v[Number(c.dataset.digit)]));
+    set("13.37");
+    findEgg("leet");
+    window.setTimeout(() => {
+      set(o.dataset.value ?? "00.00");
+      delete o.dataset.leet;
+    }, 2800);
+  };
 
   return (
     <section id="experience" aria-labelledby="experience-title" className="edge overflow-x-clip pb-6">
@@ -263,7 +332,7 @@ export default function Experience() {
         </div>
 
         <div className="grid justify-items-start gap-5 lg:justify-items-end lg:pt-6">
-          <div ref={odo} className="odo w-[min(100%,330px)] rotate-[1.5deg] rounded-[20px] border-[1.5px] border-ink bg-ink p-5 text-card shadow-[6px_6px_0_0_var(--color-pink-deep)]" data-reveal>
+          <div ref={odo} onClick={leet} className="odo w-[min(100%,330px)] cursor-pointer select-none rotate-[1.5deg] rounded-[20px] border-[1.5px] border-ink bg-ink p-5 text-card shadow-[6px_6px_0_0_var(--color-pink-deep)]" data-reveal>
             <span data-sr className="sr-only" />
             <div className="t-micro flex justify-between gap-4 opacity-80" aria-hidden="true">
               <span>Odometer</span>
@@ -302,18 +371,45 @@ export default function Experience() {
 
       <div ref={box} className="road relative mx-auto max-w-[1440px]">
         {/* The road, its centre line and the route drawn behind the car. Built on the client from the stops' positions. */}
-        <svg ref={svg} aria-hidden="true" className="pointer-events-none absolute left-0 top-0 overflow-visible">
+        <svg ref={svg} aria-hidden="true" className="pointer-events-none absolute left-0 top-0 z-[2] overflow-visible">
           <path data-road className="road-edge" />
           <path data-road className="road-tar" />
+          <path data-road className="road-side" />
+          <path data-road className="road-inner" />
           <path data-road className="road-dash" />
           <path data-road data-trail className="road-trail" />
-          <g ref={car} className="road-car" style={{ visibility: "hidden" }}>
-            <rect x="-13" y="-21" width="30" height="50" rx="10" className="road-car-shadow" />
-            <rect x="-15" y="-25" width="30" height="50" rx="10" className="road-car-body" />
-            <rect x="-10" y="5" width="20" height="11" rx="3" className="road-car-glass" />
-            <rect x="-10" y="-18" width="20" height="8" rx="3" className="road-car-glass" />
-            <circle cx="-9" cy="24" r="2.6" className="road-car-light" />
-            <circle cx="9" cy="24" r="2.6" className="road-car-light" />
+          {stops.slice(1).map((s) => (
+            <g key={s.n} data-lamp className="road-lamp" style={{ display: "none" }}>
+              <ellipse cx="0" cy="2" rx="16" ry="4" className="road-lamp-pool" />
+              <path d="M0 0 V-64 Q0 -72 10 -72 H20" className="road-lamp-post" />
+              <path d="M14 -72 H30 L26 -66 H18 Z" className="road-lamp-head" />
+              <circle cx="22" cy="-63" r="4" className="road-lamp-bulb" />
+            </g>
+          ))}
+          <g ref={car} style={{ visibility: "hidden" }}>
+            <g className="road-car pointer-events-auto cursor-pointer" onClick={honk}>
+              {/* Exhaust, out of the back (the car faces down, +y). */}
+              <circle cx="-6" cy="-30" r="5" className="road-puff" style={{ ["--d" as string]: "0ms" }} />
+              <circle cx="5" cy="-31" r="4" className="road-puff" style={{ ["--d" as string]: "200ms" }} />
+              <circle cx="0" cy="-30" r="4.5" className="road-puff" style={{ ["--d" as string]: "400ms" }} />
+              {/* Headlight beams */}
+              <path d="M-11 26 L-22 62 H-2 Z M11 26 L2 62 H22 Z" className="road-car-beam" />
+              <rect x="-12" y="-21" width="30" height="52" rx="11" className="road-car-shadow" />
+              <rect x="-19" y="-17" width="5" height="10" rx="2" className="road-car-tyre" />
+              <rect x="14" y="-17" width="5" height="10" rx="2" className="road-car-tyre" />
+              <rect x="-19" y="9" width="5" height="10" rx="2" className="road-car-tyre" />
+              <rect x="14" y="9" width="5" height="10" rx="2" className="road-car-tyre" />
+              <rect x="-15" y="-26" width="30" height="52" rx="11" className="road-car-body" />
+              <rect x="-3" y="-26" width="6" height="52" className="road-car-stripe" />
+              <rect x="-11" y="4" width="22" height="12" rx="3.5" className="road-car-glass" />
+              <rect x="-10" y="-19" width="20" height="8" rx="3" className="road-car-glass" />
+              <rect x="-11" y="-9" width="22" height="11" rx="2" className="road-car-roof" />
+              <path d="M-15 6 L-19 4 M15 6 L19 4" className="road-car-mirror" />
+              <circle cx="-9" cy="24" r="2.6" className="road-car-light" />
+              <circle cx="9" cy="24" r="2.6" className="road-car-light" />
+              <rect x="-12" y="-27" width="5" height="2.5" rx="1" className="road-car-tail" />
+              <rect x="7" y="-27" width="5" height="2.5" rx="1" className="road-car-tail" />
+            </g>
           </g>
         </svg>
 
@@ -338,8 +434,8 @@ export default function Experience() {
               >
                 <div className={`stop-tilt relative lg:row-start-1 lg:w-[80%] ${left ? "lg:col-start-1 lg:justify-self-start" : "lg:col-start-2 lg:justify-self-end"}`} style={{ ["--rot" as string]: left ? "-0.8deg" : "1deg" }}>
                   <article className="stop-card relative" data-reveal>
-                    <span aria-hidden="true" className="absolute inset-0 translate-x-2 translate-y-2 rounded-[22px] border-[1.5px] border-ink bg-card" />
-                    <div className={`relative grid gap-4 rounded-[22px] border-[1.5px] border-ink p-6 md:p-7 ${s.current ? "bg-pink" : "bg-card"}`}>
+                    <span aria-hidden="true" className={`stop-sheet absolute inset-0 rounded-[22px] border-[1.5px] border-ink ${s.current ? "bg-ink" : s.tone}`} />
+                    <div className={`stop-front relative grid gap-4 rounded-[22px] border-[1.5px] border-ink p-6 md:p-7 ${s.current ? "bg-pink" : "bg-card"}`}>
                       {s.badge && (
                         <span className={`t-label absolute -top-4 right-5 rotate-[3deg] rounded-full border-[1.5px] border-ink px-3.5 py-2 ${s.current ? "bg-ink text-lime" : "bg-sun text-[#121016]"}`}>
                           ★ {s.badge}
@@ -350,7 +446,7 @@ export default function Experience() {
                           Stop {s.n}
                           <span className="lg:hidden"> · Exit {s.n}</span>
                         </span>
-                        <span className={s.current ? "" : "muted"}>{s.status}</span>
+                        <span className={`stop-status rounded-full border-[1.5px] px-2 py-0.5 ${s.current ? "border-ink bg-ink text-lime" : "border-ink/30"}`}>{s.status}</span>
                       </div>
                       <div className="grid gap-1.5">
                         <h3 className="t-h2 md:text-[32px]">{t.title}</h3>
@@ -385,14 +481,15 @@ export default function Experience() {
 
                 {/* Roadside: the exit sign by the road, scenery out towards the edge. Wide screens only. */}
                 <div aria-hidden="true" className={`relative hidden h-full lg:row-start-1 lg:block ${left ? "lg:col-start-2" : "lg:col-start-1"}`}>
-                  <div className={`absolute top-6 ${left ? "right-[3%]" : "left-[3%]"}`}>
+                  <div className={`road-filler absolute top-6 ${left ? "right-[3%]" : "left-[3%]"}`}>
                     <Filler i={i} />
                   </div>
-                  <div className={`absolute top-10 ${left ? "right-[calc(3%+220px)]" : "left-[calc(3%+220px)]"} xl:top-16`}>
+                  <div className={`road-milestone absolute top-10 ${left ? "right-[calc(3%+220px)]" : "left-[calc(3%+220px)]"} xl:top-16`}>
                     <Milestone year={s.year} />
                   </div>
-                  <div className={`exit-sign absolute top-1/2 w-[min(270px,58%)] -translate-y-[60%] ${left ? "left-[38%]" : "right-[38%]"}`}>
-                    <div className="rounded-[14px] border-[1.5px] border-ink bg-ink px-5 pb-4 pt-3.5 text-card">
+                  <div className={`exit-sign absolute top-1/2 w-[min(240px,46%)] -translate-y-[60%] ${left ? "left-[52%]" : "right-[52%]"}`}>
+                    <div className="exit-face relative rounded-[14px] border-[1.5px] border-ink bg-ink px-5 pb-4 pt-3.5 text-card">
+                      <span aria-hidden="true" className="absolute right-4 top-2.5 font-display text-[26px] leading-none text-pink">{left ? "↘" : "↙"}</span>
                       <span className={`exit-no t-micro inline-block rounded-[5px] px-2 py-1 font-mono tracking-[0.14em] text-[#121016] ${s.tone}`}>Exit {s.n}</span>
                       <p className="mt-2 font-display text-[clamp(26px,2.5vw,38px)] uppercase leading-[0.95]">{t.org}</p>
                       <p className="t-micro mt-2 font-mono tracking-[0.16em] opacity-75">
@@ -404,7 +501,7 @@ export default function Experience() {
                       <span className="h-10 w-[1.5px] bg-ink" />
                     </div>
                   </div>
-                  <div className={`absolute bottom-3 w-[min(220px,44%)] ${left ? "right-0" : "left-0"}`}>
+                  <div className={`road-scene absolute bottom-3 w-[min(220px,42%)] ${left ? "right-0" : "left-0"}`}>
                     <Scene kind={s.scene} />
                   </div>
                 </div>
@@ -415,8 +512,8 @@ export default function Experience() {
 
         {/* Where the road runs on: it fades out past the current stop. */}
         <div className="relative h-[300px] lg:h-[380px]">
-          <div aria-hidden="true" className="absolute inset-x-0 bottom-0 z-[1] h-[85%] bg-linear-to-b from-transparent to-paper" />
-          <div className="absolute left-[60px] top-28 z-[2] flex flex-wrap items-center gap-3 lg:left-[calc(50%+70px)] lg:top-36">
+          <div aria-hidden="true" className="absolute inset-x-0 bottom-0 z-[3] h-[85%] bg-linear-to-b from-transparent to-paper" />
+          <div className="absolute left-[60px] top-28 z-[4] flex flex-wrap items-center gap-3 lg:left-[calc(50%+70px)] lg:top-36">
             <span className="t-micro rounded-full border-[1.5px] border-dashed border-ink bg-paper px-3.5 py-2 font-mono tracking-[0.16em]">To be continued…</span>
             <a href="#contact" className="btn-pill rotate-[-2deg]">
               Next exit → ?
@@ -425,7 +522,7 @@ export default function Experience() {
         </div>
 
         {/* The year under the car. */}
-        <div ref={chip} aria-hidden="true" className="road-chip t-micro pointer-events-none absolute left-0 top-0 z-[3] hidden items-center gap-1.5 rounded-full border-[1.5px] border-ink bg-sun px-3 py-1.5 font-mono tracking-[0.14em] text-[#121016] lg:flex">
+        <div ref={chip} aria-hidden="true" className="road-chip t-micro pointer-events-none absolute left-0 top-0 z-[5] hidden items-center gap-1.5 rounded-full border-[1.5px] border-ink bg-sun px-3 py-1.5 font-mono tracking-[0.14em] text-[#121016] lg:flex">
           ◐ <span ref={chipText}>{Math.floor(START)}</span>
         </div>
       </div>
